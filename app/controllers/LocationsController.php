@@ -38,9 +38,13 @@ class LocationsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Location::create($data);
+		$location = new Location;
 
-		return Redirect::route('locations.index');
+		$location->name = Input::get('name');
+		$location->description = Input::get('description');
+		$location->save();
+
+		return Redirect::route('locations.index')->withFlashMessage('Store has been successfully created!');
 	}
 
 	/**
@@ -86,9 +90,12 @@ class LocationsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$location->update($data);
+		$location->name = Input::get('name');
+		$location->description = Input::get('description');
+		$location->update();
 
-		return Redirect::route('locations.index');
+		return Redirect::route('locations.index')->withFlashMessage('Store has been successfully updated!');
+
 	}
 
 	/**
@@ -101,7 +108,9 @@ class LocationsController extends \BaseController {
 	{
 		Location::destroy($id);
 
-		return Redirect::route('locations.index');
+
+		return Redirect::route('locations.index')->withFlashMessage('Store has been successfully removed!');
+
 	}
 
 }

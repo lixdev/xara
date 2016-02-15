@@ -4,8 +4,18 @@ class Item extends \Eloquent {
 
 	// Add your validation rules here
 	public static $rules = [
-		// 'title' => 'required'
+	 'name' => 'required',
+	 'pprice' => 'required|regex:/^\d+(\.\d{2})?$/',
+	 'sprice' => 'required|regex:/^\d+(\.\d{2})?$/'
 	];
+
+	public static $messages = array(
+    	'name.required'=>'Please item name!',
+    	'pprice.required'=>'Please insert item purchase price!',
+    	'pprice.regex'=>'Please insert a valid amount!',
+    	'sprice.required'=>'Please insert item selling price!',
+    	'sprice.regex'=>'Please insert a valid amount!',
+    );
 
 	// Don't forget to fill this array
 	protected $fillable = [];
@@ -18,6 +28,12 @@ class Item extends \Eloquent {
 	public function stocks(){
 
 		return $this->hasMany('Stock');
+	}
+
+
+	public function leaseitems(){
+
+		return $this->hasMany('Leaseitem');
 	}
 
 }

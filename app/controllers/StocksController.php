@@ -11,7 +11,9 @@ class StocksController extends \BaseController {
 	{
 		$stocks = Stock::all();
 
-		return View::make('stocks.index', compact('stocks'));
+		$items = Item::all();
+
+		return View::make('stocks.index', compact('stocks', 'items'));
 	}
 
 	/**
@@ -21,7 +23,10 @@ class StocksController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('stocks.create');
+		$items = Item::all();
+		$locations = Location::all();
+
+		return View::make('stocks.create', compact('items', 'locations'));
 	}
 
 	/**
@@ -38,9 +43,19 @@ class StocksController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Stock::create($data);
+		$item_id = Input::get('item');
+		$location_id = Input::get('location');
 
-		return Redirect::route('stocks.index');
+		$item = Item::findOrFail($item_id);
+		$location = Location::find($location_id);
+		$quantity = Input::get('quantity');
+		$date = Input::get('date');
+
+		
+
+		Stock::addStock($item, $location, $quantity, $date);
+
+		return Redirect::route('stocks.index')->withFlashMessage('stock has been successfully updated!');
 	}
 
 	/**

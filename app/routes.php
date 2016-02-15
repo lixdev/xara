@@ -2098,36 +2098,35 @@ echo "Decoded L code: ".$name4."<br>";
 
 /* ########################  ERP ROUTES ################################ */
 
-/* 
-* items routes here 
-*/
-Route::resource('items', 'ItemsController');
-
-
-/*
-* client routes come here
-*/
-
 Route::resource('clients', 'ClientsController');
+Route::get('clients/edit/{id}', 'ClientsController@edit');
+Route::post('clients/update/{id}', 'ClientsController@update');
+Route::get('clients/delete/{id}', 'ClientsController@destroy');
+
+Route::resource('items', 'ItemsController');
+Route::get('items/edit/{id}', 'ItemsController@edit');
+Route::post('items/update/{id}', 'ItemsController@update');
+Route::get('items/delete/{id}', 'ItemsController@destroy');
 
 
 Route::resource('paymentmethods', 'PaymentmethodsController');
 
 
 Route::resource('locations', 'LocationsController');
+Route::get('locations/edit/{id}', 'LocationsController@edit');
+Route::get('locations/delete/{id}', 'LocationsController@destroy');
+Route::post('locations/update/{id}', 'LocationsController@update');
+
 
 
 Route::resource('expenses', 'ExpensesController');
 
-Route::resource('erporders', 'ErpordersController');
 
-
-Route::resource('erporderitems', 'ErporderitemsController');
 
 Route::resource('payments', 'PaymentsController');
 
 
-Route::resource('stocks', 'StocksController');
+
 
 
 /*
@@ -2224,5 +2223,232 @@ Route::get('css/balances', function(){
 
   return View::make('css.balances', compact('employee', 'leavetypes'));
 });
+
+
+
+/*
+*##########################ERP REPORTS#######################################
+*/
+
+Route::get('erpReports', function(){
+
+    return View::make('erpreports.erpReports');
+});
+
+Route::get('erpReports/clients', 'ErpReportsController@clients');
+Route::get('erpReports/items', 'ErpReportsController@items');
+Route::get('erpReports/expenses', 'ErpReportsController@expenses');
+Route::get('erpReports/paymentmethods', 'ErpReportsController@paymentmethods');
+Route::get('erpReports/payments', 'ErpReportsController@payments');
+
+Route::get('erpReports/locations', 'ErpReportsController@locations');
+Route::get('erpReports/stock', 'ErpReportsController@stock');
+
+
+
+
+
+
+Route::get('salesorders', function(){
+
+  $orders = Erporder::all();
+  $items = Item::all();
+  $locations = Location::all();
+
+  return View::make('erporders.index', compact('items', 'locations', 'orders'));
+});
+
+
+
+Route::get('salesorders/create', function(){
+
+  $order_number = rand(100,100000);
+  $items = Item::all();
+  $locations = Location::all();
+
+  $clients = Client::all();
+
+  return View::make('erporders.create', compact('items', 'locations', 'order_number', 'clients'));
+});
+
+Route::post('erporders/create', function(){
+
+  $data = Input::all();
+
+  $client = Client::findOrFail(array_get($data, 'client'));
+
+/*
+  $erporder = array(
+    'order_number' => array_get($data, 'order_number'), 
+    'client' => $client,
+    'date' => array_get($data, 'date')
+
+    );
+  */
+
+  Session::put( 'erporder', array(
+    'order_number' => array_get($data, 'order_number'), 
+    'client' => $client,
+    'date' => array_get($data, 'date')
+
+    )
+    );
+  Session::put('orderitems', []);
+
+  $orderitems =Session::get('orderitems');
+
+ /*
+  $erporder = new Erporder;
+
+  $erporder->date = date('Y-m-d', strtotime(array_get($data, 'date')));
+  $erporder->order_number = array_get($data, 'order_number');
+  $erporder->client()->associate($client);
+  $erporder->payment_type = array_get($data, 'payment_type');
+  $erporder->type = 'sales';
+  $erporder->save();
+
+  */
+
+  $items = Item::all();
+  $locations = Location::all();
+
+
+  return View::make('erporders.orderitems', compact('erporder', 'items', 'locations', 'orderitems'));
+
+});
+
+
+Route::post('orderitems/create', function(){
+
+  $data = Input::all();
+
+  $item = Item::findOrFail(array_get($data, 'item'));
+
+  $item_name = $item->name;
+  $price = $item->selling_price;
+  $quantity = Input::get('quantity');
+  $duration = Input::get('duration');
+  $item_id = $item->id;
+
+  
+
+   Session::push('orderitems', [
+      'itemid' => $item_id,
+      'item' => $item_name,
+      'price' => $price,
+      'quantity' => $quantity,
+      'duration' => $duration
+
+    ]);
+
+  $orderitems = Session::get('orderitems');
+
+   $items = Item::all();
+  $locations = Location::all();
+
+  return View::make('erporders.orderitems', compact('items', 'locations', 'orderitems'));
+
+});
+
+
+Route::get('orderitems/remove/{id}', function($id){
+
+   
+     $orderitems = Session::get('orderitems');
+
+     foreach ($orderitems as $orderitem) {
+       if($orderitem['itemid'] == $id){
+          //Session::forget($orderitem);
+        
+  //Session::forget('orderitems', $id);
+       }
+     }
+
+
+
+
+ $orderitems = Session::get('orderitems');
+
+
+  $items = Item::all();
+  $locations = Location::all();
+
+  return View::make('erporders.orderitems', compact('items', 'locations', 'orderitems'));
+
+});
+
+
+Route::resource('stocks', 'StocksController');
+
+
+Route::get('erporder/commit', function(){
+
+  $erporder = Session::get('erporder');
+
+  $erporderitems = Session::get('orderitems');
+
+ // $client = Client::findorfail(array_get($erporder, 'client'));
+
+  //print_r($erporder);
+
+
+  $order = new Erporder;
+  $order->order_number = array_get($erporder, 'order_number');
+  $order->client()->associate(array_get($erporder, 'client'));
+  $order->date = date('Y-m-d', strtotime(array_get($erporder, 'date')));
+  $order->status = 'new';
+  $order->type = 'sales';
+  $order->save();
+  
+
+  foreach($erporderitems as $item){
+
+
+    $itm = Item::findOrFail($item['itemid']);
+
+    $ord = Erporder::findOrFail($order->id);
+
+    $orderitem = new Erporderitem;
+    $orderitem->erporder()->associate($ord);
+    $orderitem->item()->associate($itm);
+    $orderitem->price = $item['price'];
+    $orderitem->quantity = $item['quantity'];
+    $orderitem->duration = $item['duration'];
+    $orderitem->save();
+  }
+
+//Session::purge('orderitems');
+//Session::purge('erporder');
+return Redirect::to('salesorders');
+
+
+
+});
+
+
+Route::get('erporders/cancel/{id}', function($id){
+
+  $order = Erporder::findorfail($id);
+
+
+
+  $order->status = 'cancelled';
+  $order->update();
+
+  return Redirect::to('salesorders');
+  
+});
+
+
+Route::get('erporders/show/{id}', function($id){
+
+  $order = Erporder::findorfail($id);
+
+  return View::make('erporders.show', compact('order'));
+  
+});
+
+
+
 
 

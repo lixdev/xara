@@ -14,32 +14,24 @@
                   </li>
 
                   <li>
-                    <a href="{{ URL::to('customers') }}"><i class="glyphicon glyphicon-user fa-fw"></i> Customers</a>
+                    <a href="{{ URL::to('clients') }}"><i class="fa fa-group fa-fw"></i> Clients</a>
                   </li>
 
-                  <li>
-                    <a href="{{ URL::to('suppliers') }}"><i class="glyphicon glyphicon-user fa-fw"></i> Suppliers</a>
-                  </li>    
+                   
                
                   <li>
-                    <a href="{{ URL::to('salesorders') }}"><i class="glyphicon glyphicon-list fa-fw"></i> Sales Orders</a>
+                    <a href="{{ URL::to('salesorders') }}"><i class="glyphicon glyphicon-list fa-fw"></i> Quotations</a>
                   </li>
                         
-                  <li>
-                    <a href="{{ URL::to('purchaseorders') }}"><i class="glyphicon glyphicon-list fa-fw"></i>  Purchase Orders</a>
-                  </li>
-                
-                  
                   
                   <li>
-                    <a href="{{ URL::to('paymentmethods') }}"><i class="fa fa-tasks fa-fw"></i>  Payment Methods</a>
-                  </li>
-                        
-                  <li>
-                    <a href="{{ URL::to('payments') }}"><i class="fa fa-file fa-fw"></i>  Payments</a>
+                    <a href="{{ URL::to('bookings') }}"><i class="glyphicon glyphicon-th fa-fw"></i> Bookings</a>
                   </li>
 
-                  
+
+                  <li>
+                    <a href="{{ URL::to('maintenances') }}"><i class="glyphicon glyphicon-th-large fa-fw"></i> Maintenance</a>
+                  </li>
                 
                   <li>
                     <a href="{{ URL::to('stocks') }}"><i class="glyphicon glyphicon-random fa-fw"></i>  Stock</a>

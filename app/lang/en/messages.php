@@ -45,6 +45,7 @@ return array(
 		'payroll_leave' => 'Payroll & Leave',
 		'employees' => 'Employees',
 		'css' => 'Portal',
+		'inventory' => 'Inventory',
 		
 
 		),

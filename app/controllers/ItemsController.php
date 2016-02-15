@@ -31,16 +31,26 @@ class ItemsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Item::$rules);
+		$validator = Validator::make($data = Input::all(), Item::$rules, Item::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Item::create($data);
+		$item = new Item;
 
-		return Redirect::route('items.index');
+		$item->name = Input::get('name');
+		$item->description = Input::get('description');
+		$item->purchase_price= Input::get('pprice');
+		$item->selling_price = Input::get('sprice');
+		$item->sku= Input::get('sku');
+		$item->tag_id = Input::get('tag');
+		$item->reorder_level = Input::get('reorder');
+		$item->duration = Input::get('duration');
+		$item->save();
+
+		return Redirect::route('items.index')->withFlashMessage('Item successfully created!');
 	}
 
 	/**
@@ -79,16 +89,24 @@ class ItemsController extends \BaseController {
 	{
 		$item = Item::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Item::$rules);
+		$validator = Validator::make($data = Input::all(), Item::$rules, Item::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$item->update($data);
+		$item->name = Input::get('name');
+		$item->description = Input::get('description');
+		$item->purchase_price= Input::get('pprice');
+		$item->selling_price = Input::get('sprice');
+		$item->sku= Input::get('sku');
+		$item->tag_id = Input::get('tag');
+		$item->reorder_level = Input::get('reorder');
+		$item->duration = Input::get('duration');
+		$item->update();
 
-		return Redirect::route('items.index');
+		return Redirect::route('items.index')->withFlashMessage('Item successfully updated!');
 	}
 
 	/**
@@ -101,7 +119,7 @@ class ItemsController extends \BaseController {
 	{
 		Item::destroy($id);
 
-		return Redirect::route('items.index');
+		return Redirect::route('items.index')->withDeleteMessage('Item successfully deleted!');
 	}
 
 }
