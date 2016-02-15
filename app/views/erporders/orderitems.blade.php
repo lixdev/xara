@@ -108,27 +108,7 @@
 
         @endforeach
 
-        <tr>
-           
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Discount</td>
-            <td>{{$total}}</td>
-            <td></td>
-        </tr>
-
-        <tr>
-           
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>VAT</td>
-            <td>{{$total}}</td>
-            <td></td>
-        </tr>
+        
 
         <tr>
            

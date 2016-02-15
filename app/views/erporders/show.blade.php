@@ -10,7 +10,7 @@ function asMoney($value) {
 ?>
 <br><div class="row">
 	<div class="col-lg-12">
-  <h4>Sales Order : {{$order->order_number}} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client: {{$order->client->name}}  &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Date: {{$order->date}} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Status: {{$order->status}}  </h4>
+  <h4>Quote # : {{$order->order_number}} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client: {{$order->client->name}}  &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Date: {{$order->date}} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Status: {{$order->status}}  </h4>
 
 <hr>
 </div>	
@@ -18,16 +18,11 @@ function asMoney($value) {
 
 <div class="row">
     <div class="col-lg-12">
-    @if($order->status != 'released')
-    <a href="{{URL::to('items/release/'.$order->id)}}" class="btn btn-primary"> Release Items</a>
-    @endif
+    
+    
 
-     @if($order->status != 'released')
-    <a href="{{URL::to('releaseform/'.$order->id)}}" class="btn btn-primary"> Generate Release form</a>
-     @endif
-
-    <a href="{{URL::to('salesinvoice/'.$order->id)}}" class="btn btn-primary"> Generate Invoice</a>
-    <a href="{{URL::to('payments/create')}}" class="btn btn-primary"> Make Payment</a>
+    <a href="{{URL::to('salesinvoice/'.$order->id)}}" class="btn btn-primary"> Print Quote</a>
+    
     </div>
 </div>
 

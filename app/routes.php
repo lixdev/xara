@@ -2464,6 +2464,14 @@ Route::get('salesinvoice/{id}', function($id){
 
 
 
+Route::resource('itemcategories', 'ItemcategoriesController');
+Route::get('itemcategories/edit/{id}', 'ItemcategoriesController@edit');
+Route::get('itemcategories/delete/{id}', 'ItemcategoriesController@destroy');
+Route::post('itemcategories/update/{id}', 'ItemcategoriesController@update');
+
+
+
+
 
 
 

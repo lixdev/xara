@@ -46,6 +46,27 @@
             <input class="form-control" placeholder="" type="text" name="sprice" id="sprice" value="{{$item->selling_price}}">
         </div>
 
+         <div class="form-group">
+            <label for="username">Duration<span style="color:red">*</span> :</label>
+            <select name="duration" class="form-control">
+            <option value="{{$item->duration}}">{{$item->duration}}</option>
+                <option value="hour">Per Hour</option>
+                <option value="day">Per Day</option>
+            </select>
+        </div>
+
+         <div class="form-group">
+            <label for="username">Category <span style="color:red">*</span> :</label>
+            <select name="category" class="form-control" required>
+
+                @foreach($itemcategories as $category)
+                <option value="{{$category->name}}">{{$category->name}}</option>
+                @endforeach
+                
+            </select>
+            
+        </div>
+
         <div class="form-group">
             <label for="username">Store Keeping Unit:</label>
             <input class="form-control" placeholder="" type="text" name="sku" id="sku" value="{{$item->sku}}">

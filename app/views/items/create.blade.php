@@ -55,6 +55,18 @@
             </select>
         </div>
 
+          <div class="form-group">
+            <label for="username">Category <span style="color:red">*</span> :</label>
+            <select name="category" class="form-control" required>
+
+                @foreach($itemcategories as $category)
+                <option value="{{$category->name}}">{{$category->name}}</option>
+                @endforeach
+                
+            </select>
+            
+        </div>
+
 
         <div class="form-group">
             <label for="username">Store Keeping Unit:</label>

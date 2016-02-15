@@ -65,7 +65,7 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="100px"/>
     
         </td>
 
@@ -106,7 +106,7 @@ body {
    <div align="center"><strong>Quotation</strong></div>
    <hr>
 
-    <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0' style="width:400px;">
+    <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0' style="width:250px;">
 
       <tr>        
 
@@ -116,8 +116,8 @@ body {
         <td>{{$order->order_number}}</td>
         </tr>
         <tr>
-        <td><strong>Invoice Date: </strong></td>
-        <td>{{date('d-m-Y')}}</td></tr>
+        <td><strong>Quote Date: </strong></td>
+        <td>{{date('d-M-Y')}}</td></tr>
         <tr>
         <td><strong>Client: </strong></td>
         <td>{{$order->client->name}}</td>

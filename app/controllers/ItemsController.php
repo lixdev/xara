@@ -21,7 +21,9 @@ class ItemsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('items.create');
+		$itemcategories = Itemcategory::all();
+
+		return View::make('items.create', compact('itemcategories'));
 	}
 
 	/**
@@ -44,6 +46,7 @@ class ItemsController extends \BaseController {
 		$item->description = Input::get('description');
 		$item->purchase_price= Input::get('pprice');
 		$item->selling_price = Input::get('sprice');
+		$item->category = Input::get('category');
 		$item->sku= Input::get('sku');
 		$item->tag_id = Input::get('tag');
 		$item->reorder_level = Input::get('reorder');
@@ -76,7 +79,9 @@ class ItemsController extends \BaseController {
 	{
 		$item = Item::find($id);
 
-		return View::make('items.edit', compact('item'));
+		$itemcategories = Itemcategory::all();
+
+		return View::make('items.edit', compact('item', 'itemcategories'));
 	}
 
 	/**
@@ -100,6 +105,7 @@ class ItemsController extends \BaseController {
 		$item->description = Input::get('description');
 		$item->purchase_price= Input::get('pprice');
 		$item->selling_price = Input::get('sprice');
+		$item->category = Input::get('category');
 		$item->sku= Input::get('sku');
 		$item->tag_id = Input::get('tag');
 		$item->reorder_level = Input::get('reorder');

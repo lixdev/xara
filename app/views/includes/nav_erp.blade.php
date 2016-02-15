@@ -13,6 +13,11 @@
                     <a href="{{ URL::to('items') }}"><i class="glyphicon glyphicon-barcode fa-fw"></i> Items</a>
                   </li>
 
+
+                  <li>
+                    <a href="{{ URL::to('itemcategories') }}"><i class="glyphicon glyphicon-tasks fa-fw"></i> Item Categories</a>
+                  </li>
+
                   <li>
                     <a href="{{ URL::to('clients') }}"><i class="fa fa-group fa-fw"></i> Clients</a>
                   </li>
