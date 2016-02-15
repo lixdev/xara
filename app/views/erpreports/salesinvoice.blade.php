@@ -103,7 +103,8 @@ body {
 
 
 	<div class="content" style='margin-top:0px;'>
-   <div align="center"><strong>Sales Invoice</strong></div>
+   <div align="center"><strong>Quotation</strong></div>
+   <hr>
 
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0' style="width:400px;">
 
@@ -111,12 +112,12 @@ body {
 
 
         
-        <td><strong>Invoice Number: </strong></td>
+        <td><strong>Quote Number: </strong></td>
         <td>{{$order->order_number}}</td>
         </tr>
         <tr>
         <td><strong>Invoice Date: </strong></td>
-        <td>{{date('Y-m-d')}}</td></tr>
+        <td>{{date('d-m-Y')}}</td></tr>
         <tr>
         <td><strong>Client: </strong></td>
         <td>{{$order->client->name}}</td>
