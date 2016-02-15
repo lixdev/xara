@@ -33,17 +33,20 @@
 
         
 </div>
+</div>
+<div class="row">
 
-<div class="col-lg-7">
+<div class="col-lg-12">
   <br>
 
 
 
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
+        <?php $i = 1; ?>
             @foreach($categories as $category)
   <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel-heading" role="tab" id="{{$i}}">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
          Manage {{$category->category}}
@@ -57,7 +60,7 @@
         <table class="table table-condensed">
 
           <tr>
-
+<?php $count = 0; ?>
             @foreach($permissions as $perm)
               @if($perm->category == $category->category)
 
@@ -75,6 +78,8 @@
 
 
           @endif
+
+          <?php $i++; ?>
         @endforeach
 
 

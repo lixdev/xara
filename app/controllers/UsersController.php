@@ -101,7 +101,7 @@ class UsersController extends Controller
         } else {
             $error = $user->errors()->all(':message');
 
-            return Redirect::action('UsersController@create')
+            return Redirect::back()
                 ->withInput(Input::except('password'))
                 ->with('error', $error);
         }
@@ -136,9 +136,14 @@ class UsersController extends Controller
 
         if ($repo->login($input)) {
             return Redirect::intended('/dashboard');
+
+            Audit::logaudit('System', 'login', 'Logged in: '.Confide::user()->username);
+
         } else {
             if ($repo->isThrottled($input)) {
                 $err_msg = Lang::get('confide::confide.alerts.too_many_attempts');
+
+                Audit::logaudit('System', 'login', 'failed log in attempt');
             } elseif ($repo->existsButNotConfirmed($input)) {
                 $err_msg = Lang::get('confide::confide.alerts.not_confirmed');
             } else {
@@ -247,7 +252,12 @@ class UsersController extends Controller
      */
     public function logout()
     {
+
+        Audit::logaudit('System', 'logout', 'Logged out: '.Confide::user()->username);
+
         Confide::logout();
+
+
 
         return Redirect::to('/');
     }
@@ -467,24 +477,8 @@ class UsersController extends Controller
 
         $roles = Input::get('role');
 
-        $user = new User;
-
-        $user->username = array_get($input, 'username');
-        $user->email    = array_get($input, 'email');
-        $user->password = array_get($input, 'password');
-        $user->user_type = array_get($input, 'user_type');
-
-        // The password confirmation will be removed from model
-        // before saving. This field will be used in Ardent's
-        // auto validation.
-        $user->password_confirmation = array_get($input, 'password_confirmation');
-
-        // Generate a random confirmation code
-        $user->confirmation_code     = md5(uniqid(mt_rand(), true));
-
-        // Save if valid. Password field will be hashed before save
-        $user->save();
-
+        $repo = App::make('UserRepository');
+        $user = $repo->register($input);
          
 
             foreach ($roles as $role) {
@@ -496,6 +490,15 @@ class UsersController extends Controller
         return Redirect::to('users');
     }
 
+
+    public function show($id){
+
+        
+
+         Confide::logout();
+
+        return Redirect::to('/');
+    }
 
 
 }

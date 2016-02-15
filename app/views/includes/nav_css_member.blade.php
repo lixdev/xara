@@ -8,17 +8,19 @@
                 <ul class="nav" id="side-menu">
 
                     <li>
-                        <a href="{{ URL::to('shop') }}"><i class="fa fa-home fa-fw"></i> Shop</a>
+                        <a href="{{ URL::to('css/leave') }}"><i class="fa fa-tasks fa-fw"></i> Leave Applications</a>
+                    </li>
+
+
+                     <li>
+                        <a href="{{ URL::to('css/balances') }}"><i class="fa fa-list fa-fw"></i> Leave Balances</a>
                     </li>
 
                 
                    <li>
-                        <a href="{{ URL::to('savings') }}"><i class="fa fa-money fa-fw"></i> Savings</a>
+                        <a href="{{ URL::to('css/payslips') }}"><i class="fa fa-money fa-fw"></i> Payslips</a>
                     </li>
 
-                     <li>
-                        <a href="{{ URL::to('memberloans') }}"><i class="fa fa-tasks fa-fw"></i> Loans</a>
-                    </li>
 
                    
 

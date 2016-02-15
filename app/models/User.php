@@ -11,6 +11,7 @@ use Zizaco\Entrust\HasRole;
 class User extends Eloquent implements ConfideUserInterface {
 
 	use ConfideUser, HasRole;
+
 	
 
 	/**
@@ -40,6 +41,18 @@ class User extends Eloquent implements ConfideUserInterface {
         
     ];
 
+
+    public static function exists($employee){
+
+    	$exists = DB::table('users')->where('username', '=', $employee->personal_file_number)->count();
+
+    	if($exists >= 1){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
+    }
 
     
 

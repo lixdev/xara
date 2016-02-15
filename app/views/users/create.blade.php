@@ -11,6 +11,7 @@
 
       <form method="POST" action="{{{ URL::to('users/newuser') }}}" accept-charset="UTF-8">
         <input class="form-control" type="hidden" name="user_type" id="user_type" value="admin">
+         <input class="form-control" type="hidden" name="organization_id" id="user_type" value="1">
    
     <fieldset>
         <div class="form-group">

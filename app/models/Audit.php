@@ -2,6 +2,17 @@
 
 class Audit extends \Eloquent {
 
+	use \Traits\Encryptable;
+
+
+	protected $encryptable = [
+
+		'description',
+		'entity',
+		'action',
+		'user',
+	];
+
 	// Add your validation rules here
 	public static $rules = [
 		// 'title' => 'required'
@@ -11,15 +22,18 @@ class Audit extends \Eloquent {
 	protected $fillable = [];
 
 
-	public static function logAudit($date, $user, $action, $entity, $amount){
+	public static function logAudit( $entity, $action, $description){
 
-		$audit = new Audit;
+	$audit = new Audit;
 
-		$audit->date = $date;
-		$audit->user = $user;
-		$audit->action = $action;
-		$audit->entity = $entity;
-		$audit->amount = $amount;
-		$audit->save();
+    $audit->date = date('Y-m-d');
+    $audit->description = $description;
+    $audit->user = Confide::user()->username;
+    $audit->entity = $entity;
+    $audit->action = $action;
+    $audit->save();
+
 	}
+
+
 }

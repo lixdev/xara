@@ -9,11 +9,24 @@ class OrganizationsController extends \BaseController {
 	 */
 	public function index()
 	{
-		 $organization = DB::table('organizations')->where('id', '=', 1)->first();
-
 		
+		$banks = DB::table('banks')
+		->join('organizations', 'banks.id', '=', 'organizations.bank_id')
+		->get();
 
-		return View::make('organizations.index', compact('organization'));
+		$bbranches = DB::table('bank_branches')
+        ->join('organizations', 'bank_branches.id', '=', 'organizations.bank_branch_id')
+		->get();
+
+		$banks_db = DB::table('banks')
+		->get();
+
+		$bbranches_db = DB::table('bank_branches')
+		->get();
+		$organization = DB::table('organizations')->where('id', '=', 1)->first();
+
+		return View::make('organizations.index', compact('organization','banks','bbranches','banks_db','bbranches_db'));
+	
 	}
 
 	/**
@@ -56,9 +69,17 @@ class OrganizationsController extends \BaseController {
 	 */
 	public function show($id)
 	{
+		$banks = DB::table('banks')
+		->join('organizations', 'banks.id', '=', 'organizations.bank_id')
+		->get();
+
+		$bbranches = DB::table('bank_branches')
+        ->join('organizations', 'bank_branches.id', '=', 'organizations.bank_branch_id')
+		->get();
+
 		$organization = Organization::findOrFail($id);
 
-		return View::make('organizations.show', compact('organization'));
+		return View::make('organizations.show', compact('organization','banks','bbranches'));
 	}
 
 	/**
@@ -96,6 +117,13 @@ class OrganizationsController extends \BaseController {
 		$organization->email = Input::get('email');
 		$organization->address = Input::get('address');
 		$organization->website = Input::get('website');
+		$organization->kra_pin = Input::get('pin');
+		$organization->nssf_no = Input::get('nssf');
+		$organization->nhif_no = Input::get('nhif');
+		$organization->bank_id = Input::get('bank_id');
+		$organization->bank_branch_id = Input::get('bbranch_id');
+		$organization->bank_account_number = Input::get('acc');
+		$organization->swift_code = Input::get('code');
 		$organization->update();
 
 		return Redirect::route('organizations.index');

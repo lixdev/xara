@@ -2,6 +2,7 @@
 
 class Account extends \Eloquent {
 
+	
 	// Add your validation rules here
 	public static $rules = [
 		'code' => 'required',
@@ -22,6 +23,17 @@ class Account extends \Eloquent {
 	public function savingProduct(){
 
 		return $this->belongsTo('Saving');
+	}
+
+
+	public function paymentmethods(){
+
+		return $this->hasMany('Paymentmethod');
+	}
+
+	public function expenses(){
+
+		return $this->hasMany('Expense');
 	}
 
 

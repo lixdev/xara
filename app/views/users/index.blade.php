@@ -20,6 +20,7 @@
 					<thead>
 						
 						<th>Username</th>
+						
 						<th>Email</th>
 						<th>created on</th>
 						<th>confirmed</th>
@@ -30,6 +31,7 @@
               			 <tr>
                			
                			<td>{{ $user->username }}</td>
+			
                			<td>{{ $user->email }}</td>
                			<td>{{ $user->created_at }}</td>
                			<?php if($user->confirmed){ ?>
@@ -49,7 +51,7 @@
 
     								<?php if($user->confirmed){ ?>
 
-                    <li><a href="{{URL::to('tellers/create/'.$user->id)}}">Make Teller</a></li>
+                    <!--<li><a href="{{URL::to('tellers/create/'.$user->id)}}">Make Teller</a></li>-->
                     
     								<li><a href="{{URL::to('users/deactivate/'.$user->id)}}">Deactivate</a></li>
 
@@ -91,7 +93,7 @@
 
 
       	
-      	<form method="POST" action="{{{ URL::to('users') }}}" accept-charset="UTF-8">
+      	<form method="POST" action="{{{ URL::to('users/newuser') }}}" accept-charset="UTF-8">
    
     <fieldset>
         <div class="form-group">

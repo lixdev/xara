@@ -12,6 +12,9 @@ class AccountsController extends \BaseController {
 		$accounts = DB::table('accounts')->orderBy('code', 'asc')->get();
 
 		return View::make('accounts.index', compact('accounts'));
+
+
+		Audit::logaudit('Accounts', 'view', 'view chart of accounts');
 	}
 
 	/**
@@ -66,7 +69,7 @@ class AccountsController extends \BaseController {
 
 		}
 
-		
+		Audit::logaudit('Accounts', 'create', 'created: '.$account->name.' '.$account->code);
 
 		return Redirect::route('accounts.index');
 	}
@@ -93,6 +96,8 @@ class AccountsController extends \BaseController {
 	public function edit($id)
 	{
 		$account = Account::find($id);
+
+
 
 		return View::make('accounts.edit', compact('account'));
 	}
@@ -156,7 +161,8 @@ class AccountsController extends \BaseController {
 
 		}
 		
-		
+		Audit::logaudit('Accounts', 'update', 'updated: '.$account->name.' '.$account->code);
+
 
 		return Redirect::route('accounts.index');
 	}
@@ -169,7 +175,14 @@ class AccountsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+
+		$account = Account::findOrFail($id);
+
 		Account::destroy($id);
+
+
+		Audit::logaudit('Accounts', 'delete', 'deleted:'.$account->name.' '.$account->code);
+
 
 		return Redirect::route('accounts.index');
 	}

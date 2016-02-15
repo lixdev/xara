@@ -44,6 +44,9 @@ class CurrenciesController extends \BaseController {
 		$currency->shortname = Input::get('shortname');
 		$currency->save();
 
+		Audit::logaudit('Currency', 'create', 'created: '.$currency->name);
+
+
 		return Redirect::route('currencies.index');
 	}
 
@@ -57,7 +60,10 @@ class CurrenciesController extends \BaseController {
 	{
 		$currency = Currency::findOrFail($id);
 
+		Audit::logaudit('Currency', 'view', 'viewed: '.$currency->name);
+
 		return View::make('currencies.show', compact('currency'));
+
 	}
 
 	/**
@@ -94,6 +100,8 @@ class CurrenciesController extends \BaseController {
 		$currency->shortname = Input::get('shortname');
 		$currency->update();
 
+		Audit::logaudit('Currency', 'update', 'updated: '.$currency->name);
+
 		return Redirect::route('currencies.index');
 	}
 
@@ -105,7 +113,10 @@ class CurrenciesController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$currency = Currency::findOrFail($id);
 		Currency::destroy($id);
+
+		Audit::logaudit('Currency', 'delete', 'deleted: '.$currency->name);
 
 		return Redirect::route('currencies.index');
 	}

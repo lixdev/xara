@@ -18,14 +18,12 @@ class UserRepository
     public function signup($input)
     {
        
-        $name = array_get($input, 'organization');
+       // $name = array_get($input, 'organization');
        
         $org = new Organization;
         $lcode = $org->encode($name);
 
-        $organization = Organization::find(1);
-
-        $organization->name = array_get($input, 'organization');
+        $organization =  Organization::find(array_get($input, 'organization_id'));
         $organization->licensed = 100;
         $organization->license_code = $lcode;
         $organization->update();
@@ -38,6 +36,40 @@ class UserRepository
         $user->password = array_get($input, 'password');
         $user->user_type = array_get($input, 'user_type');
         $user->username = array_get($input, 'username');
+        $user->organization_id = '1';
+        // The password confirmation will be removed from model
+        // before saving. This field will be used in Ardent's
+        // auto validation.
+        $user->password_confirmation = array_get($input, 'password_confirmation');
+
+        // Generate a random confirmation code
+        $user->confirmation_code     = md5(uniqid(mt_rand(), true));
+
+        // Save if valid. Password field will be hashed before save
+        $this->save($user);
+
+         
+
+        return $user;
+
+        
+    }
+
+
+
+    public function register($input)
+    {
+       
+
+
+        $user = new User;
+
+        $user->username = array_get($input, 'username');
+        $user->email    = array_get($input, 'email');
+        $user->password = array_get($input, 'password');
+        $user->user_type = array_get($input, 'user_type');
+        $user->username = array_get($input, 'username');
+        $user->organization_id = 1;
 
         // The password confirmation will be removed from model
         // before saving. This field will be used in Ardent's
@@ -56,6 +88,9 @@ class UserRepository
 
         
     }
+
+
+
 
     /**
      * Attempts to login with the given credentials.

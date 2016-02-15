@@ -20,6 +20,7 @@ class CreateXAuditsTable extends Migration {
 			$table->string('action')->nullable();
 			$table->string('entity')->nullable();
 			$table->float('amount', 10, 0)->nullable();
+			$table->string('description')->nullable();
 			$table->timestamps();
 		});
 	}

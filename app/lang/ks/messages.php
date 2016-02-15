@@ -38,6 +38,13 @@ return array(
 		'accounting' => 'Uhasibu',
 		'reports' => 'Ripoti',
 		'administration' => 'Usimamizi',
+		'payroll' => 'Mishahara',
+		'erp' => 'ERP',
+		'leave' => 'Likizo',
+		'cbs' => 'CBS',
+		'payroll_leave' => 'Payroll & Leave',
+		'employees' => 'Waajiriwa',
+		'css' => 'Portal',
 		
 
 		),

@@ -21,10 +21,11 @@ class CreateXUsersTable extends Migration {
 			$table->string('confirmation_code')->nullable();
 			$table->string('remember_token')->nullable();
 			$table->boolean('confirmed')->default(1);
-			$table->timestamps();
 			$table->string('user_type', 20)->nullable()->default('admin');
 			$table->boolean('is_active')->nullable();
 			$table->integer('branch_id')->unsigned()->nullable()->index('branch_id');
+			$table->integer('organization_id')->nulable();
+			$table->timestamps();
 		});
 	}
 

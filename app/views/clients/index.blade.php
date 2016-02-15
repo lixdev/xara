@@ -1,0 +1,1 @@
+/var/www/html/xara/app/views/clients/index.blade.php

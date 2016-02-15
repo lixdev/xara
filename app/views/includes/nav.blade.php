@@ -1,3 +1,4 @@
+
 <body>
 
 
@@ -13,13 +14,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <?php 
 
-    $organization = DB::table('organizations')->where('id', '=', 1)->pluck('name');
-
-    
-?> 
-                <a class="navbar-brand"  href="{{ URL::to('/')}}" > <?php echo $organization; ?></a>
+                <a class="navbar-brand"  href="{{ URL::to('/')}}" > {{Organization::getOrganizationName()}}</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -41,8 +37,83 @@
                 </li>
 
 
+                <li  >
+                    <a  href="{{ URL::to('payrollmgmt')}}">
+                        <i class="fa fa-file fa-fw"></i>  {{{ Lang::get('messages.nav.payroll') }}}
+                    </a>
+                    
+                </li>
 
-                 
+
+                <li  >
+                    <a  href="{{ URL::to('leavemgmt')}}">
+                        <i class="fa fa-list fa-fw"></i>  {{{ Lang::get('messages.nav.leave') }}}
+                    </a>
+                    
+                </li>
+
+<!--
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-file fa-fw"></i>  {{{ Lang::get('messages.nav.payroll_leave') }}} <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+
+                        <li  >
+                    <a  href="{{ URL::to('payrollmgmt')}}">
+                        <i class="fa fa-file fa-fw"></i>  {{{ Lang::get('messages.nav.payroll') }}}
+                    </a>
+                    
+                </li>
+
+                       
+                        <li class="divider"></li>
+                        <li  >
+                    <a  href="{{ URL::to('leavemgmt')}}">
+                        <i class="fa fa-list fa-fw"></i>  {{{ Lang::get('messages.nav.leave') }}}
+                    </a>
+                    
+                </li>
+
+                       
+
+                        
+                        
+                    </ul>
+                    <!-- /.dropdown-user
+                </li>
+                <!-- /.dropdown -->
+
+
+                <!-- 
+
+                <li  >
+                    <a  href="{{ URL::to('erpmgmt')}}">
+                        <i class="fa fa-tasks fa-fw"></i>  {{{ Lang::get('messages.nav.erp') }}}
+                    </a>
+                    
+                </li>
+-->
+
+<!--
+
+                <li  >
+                    <a  href="{{ URL::to('cbsmgmt')}}">
+                        <i class="fa fa-qrcode fa-fw"></i>  {{{ Lang::get('messages.nav.cbs') }}}
+                    </a>
+                    
+                </li>
+
+-->
+
+                  <li  >
+                    <a  href="{{ URL::to('portal')}}">
+                        <i class="fa fa-file fa-fw"></i>  {{{ Lang::get('messages.nav.css') }}} 
+                    </a>
+                    
+                </li>
+
 
                  <li  >
                     <a  href="{{ URL::to('accounts')}}">
@@ -53,12 +124,7 @@
 
                 
 
-                <li  >
-                    <a  href="{{ URL::to('reports')}}">
-                        <i class="fa fa-file fa-fw"></i>  {{{ Lang::get('messages.nav.reports') }}}
-                    </a>
-                    
-                </li>
+               
 
                 
 
@@ -68,10 +134,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="{{ URL::to('organizations') }}"><i class="fa fa-home fa-fw"></i>  Organization</a>
-                        </li>
-                        <li class="divider"></li>
-
-                        
+                             <li class="divider"></li>
+                       
                         <li><a href="{{ URL::to('system') }}"><i class="fa fa-sign-out fa-fw"></i> System</a>
                         </li>
                         

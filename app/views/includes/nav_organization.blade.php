@@ -24,6 +24,10 @@
                         <a href="{{ URL::to('currencies') }}"><i class="fa fa-list-alt fa-fw"></i> Currency</a>
                     </li>
 
+                    <li>
+                    <a href="{{ URL::to('departments') }}"><i class="glyphicon glyphicon-cog fa-fw"></i>   Settings</a>
+                  </li>
+
                     
                     
 

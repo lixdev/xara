@@ -24,35 +24,20 @@
 
 												  				<tr>
 
-																	<td>System</td><td>XARA CBS</td>
+																	<td>System</td><td>XARA PAYROLL </td>
 																</tr>
 																<tr>
 
-																	<td>Version</td><td>v1.1.10</td>
+																	<td>Version</td><td>v3.3.10</td>
 																</tr>
 
 																<tr>
 
-																	<td>Licensed To</td><td>{{$organization->name}}</td>
-																</tr>
-																<tr>
-
-																	<td>License Type</td><td>{{$organization->license_type}}</td>
-																</tr>
-
-																<tr>
-																	<td>Licensed</td><td>{{$organization->licensed.' Members'}}</td>
-
+																	<td>Licensed To</td><td>{{Organization::getOrganizationName()}}</td>
 																</tr>
 																
-																<tr>
-																	<td>License Code</td><td>{{$organization->license_code}}</td>
-																</tr>
-																
-																<tr>
-																	<td>License Key</td><td>{{$organization->license_key}}</td>
 
-																</tr>
+																
 																
 
 															</table>

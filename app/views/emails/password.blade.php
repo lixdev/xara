@@ -8,4 +8,4 @@ Hello {{$name}},
 <p>Use your Payroll number as your username</p>
 <br><br>
 <p>Regards,</p>
-<p>Tacsix Sacco</p>
+<p>Xpose Limited.</p>

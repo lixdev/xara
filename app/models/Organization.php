@@ -2,6 +2,25 @@
 
 class Organization extends \Eloquent {
 
+	/*
+
+	use \Traits\Encryptable;
+
+
+	protected $encryptable = [
+		'name',
+		'email',
+		'website',
+		'address',
+		'phone',
+		'kra_pin',
+		'nssf_no',
+		'nhif_no',
+		'license_type',	
+	];
+
+	*/
+
 	// Add your validation rules here
 	public static $rules = [
 		// 'title' => 'required'
@@ -12,8 +31,42 @@ class Organization extends \Eloquent {
 
 
 
+public function holidays(){
+
+	return $this->hasMany('Holiday');
+}
 
 
+public function leavetypes(){
+
+	return $this->hasMany('Leavetype');
+}
+
+public function leaveapplications(){
+
+	return $this->hasMany('Leaveapplication');
+}
+
+
+public static function getOrganizationName(){
+
+	$organization_id = Confide::user()->organization_id;
+
+	$organization = Organization::find($organization_id);
+
+	return $organization->name;
+
+}
+
+
+public static function getUserOrganization(){
+
+	$organization_id = 1;
+
+	$organization = Organization::find($organization_id);
+
+	return $organization;
+}
 
 
 

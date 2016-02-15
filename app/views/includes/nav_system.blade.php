@@ -16,15 +16,15 @@
                     </li>
 
                     
-
+<!--
                     <li>
                         <a href="{{ URL::to('import') }}"><i class="fa fa-upload fa-fw"></i> Bulk Import</a>
                     </li>
-
+-->
                     <li>
                         <a href="{{ URL::to('audits') }}"><i class="fa fa-list fa-fw"></i> Audit Trail</a>
                     </li>
-
+<!--
                     <li>
                         <a href="{{ URL::to('backups') }}"><i class="fa fa-download fa-fw"></i> Backup & Restore</a>
                     </li>
@@ -32,6 +32,8 @@
                     <li>
                         <a href="{{ URL::to('license') }}"><i class="fa fa-home fa-fw"></i> Licensing</a>
                     </li>
+
+                    -->
 
 
                     
