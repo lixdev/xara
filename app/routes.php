@@ -2470,6 +2470,83 @@ Route::get('itemcategories/delete/{id}', 'ItemcategoriesController@destroy');
 Route::post('itemcategories/update/{id}', 'ItemcategoriesController@update');
 
 
+Route::get('erpmigrate', function(){
+
+  return View::make('erpmigrate');
+
+});
+
+
+Route::post('import/categories', function(){
+
+  
+  if(Input::hasFile('category')){
+
+      $destination = public_path().'/migrations/';
+
+      $filename = str_random(12);
+
+      $ext = Input::file('category')->getClientOriginalExtension();
+      $file = $filename.'.'.$ext;
+
+
+
+      
+      
+     
+      Input::file('category')->move($destination, $file);
+
+
+  
+
+
+    Excel::selectSheetsByIndex(0)->load(public_path().'/migrations/'.$file, function($reader){
+
+          $results = $reader->get();    
+  
+    foreach ($results as $result) {
+
+
+
+      $category = new Itemcategory;
+
+      $employee->personal_file_number = $result->employment_number;
+      
+      $employee->first_name = $result->first_name;
+      $employee->last_name = $result->surname;
+      $employee->middle_name = $result->other_names;
+      $employee->identity_number = $result->id_number;
+      $employee->pin = $result->kra_pin;
+      $employee->social_security_number = $result->nssf_number;
+      $employee->hospital_insurance_number = $result->nhif_number;
+      $employee->email_office = $result->email_address;
+      $employee->basic_pay = $result->basic_pay;
+      $employee->save();
+      
+    }
+    
+
+    
+
+  });
+
+
+
+      
+    }
+
+
+
+  return Redirect::back()->with('notice', 'Employees have been succeffully imported');
+
+
+
+  
+
+});
+
+
+
 
 
 
