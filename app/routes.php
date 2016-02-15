@@ -2450,5 +2450,20 @@ Route::get('erporders/show/{id}', function($id){
 
 
 
+Route::get('salesinvoice/{id}', function($id){
+
+    $order = Erporder::find($id);
+
+    $organization = Organization::find(1);
+
+    $pdf = PDF::loadView('erpreports.salesinvoice', compact('order', 'organization'))->setPaper('a4')->setOrientation('potrait');
+  
+    return $pdf->stream('Sales Invoice.pdf');
+});
+
+
+
+
+
 
 
