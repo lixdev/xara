@@ -49,7 +49,7 @@ class LeaveapplicationsController extends \BaseController {
 		$start_date = array_get($data, 'applied_start_date');
 		$end_date = array_get($data, 'applied_end_date');
 
-		$days_applied = Leaveapplication::getDays($start_date, $end_date);
+		$days_applied = Leaveapplication::getLeaveDays($start_date, $end_date);
 
 		$balance_days = Leaveapplication::getBalanceDays($employee, $leavetype);
 
