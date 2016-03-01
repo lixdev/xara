@@ -14,6 +14,10 @@
                         <a href="{{ URL::to('employees') }}"><i class="fa fa-users fa-fw"></i> Employees </a>
                     </li>
 
+                     <li>
+                        <a href="{{ URL::to('documents') }}"><i class="fa fa-users fa-fw"></i> Employee Documents </a>
+                    </li>
+
                     <li>
                         <a href="{{ URL::to('occurences') }}"><i class="fa fa-users fa-fw"></i> Employee Occurences </a>
                     </li>

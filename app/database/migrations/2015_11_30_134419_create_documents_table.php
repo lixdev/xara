@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration {
 			$table->integer('employee_id')->unsigned()->default('0')->index('documents_employee_id_foreign');
 			$table->string('document_name');
 			$table->string('document_path');
+			$table->text('description');
 			$table->timestamps();
 		});
 	}

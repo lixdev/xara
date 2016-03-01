@@ -2463,6 +2463,27 @@ Route::get('salesinvoice/{id}', function($id){
 
 
 
+/*
+*overtimes
+*/
+
+Route::resource('overtimes', 'OvertimesController');
+Route::get('overtimes/edit/{id}', 'OvertimesController@edit');
+Route::post('overtimes/update/{id}', 'OvertimesController@update');
+Route::get('overtimes/delete/{id}', 'OvertimesController@destroy');
+
+/*
+* employee documents routes
+*/
+
+Route::resource('documents', 'DocumentsController');
+Route::post('documents/update/{id}', 'DocumentsController@update');
+Route::get('documents/delete/{id}', 'DocumentsController@destroy');
+Route::get('documents/edit/{id}', 'DocumentsController@edit');
+
+
+
+
 
 Route::resource('itemcategories', 'ItemcategoriesController');
 Route::get('itemcategories/edit/{id}', 'ItemcategoriesController@edit');
