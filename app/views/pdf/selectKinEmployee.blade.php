@@ -24,7 +24,7 @@
         </div>
         @endif
 
-		 <form method="POST" action="{{URL::to('reports/employee')}}" accept-charset="UTF-8">
+		 <form method="POST" action="{{URL::to('reports/EmployeeKin')}}" accept-charset="UTF-8">
    
     <fieldset>
             <div class="form-group">
@@ -32,7 +32,7 @@
                         <select name="employeeid" class="form-control" required>
                             <option></option>
                             @foreach($employees as $employee)
-                            <option value="{{$employee->id }}"> {{ $employee->personal_file_number.' '.$employee->last_name.' '.$employee->first_name }}</option>
+                            <option value="{{$employee->id }}"> {{ $employee->first_name.' '.$employee->last_name }}</option>
                             @endforeach
 
                         </select>

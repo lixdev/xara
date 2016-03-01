@@ -2167,6 +2167,11 @@ Route::get('api/dropdown', function(){
     return $bbranch->lists('bank_branch_name', 'id');
 });
 
+Route::get('api/score', function(){
+    $id = Input::get('option');
+    $rate = Appraisalquestion::find($id);
+    return $rate->rate;
+});
 
 Route::get('empedit/{id}', function($id){
 

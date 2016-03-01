@@ -67,6 +67,105 @@ class ReportsController extends \BaseController {
         
     }
 
+    public function propertyperiod()
+    {
+       $employees = Employee::all();
+        return View::make('pdf.selectPropertyPeriod',compact('employees'));
+    }
+
+    public function property(){
+
+        $id = Input::get('employeeid');
+
+        $from = Input::get("from");
+        $to = Input::get("to");
+
+        $issuers = DB::table('users')
+            ->join('properties', 'users.id', '=', 'properties.issued_by')
+            ->get(); 
+
+        $receivers = DB::table('users')
+            ->join('properties', 'users.id', '=', 'properties.received_by')
+            ->get(); 
+
+        $employee = Employee::find($id);
+
+        $properties = DB::table('properties')
+            ->join('employee', 'properties.employee_id', '=', 'employee.id')
+            ->whereBetween('issue_date', array($from, $to))
+            ->get();
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('pdf.property', compact( 'employee','organization','properties','issuers','receivers'))->setPaper('a4')->setOrientation('potrait');
+    
+        //dd($organization);
+
+        return $pdf->stream('company_property.pdf');
+        
+    }
+
+    public function appraisalperiod()
+    {
+       $employees = Employee::all();
+        return View::make('pdf.selectAppraisalPeriod',compact('employees'));
+    }
+
+    public function appraisal(){
+
+        $id = Input::get('employeeid');
+
+        $from = Input::get("from");
+        $to = Input::get("to");
+
+        $employee = Employee::find($id);
+
+        $appraisals = DB::table('appraisals')
+            ->join('employee', 'appraisals.employee_id', '=', 'employee.id')
+            ->join('appraisalquestions', 'appraisals.appraisalquestion_id', '=', 'appraisalquestions.id')
+            ->join('users', 'appraisals.examiner', '=', 'users.id')
+            ->whereBetween('appraisaldate', array($from, $to))
+            ->select('first_name','last_name','comment','appraisals.rate','username','question','performance','appraisaldate')
+            ->get();
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('pdf.appraisal', compact( 'employee','organization','appraisals'))->setPaper('a4')->setOrientation('potrait');
+    
+        //dd($organization);
+
+        return $pdf->stream('appraisal.pdf');
+        
+    }
+
+    public function selempkin()
+    {
+       $employees = Employee::all();
+        return View::make('pdf.selectKinEmployee',compact('employees'));
+    }
+
+    public function kin(){
+
+        $id = Input::get('employeeid');
+
+        $employee = Employee::find($id);
+
+        $kins = DB::table('nextofkins')
+            ->join('employee', 'nextofkins.employee_id', '=', 'employee.id')
+            ->where('employee_id', '=', $id)
+            ->get();
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('pdf.kin', compact( 'employee','organization','kins'))->setPaper('a4')->setOrientation('potrait');
+    
+        //dd($organization);
+
+        return $pdf->stream('kin.pdf');
+        
+    }
+
+
     public function period_payslip()
   {
     $employees = DB::table('employee')->get();
@@ -322,6 +421,8 @@ class ReportsController extends \BaseController {
 		return $pdf->stream('nssf_Report_'.$period.'.pdf');
 		
 	}
+
+    
 
     public function period_nhif()
 	{
