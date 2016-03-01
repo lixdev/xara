@@ -1479,7 +1479,12 @@ Route::get('payrollReports/selectNssfExcelPeriod', 'ReportsController@period_exc
 Route::post('payrollReports/nssfExcel', 'ReportsController@export');
 Route::get('reports/selectEmployeeOccurence', 'ReportsController@selEmp');
 Route::post('reports/occurence', 'ReportsController@occurence');
-
+Route::get('reports/CompanyProperty/selectPeriod', 'ReportsController@propertyperiod');
+Route::post('reports/companyproperty', 'ReportsController@property');
+Route::get('reports/Appraisals/selectPeriod', 'ReportsController@appraisalperiod');
+Route::post('reports/appraisal', 'ReportsController@appraisal');
+Route::get('reports/nextofkin/selectEmployee', 'ReportsController@selempkin');
+Route::post('reports/EmployeeKin', 'ReportsController@kin');
 
 /*
 *#################################################################
@@ -2480,9 +2485,28 @@ Route::resource('documents', 'DocumentsController');
 Route::post('documents/update/{id}', 'DocumentsController@update');
 Route::get('documents/delete/{id}', 'DocumentsController@destroy');
 Route::get('documents/edit/{id}', 'DocumentsController@edit');
+Route::get('documents/download/{id}', 'DocumentsController@getDownload');
+
+Route::resource('NextOfKins', 'NextOfKinsController');
+Route::post('NextOfKins/update/{id}', 'NextOfKinsController@update');
+Route::get('NextOfKins/delete/{id}', 'NextOfKinsController@destroy');
+Route::get('NextOfKins/edit/{id}', 'NextOfKinsController@edit');
 
 
+Route::resource('Appraisals', 'AppraisalsController');
+Route::post('Appraisals/update/{id}', 'AppraisalsController@update');
+Route::get('Appraisals/delete/{id}', 'AppraisalsController@destroy');
+Route::get('Appraisals/edit/{id}', 'AppraisalsController@edit');
 
+Route::resource('Properties', 'PropertiesController');
+Route::post('Properties/update/{id}', 'PropertiesController@update');
+Route::get('Properties/delete/{id}', 'PropertiesController@destroy');
+Route::get('Properties/edit/{id}', 'PropertiesController@edit');
+
+Route::resource('AppraisalSettings', 'AppraisalSettingsController');
+Route::post('AppraisalSettings/update/{id}', 'AppraisalSettingsController@update');
+Route::get('AppraisalSettings/delete/{id}', 'AppraisalSettingsController@destroy');
+Route::get('AppraisalSettings/edit/{id}', 'AppraisalSettingsController@edit');
 
 
 Route::resource('itemcategories', 'ItemcategoriesController');

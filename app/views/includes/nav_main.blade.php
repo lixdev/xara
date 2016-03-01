@@ -15,7 +15,15 @@
                     </li>
 
                      <li>
+                        <a href="{{ URL::to('NextOfKins') }}"><i class="fa fa-users fa-fw"></i> Next Of Kins </a>
+                    </li>
+
+                     <li>
                         <a href="{{ URL::to('documents') }}"><i class="fa fa-users fa-fw"></i> Employee Documents </a>
+                    </li>
+
+                     <li>
+                        <a href="{{ URL::to('Appraisals') }}"><i class="fa fa-list fa-fw"></i> Appraisals </a>
                     </li>
 
                     <li>
