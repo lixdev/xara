@@ -23,7 +23,11 @@
                     <li>
                         <a href="{{ URL::to('job_group') }}"><i class="fa fa-users fa-fw"></i> Job Groups</a>
                     </li>
-                
+                   
+                    <li>
+                        <a href="{{ URL::to('AppraisalSettings') }}"><i class="fa fa-list fa-fw"></i> Appraisal Setting</a>
+                    </li>
+
                 </ul>
                 <!-- /#side-menu -->
             </div>

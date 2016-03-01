@@ -75,7 +75,7 @@ function asMoney($value) {
       <input type="hidden" name="period" value="{{ $period }}"> 
        <input type="hidden" name="account" value="{{ $account }}"> 
 
-    <table id="users" style="font-size:12px;width:1000px" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="users" style="font-size:10px;width:1000px" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
