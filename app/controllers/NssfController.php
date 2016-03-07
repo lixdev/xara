@@ -11,6 +11,8 @@ class NssfController extends \BaseController {
 	{
 		$nrates = DB::table('social_security')->where('income_from', '!=', 0.00)->get();
 
+		Audit::logaudit('NSSF', 'view', 'viewed nssf rates');
+
 		return View::make('nssf.index', compact('nrates'));
 	}
 
@@ -42,19 +44,26 @@ class NssfController extends \BaseController {
 
 		$nrate->tier = Input::get('tier');
 
-		$nrate->income_from = Input::get('i_from');
+		$a = str_replace( ',', '', Input::get('i_from') );
+        $b = str_replace( ',', '', Input::get('i_to') );
+        $c = str_replace( ',', '', Input::get('employee_amount') );
+        $d = str_replace( ',', '', Input::get('employer_amount') );
 
-		$nrate->income_to = Input::get('i_to');
+		$nrate->income_from = $a;
 
-		$nrate->ss_amount_employee = Input::get('employee_amount');
+		$nrate->income_to = $b;
 
-		$nrate->ss_amount_employer = Input::get('employer_amount');
+		$nrate->ss_amount_employee = $c;
+
+		$nrate->ss_amount_employer = $d;
 
         $nrate->organization_id = '1';
 
 		$nrate->save();
 
-		return Redirect::route('nssf.index');
+		Audit::logaudit('NSSF', 'create', 'created: '.$nrate->ss_amount_employee.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+
+		return Redirect::route('nssf.index')->withFlashMessage('Nssf successfully created!');
 	}
 
 	/**
@@ -102,17 +111,24 @@ class NssfController extends \BaseController {
 
 		$nrate->tier = Input::get('tier');
 
-		$nrate->income_from = Input::get('i_from');
+		$a = str_replace( ',', '', Input::get('i_from') );
+        $b = str_replace( ',', '', Input::get('i_to') );
+        $c = str_replace( ',', '', Input::get('employee_amount') );
+        $d = str_replace( ',', '', Input::get('employer_amount') );
 
-		$nrate->income_to = Input::get('i_to');
+		$nrate->income_from = $a;
 
-		$nrate->ss_amount_employee = Input::get('employee_amount');
+		$nrate->income_to = $b;
 
-		$nrate->ss_amount_employer = Input::get('employer_amount');
+		$nrate->ss_amount_employee = $c;
+
+		$nrate->ss_amount_employer = $d;
 
 		$nrate->update();
 
-		return Redirect::route('nssf.index');
+		Audit::logaudit('NSSF', 'update', 'updated: '.$nrate->ss_amount_employee.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+
+		return Redirect::route('nssf.index')->withFlashMessage('Nssf successfully updated!');
 	}
 
 	/**
@@ -123,9 +139,10 @@ class NssfController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$nrate = NssfRates::findOrFail($id);
 		NssfRates::destroy($id);
-
-		return Redirect::route('nssf.index');
+        Audit::logaudit('NSSF', 'delete', 'deleted: '.$nrate->ss_amount_employee.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+		return Redirect::route('nssf.index')->withDeleteMessage('Nssf successfully deleted!');
 	}
 
 }

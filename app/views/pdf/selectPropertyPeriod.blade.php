@@ -44,6 +44,24 @@
                     </div>
        </div>
         
+       <div class="form-group">
+                        <label for="username">Select:</label>
+                        <select name="employeeid" class="form-control">
+                            <option></option>
+                            @foreach($employees as $employee)
+                            <option value="{{$employee->id }}"> {{ $employee->first_name.' '.$employee->last_name }}</option>
+                            @endforeach
+
+                        </select>
+                
+        </div>
+
+        <div class="checkbox">
+                        <label>
+                            <input type="checkbox" checked name="selE">
+                              Select All Employee
+                        </label>
+                    </div>
 
         <div class="form-actions form-group">
         

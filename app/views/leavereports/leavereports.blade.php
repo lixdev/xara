@@ -21,27 +21,27 @@
     <ul>
 
        <li>
-            <a href="{{ URL::to('leaveReports/selectApplicationPeriod') }}" target="_blank"> Leave Application</a>
+            <a href="{{ URL::to('leaveReports/selectApplicationPeriod') }}"> Leave Application</a>
        </li>
 
        <li>
-          <a href="{{ URL::to('leaveReports/selectApprovedPeriod') }}" target="_blank">Leaves Approved</a>
+          <a href="{{ URL::to('leaveReports/selectApprovedPeriod') }}">Leaves Approved</a>
        </li>
 
        <li>
-          <a href="{{ URL::to('leaveReports/selectRejectedPeriod') }}" target="_blank">Leaves Rejected</a>
+          <a href="{{ URL::to('leaveReports/selectRejectedPeriod') }}">Leaves Rejected</a>
        </li>
 
        <li>
-          <a href="{{ URL::to('leaveReports/selectLeave') }}" target="_blank">Leaves Balances</a>
+          <a href="{{ URL::to('leaveReports/selectLeave') }}">Leaves Balances</a>
        </li>
     
        <li>
-          <a href="{{ URL::to('leaveReports/selectLeaveType') }}" target="_blank"> Employees on Leave</a>
+          <a href="{{ URL::to('leaveReports/selectLeaveType') }}"> Employees on Leave</a>
        </li>  
 
        <li>
-         <a href="{{ URL::to('leaveReports/selectEmployee') }}" target="_blank"> Individual Employee </a>     
+         <a href="{{ URL::to('leaveReports/selectEmployee') }}"> Individual Employee </a>     
        </li>  
 
        <li>

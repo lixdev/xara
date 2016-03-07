@@ -54,7 +54,7 @@
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $document->employee->first_name.' '.$document->employee->last_name }}</td>
+          <td>{{ $document->first_name.' '.$document->last_name }}</td>
           <td>{{ $document->document_name }}</td>
           <td>
 

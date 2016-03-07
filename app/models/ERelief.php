@@ -17,7 +17,7 @@ public $table = "employee_relief";
 public static $rules = [
 		'employee' => 'required',
 		'relief' => 'required',
-		'amount' => 'required|regex:/^\d+(\.\d{2})?$/'
+		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 	];
 
 public static $messages = array(

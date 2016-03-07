@@ -57,10 +57,10 @@
           
 
           <td> {{ $i }}</td>
-          <td>{{ $appraisal->employee->first_name.' '.$appraisal->employee->last_name }}</td>
+          <td>{{ $appraisal->first_name.' '.$appraisal->last_name }}</td>
           <td>{{ Appraisalquestion::getQuestion($appraisal->appraisalquestion_id) }}</td>
           <td>{{ $appraisal->performance }}</td>
-          <td>{{ $appraisal->rate }}</td>
+          <td>{{ $appraisal->rate.' / '. Appraisalquestion::getScore($appraisal->appraisalquestion_id) }}</td>
           <td>
 
                   <div class="btn-group">
@@ -69,6 +69,8 @@
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{URL::to('Appraisals/view/'.$appraisal->id)}}">View</a></li> 
+
                     <li><a href="{{URL::to('Appraisals/edit/'.$appraisal->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('Appraisals/delete/'.$appraisal->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s appraisal?'))">Delete</a></li>

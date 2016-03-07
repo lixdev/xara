@@ -24,7 +24,11 @@ th {
   text-align: left;
 }
 .table {
-  width: 100%;
+  width: 70%;
+  margin-bottom: 2px;
+}
+.t {
+  width: 30%;
   margin-bottom: 2px;
 }
 hr {
@@ -98,18 +102,28 @@ body {
    </div>
 
 
+<div style='margin-left:550px;margin-top:30px'>
+<table class="t">
+<tr>
+<td><img src="{{ asset('/public/uploads/employees/photo/'.$employee->photo) }}" alt="{{asset('/public/uploads/employees/photo/default_photo.png') }}" width="150px"/></td>
+</tr>
+<tr>
+<td><img src="{{asset('/public/uploads/employees/signature/'.$employee->signature) }}" alt="{{asset('/public/uploads/employees/signature/sign_av.jpg') }}" width="100px"/></td>
+</tr>
+</table>
+</div>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
+	<div class="content" style='margin-top:-230px;' align="left">
 
 
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
       <tr><td><strong>Payroll Number: </strong></td><td>{{$employee->personal_file_number}}</td></tr>
-      @if($employee->middle_name != null)
+      @if($employee->middle_name != null || $employee->middle_name != ' ')
       <tr><td><strong>Employee Name: </strong></td><td> {{$employee->last_name.' '.$employee->first_name.' '.$employee->middle_name}}</td>
       @else
       <td><strong>Employee Name: </strong></td><td> {{$employee->last_name.' '.$employee->first_name}}</td>

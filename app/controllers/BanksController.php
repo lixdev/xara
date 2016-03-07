@@ -11,6 +11,8 @@ class BanksController extends \BaseController {
 	{
 		$banks = Bank::all();
 
+		Audit::logaudit('Banks', 'view', 'viewed banks');
+
 		return View::make('banks.index', compact('banks'));
 	}
 
@@ -46,7 +48,9 @@ class BanksController extends \BaseController {
 
 		$bank->save();
 
-		return Redirect::route('banks.index');
+		Audit::logaudit('Bank', 'create', 'created: '.$bank->bank_name);
+
+		return Redirect::route('banks.index')->withFlashMessage('Bank successfully created!');
 	}
 
 	/**
@@ -94,8 +98,10 @@ class BanksController extends \BaseController {
 
 		$bank->bank_name = Input::get('name');
 		$bank->update();
+        
+        Audit::logaudit('Bank', 'update', 'updated: '.$bank->bank_name);
 
-		return Redirect::route('banks.index');
+		return Redirect::route('banks.index')->withFlashMessage('Bank successfully updated!');
 	}
 
 	/**
@@ -106,9 +112,11 @@ class BanksController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$bank = Bank::findOrFail($id);
 		Bank::destroy($id);
 
-		return Redirect::route('banks.index');
+        Audit::logaudit('Bank', 'delete', 'deleted: '.$bank->bank_name);
+		return Redirect::route('banks.index')->withDeleteMessage('Bank successfully deleted!');
 	}
 
 }

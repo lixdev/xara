@@ -6,10 +6,10 @@ class NssfRates extends \Eloquent {
 
 public static $rules = [
 		'tier' => 'required',
-		'i_from' => 'required|regex:/^\d+(\.\d{2})?$/',
-		'i_to' => 'required|regex:/^\d+(\.\d{2})?$/',
-		'employee_amount' => 'required|regex:/^\d+(\.\d{2})?$/',
-		'employer_amount' => 'required|regex:/^\d+(\.\d{2})?$/',
+		'i_from' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'i_to' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'employee_amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'employer_amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 	];
 
 public static $messages = array(

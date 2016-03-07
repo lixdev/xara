@@ -28,14 +28,10 @@
    
     <fieldset>
         <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <select name="employee" class="form-control">
-                            <option></option>
-                            @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}"<?= ($rel->employee_id==$employee->id)?'selected="selected"':''; ?>> {{ $employee->first_name.' '.$employee->last_name }}</option>
-                            @endforeach
-
-                        </select>
+                        <div class="form-group">
+            <label for="username">Employee</label>
+            <input class="form-control" placeholder="" type="text" readonly name="employee" id="employee" value="{{ $rel->employee->first_name.' '.$rel->employee->last_name }}">
+        </div> 
                 
                     </div>
 
@@ -55,6 +51,11 @@
         <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span></label>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{ $rel->relief_amount}}">
+            <script type="text/javascript">
+           $(document).ready(function() {
+           $('#amount').priceFormat();
+           });
+           </script>  
         </div>
 
         

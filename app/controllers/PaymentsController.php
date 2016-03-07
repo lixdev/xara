@@ -11,6 +11,8 @@ class PaymentsController extends \BaseController {
 	{
 		$payments = Payment::all();
 
+		Audit::logaudit('Payments', 'view', 'viewed payments');
+
 		return View::make('payments.index', compact('payments'));
 	}
 
@@ -40,7 +42,7 @@ class PaymentsController extends \BaseController {
 
 		Payment::create($data);
 
-		return Redirect::route('payments.index');
+		return Redirect::route('payments.index')->withFlashMessage('Payment successfully created!');
 	}
 
 	/**
@@ -88,7 +90,7 @@ class PaymentsController extends \BaseController {
 
 		$payment->update($data);
 
-		return Redirect::route('payments.index');
+		return Redirect::route('payments.index')->withFlashMessage('Payment successfully updated!');
 	}
 
 	/**
@@ -99,9 +101,12 @@ class PaymentsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$payment = Payment::findOrFail($id);
 		Payment::destroy($id);
 
-		return Redirect::route('payments.index');
+		Audit::logaudit('Payments', 'delete', 'deleted: '.$payment->name);
+
+		return Redirect::route('payments.index')->withDeleteMessage('Payment successfully deleted!');
 	}
 
 }

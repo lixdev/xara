@@ -97,7 +97,12 @@ body {
     </table>
    </div>
 
+<br>
 
+<?php
+  $d=strtotime($from);
+  $d1=strtotime($to);
+?>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
@@ -106,7 +111,7 @@ body {
 
 	<div class="content" style='margin-top:0px;'>
 
-
+<div align="center"><strong>Company Property Report for period between {{date("F j, Y", $d).' and '.date("F j, Y", $d1)}}</strong></div><br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>
@@ -137,21 +142,18 @@ body {
         <td> {{ $property->description}}</td>
         <td> {{ $property->serial}}</td>
         <td> {{ $property->digitalserial}}</td>
-        <td align="right"> {{ asMoney($property->monetary)}}</td>
-        @foreach($issuers as $issuer)
-        <td> {{ $issuer->username}}</td>
-        @endforeach
+        <td align="right"> {{ asMoney((double)$property->monetary) }} </td>
+        <td> {{ Property::getIssuer($property->issued_by)}}</td>
         <td> {{ $property->issue_date}}</td>
         <td> {{ $property->scheduled_return_date}}</td>
         
         @if($property->state == 1)
         <td> Returned</td>
+        <td> {{ Property::getReceiver($property->received_by)}}</td>
         @else
         <td>Not Returned</td>
+        <td></td>
         @endif
-       @foreach($receivers as $receiver)
-        <td> {{ $receiver->username}}</td>
-        @endforeach
         </tr>
       <?php $i++; ?>
    

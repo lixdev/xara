@@ -74,21 +74,11 @@ class ReportsController extends \BaseController {
     }
 
     public function property(){
-
-        $id = Input::get('employeeid');
+     
+        if(!empty(Input::get('selE'))){
 
         $from = Input::get("from");
         $to = Input::get("to");
-
-        $issuers = DB::table('users')
-            ->join('properties', 'users.id', '=', 'properties.issued_by')
-            ->get(); 
-
-        $receivers = DB::table('users')
-            ->join('properties', 'users.id', '=', 'properties.received_by')
-            ->get(); 
-
-        $employee = Employee::find($id);
 
         $properties = DB::table('properties')
             ->join('employee', 'properties.employee_id', '=', 'employee.id')
@@ -97,11 +87,35 @@ class ReportsController extends \BaseController {
 
         $organization = Organization::find(1);
 
-        $pdf = PDF::loadView('pdf.property', compact( 'employee','organization','properties','issuers','receivers'))->setPaper('a4')->setOrientation('potrait');
+        $pdf = PDF::loadView('pdf.property', compact('from','to','organization','properties'))->setPaper('a4')->setOrientation('potrait');
     
         //dd($organization);
 
         return $pdf->stream('company_property.pdf');
+         
+        }else{
+
+        $id = Input::get('employeeid');
+
+        $from = Input::get("from");
+        $to = Input::get("to");
+
+        $employee = Employee::find($id);
+
+        $properties = DB::table('properties')
+            ->join('employee', 'properties.employee_id', '=', 'employee.id')
+            ->where('employee_id', $id)
+            ->whereBetween('issue_date', array($from, $to))
+            ->get();
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('pdf.individualproperty', compact( 'from','to','employee','organization','properties'))->setPaper('a4')->setOrientation('potrait');
+    
+        //dd($organization);
+
+        return $pdf->stream($employee->first_name.'_'.$employee->last_name.'_company_property.pdf');
+    }
         
     }
 
@@ -112,6 +126,29 @@ class ReportsController extends \BaseController {
     }
 
     public function appraisal(){
+
+        if(!empty(Input::get('selE'))){
+        
+        $from = Input::get("from");
+        $to = Input::get("to");
+
+        $appraisals = DB::table('appraisals')
+            ->join('employee', 'appraisals.employee_id', '=', 'employee.id')
+            ->join('appraisalquestions', 'appraisals.appraisalquestion_id', '=', 'appraisalquestions.id')
+            ->join('users', 'appraisals.examiner', '=', 'users.id')
+            ->whereBetween('appraisaldate', array($from, $to))
+            ->select('first_name','last_name','comment','appraisals.rate','username','question','performance','appraisaldate')
+            ->get();
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('pdf.appraisal', compact('from','to', 'organization','appraisals'))->setPaper('a4')->setOrientation('potrait');
+    
+        //dd($organization);
+
+        return $pdf->stream('appraisal.pdf');
+
+        }else{
 
         $id = Input::get('employeeid');
 
@@ -124,17 +161,19 @@ class ReportsController extends \BaseController {
             ->join('employee', 'appraisals.employee_id', '=', 'employee.id')
             ->join('appraisalquestions', 'appraisals.appraisalquestion_id', '=', 'appraisalquestions.id')
             ->join('users', 'appraisals.examiner', '=', 'users.id')
+            ->where('employee_id', $id)
             ->whereBetween('appraisaldate', array($from, $to))
             ->select('first_name','last_name','comment','appraisals.rate','username','question','performance','appraisaldate')
             ->get();
 
         $organization = Organization::find(1);
 
-        $pdf = PDF::loadView('pdf.appraisal', compact( 'employee','organization','appraisals'))->setPaper('a4')->setOrientation('potrait');
+        $pdf = PDF::loadView('pdf.individualappraisal', compact( 'from','to','employee','organization','appraisals'))->setPaper('a4')->setOrientation('potrait');
     
         //dd($organization);
 
-        return $pdf->stream('appraisal.pdf');
+        return $pdf->stream($employee->first_name.'_'.$employee->last_name.'_appraisal.pdf');
+    }
         
     }
 
@@ -174,7 +213,8 @@ class ReportsController extends \BaseController {
   }
 
     public function payslip(){
-      if(!empty(Input::get('sel'))){
+    /*
+        if(!empty(Input::get('sel'))){
         $period = Input::get("period");
         
         $id = Input::get('employeeid');
@@ -220,18 +260,19 @@ class ReportsController extends \BaseController {
     $pdf = PDF::loadView('pdf.monthlySlip', compact('transacts','allws','deds','earnings','period','currencies', 'organization'))->setPaper('a4')->setOrientation('potrait');
     }
     return $pdf->stream('Monthly_Payslip_'.$period.'.pdf');
-    }else{
+    }else{*/
+      
         $period = Input::get("period");
         
         $id = Input::get('employeeid');
 
         $employee = Employee::find($id);
 
-        $transacts = DB::table('transact')
+        $transact = DB::table('transact')
             ->join('employee', 'transact.employee_id', '=', 'employee.personal_file_number')
             ->where('financial_month_year' ,'=', Input::get('period'))
             ->where('employee.id' ,'=', Input::get('employeeid'))
-            ->get(); 
+            ->first(); 
 
         $allws = DB::table('transact_allowances')
             ->join('employee', 'transact_allowances.employee_id', '=', 'employee.id')
@@ -252,7 +293,21 @@ class ReportsController extends \BaseController {
             ->where('financial_month_year' ,'=', Input::get('period'))
             ->where('employee.id' ,'=', Input::get('employeeid'))
             ->groupBy('deduction_name')
-            ->get();    
+            ->get(); 
+
+        $overtimes = DB::table('transact_overtimes')
+            ->join('employee', 'transact_overtimes.employee_id', '=', 'employee.id')
+            ->where('financial_month_year' ,'=', Input::get('period'))
+            ->where('employee.id' ,'=', Input::get('employeeid'))
+            ->groupBy('overtime_type')
+            ->get();
+
+        $rels = DB::table('transact_reliefs')
+            ->join('employee', 'transact_reliefs.employee_id', '=', 'employee.id')
+            ->where('financial_month_year' ,'=', Input::get('period'))
+            ->where('employee.id' ,'=', Input::get('employeeid'))
+            ->groupBy('relief_name')
+            ->get();
  
         $currencies = DB::table('currencies')
             ->select('shortname')
@@ -260,10 +315,10 @@ class ReportsController extends \BaseController {
 
     $organization = Organization::find(1);
 
-    $pdf = PDF::loadView('pdf.monthlySlip', compact('employee','transacts','allws','deds','earnings','period','currencies', 'organization'))->setPaper('a4')->setOrientation('potrait');
+    $pdf = PDF::loadView('pdf.monthlySlip', compact('employee','transact','allws','deds','earnings','overtimes','rels','period','currencies', 'organization','id'))->setPaper('a4')->setOrientation('potrait');
   
-    return $pdf->stream($employee->first_name.'_'.$employee->last_name.'_'.$period.'.pdf');
-    }
+    return $pdf->stream($employee->personal_file_number.'_'.$employee->first_name.'_'.$employee->last_name.'_'.$period.'.pdf');
+    //}
     
   }
 

@@ -9,7 +9,12 @@ class DocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$documents = Document::all();
+		$documents = DB::table('employee')
+		          ->join('documents', 'employee.id', '=', 'documents.employee_id')
+		          ->where('in_employment','=','Y')
+		          ->get();
+
+		Audit::logaudit('Documents', 'view', 'viewed documents');
 
 		return View::make('documents.index', compact('documents'));
 	}
@@ -21,7 +26,9 @@ class DocumentsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 
 		return View::make('documents.create', compact('employees'));
 	}
@@ -59,8 +66,7 @@ class DocumentsController extends \BaseController {
 
 		$document->save();
 
-		Audit::logaudit('Documents', 'create', 'created: '.$document->type);
-
+		Audit::logaudit('Documents', 'create', 'created: '.$document->document_name.' for '.Employee::getEmployeeName(Input::get('employee')));
 
 		return Redirect::route('documents.index')->withFlashMessage('Employee document successfully uploaded!');
 	}
@@ -123,7 +129,7 @@ class DocumentsController extends \BaseController {
 
 		$document->update();
 
-		Audit::logaudit('Documents', 'update', 'updated: '.$document->document_name);
+		Audit::logaudit('Documents', 'update', 'updated: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 
 		return Redirect::route('documents.index')->withFlashMessage('Employee Document successfully updated!');
 	}
@@ -139,7 +145,7 @@ class DocumentsController extends \BaseController {
 		$document = Document::findOrFail($id);
 		Document::destroy($id);
 
-		Audit::logaudit('Documents', 'delete', 'deleted: '.$document->document_name);
+		Audit::logaudit('Documents', 'delete', 'deleted: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 
 		return Redirect::route('documents.index')->withDeleteMessage('Employee Document successfully deleted!');
 	}

@@ -1,22 +1,24 @@
 @extends('layouts.payroll')
+
 @section('content')
+
 <br/>
 
 <div class="row">
-	<div class="col-lg-12">
+    <div class="col-lg-12">
   <h3>New Employee Allowance</h3>
 
 <hr>
-</div>	
+</div>  
 </div>
 
 
 <div class="row">
-	<div class="col-lg-5">
+    <div class="col-lg-5">
 
     
-		
-		 @if ($errors->has())
+        
+         @if ($errors->has())
         <div class="alert alert-danger">
             @foreach ($errors->all() as $error)
                 {{ $error }}<br>        
@@ -24,7 +26,7 @@
         </div>
         @endif
 
-		 <form method="POST" action="{{{ URL::to('employee_allowances') }}}" accept-charset="UTF-8">
+         <form method="POST" action="{{{ URL::to('employee_allowances') }}}" accept-charset="UTF-8">
    
     <fieldset>
 
@@ -54,6 +56,11 @@
         <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span> </label>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{{ Input::old('amount') }}}">
+           <script type="text/javascript">
+           $(document).ready(function() {
+           $('#amount').priceFormat();
+           });
+           </script>
         </div>
         
         
@@ -64,7 +71,7 @@
 
     </fieldset>
 </form>
-		
+        
 
   </div>
 

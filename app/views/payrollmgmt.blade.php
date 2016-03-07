@@ -54,13 +54,13 @@
           <td>{{ $employee->personal_file_number }}</td>
           <td>{{ $employee->first_name.' '.$employee->last_name}}</td>
           <?php if( $employee->branch_id!='0'){ ?>
-          <td>{{ $employee->branch->name }}</td>
-          <?php } else{ ?>
+          <td>{{ $employee->name }}</td>
+          <?php }else{?>
           <td></td>
           <?php } ?>
-           <?php if( $employee->branch_id!='0'){ ?>
-          <td>{{ $employee->department->department_name }}</td>
-          <?php }else{ ?>
+           <?php if( $employee->department_id!='0'){ ?>
+          <td>{{ $employee->department_name }}</td>
+          <?php }else{?>
           <td></td>
           <?php } ?>
 
@@ -73,9 +73,11 @@
           
                   <ul class="dropdown-menu" role="menu">
 
+                    <li><a href="{{URL::to('employees/view/'.$employee->id)}}">View</a></li>
+
                     <li><a href="{{URL::to('employees/edit/'.$employee->id)}}">Update</a></li>
                    
-                    <li><a href="{{URL::to('employees/delete/'.$employee->id)}}">Delete</a></li>
+                    <li><a href="{{URL::to('employees/deactivate/'.$employee->id)}}" onclick="return (confirm('Are you sure you want to deactivate this employee?'))">Deactivate</a></li>
                     
                   </ul>
               </div>

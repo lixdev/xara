@@ -26,7 +26,7 @@ class Employee extends Eloquent {
 		 'lname' => 'required',
 		 'personal_file_number' => 'required|unique:employee',
 		 'identity_number' => 'required|unique:employee',
-		 'pay' => 'regex:/^\d+(\.\d{2})?$/',
+		 'pay' => 'regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 		 'email_office' => 'email|unique:employee',
 		 'email_personal' => 'email|unique:employee',
 		 'passport_number' => 'unique:employee',
@@ -48,7 +48,7 @@ class Employee extends Eloquent {
 		 'lname' => 'required',
 		 'personal_file_number' => 'required|unique:employee,personal_file_number,' . $id,
 		 'identity_number' => 'required|unique:employee,identity_number,' . $id,
-		 'pay' => 'regex:/^\d+(\.\d{2})?$/',
+		 'pay' => 'regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 		 'email_office' => 'email|unique:employee,email_office,' . $id,
 		 'email_personal' => 'email|unique:employee,email_personal,' . $id,
 		 'passport_number' => 'unique:employee,passport_number,' . $id,
@@ -124,6 +124,12 @@ class Employee extends Eloquent {
 		return $this->hasMany('Occurence');
 	}
 
+    public function education(){
+
+		return $this->hasMany('Education');
+	}
+
+
 	public static function getEmployeeName($id){
 
 		$employee = Employee::findOrFail($id);
@@ -133,5 +139,16 @@ class Employee extends Eloquent {
 	}
 
 
+    public static function getActiveEmployee(){
+
+		$employee = DB::table('employee')
+		          ->join('branches', 'employee.branch_id', '=', 'branches.id')
+                  ->join('departments', 'employee.department_id', '=', 'departments.id')
+		          ->where('in_employment','=','Y')
+		          ->select('employee.id','personal_file_number','first_name','last_name','branch_id','name','department_id','department_name')
+		          ->get();
+
+		return $employee;
+	}
 	
 }

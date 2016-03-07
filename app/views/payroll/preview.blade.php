@@ -1,12 +1,19 @@
+
 @extends('layouts.payroll')
+
+{{ HTML::script('media/jquery-1.8.0.min.js') }}
+
 <?php
 $part = explode("-", $period);
+$start_date = $part[1]."-".$part[0]."-01";
+$end_date  = date('Y-m-t', strtotime($start_date));
+$start  = date('Y-m-01', strtotime($end_date));
+
+
      $per = DB::table('transact')
           ->where('financial_month_year','=',$period)
           ->count();
      if($per>0){?>
-
-     {{ HTML::script('media/js/jquery.js') }}
 
       <script type="text/javascript"> 
      
@@ -17,6 +24,8 @@ $part = explode("-", $period);
                   var p1 = <?php echo $part[0]?>;
                   var p2 = "-";
                   var p3 = <?php echo $part[1]?>;
+
+                  console.log(p1+p2+p3);
 
                   $.ajax({
                       url     : "{{URL::to('deleterow')}}",
@@ -104,15 +113,15 @@ function asMoney($value) {
           <td> {{ $i }}</td>
           <td >{{ $employee->personal_file_number }}</td>
           <td>{{ $employee->first_name.' '.$employee->last_name }}</td>
-          <td>{{ asMoney($employee->basic_pay) }}</td>
-          <td>{{ asMoney(Payroll::total_benefits($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::gross($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::tax($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::nssf($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::nhif($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::deductions($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::total_deductions($employee->id)) }}</td>
-          <td>{{ asMoney(Payroll::net($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)$employee->basic_pay) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::total_benefits($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::gross($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::tax($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::nssf($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::nhif($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::deductions($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::total_deductions($employee->id)) }}</td>
+          <td align="right">{{ asMoney((double)Payroll::net($employee->id)) }}</td>
           
         </tr>
          

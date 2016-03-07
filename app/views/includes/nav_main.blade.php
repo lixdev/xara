@@ -27,6 +27,10 @@
                     </li>
 
                     <li>
+                        <a href="{{ URL::to('Properties') }}"><i class="fa fa-list fa-fw"></i> Company Properties </a>
+                    </li>
+
+                    <li>
                         <a href="{{ URL::to('occurences') }}"><i class="fa fa-users fa-fw"></i> Employee Occurences </a>
                     </li>
 

@@ -99,7 +99,7 @@ body {
    </div>
 
 
-
+<br>
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
    </div>
@@ -117,7 +117,7 @@ body {
 
 
 
-   
+   <div align="center"><strong>Employee List Report</strong></div><br>
 
 
 

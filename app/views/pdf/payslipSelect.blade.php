@@ -1,4 +1,4 @@
-@extends('layouts.pay_ports')
+@extends('layouts.payroll')
 @section('content')
 <br/>
 
@@ -48,12 +48,14 @@
                 
         </div>
 
+        <!--
                         <div class="checkbox">
                         <label>
                             <input type="checkbox" checked name="sel">
                               Select All
                         </label>
                     </div>
+        -->
         
         <div class="form-actions form-group">
         

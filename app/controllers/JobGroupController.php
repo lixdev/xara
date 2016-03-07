@@ -11,6 +11,8 @@ class JobGroupController extends \BaseController {
 	{
 		$jgroups = JGroup::all();
 
+		Audit::logaudit('Job Group', 'view', 'viewed employee job group');
+
 		return View::make('job_group.index', compact('jgroups'));
 	}
 
@@ -46,7 +48,9 @@ class JobGroupController extends \BaseController {
 
 		$jgroup->save();
 
-		return Redirect::route('job_group.index');
+		Audit::logaudit('Job Groups', 'create', 'created: '.$jgroup->job_group_name);
+
+		return Redirect::route('job_group.index')->withFlashMessage('Job group successfully created!');
 	}
 
 	/**
@@ -94,8 +98,10 @@ class JobGroupController extends \BaseController {
 
 		$jgroup->job_group_name = Input::get('name');
 		$jgroup->update();
+        
+        Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
 
-		return Redirect::route('job_group.index');
+		return Redirect::route('job_group.index')->withFlashMessage('Job group successfully updated!');
 	}
 
 	/**
@@ -106,9 +112,10 @@ class JobGroupController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$jgroup = JGroup::findOrFail($id);
 		JGroup::destroy($id);
-
-		return Redirect::route('job_group.index');
+        Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
+		return Redirect::route('job_group.index')->withDeleteMessage('Job group successfully deleted!');
 	}
 
 }

@@ -65,6 +65,8 @@
 
     {{ HTML::script('datepicker/js/bootstrap-datepicker.js') }}
 
+    {{HTML::script('js/price_format.js') }}
+
     
    <script type="text/javascript">
 
@@ -119,7 +121,7 @@ $('.datepicker1').datepicker({
 <script type="text/javascript">
 $(function(){
 $('.datepicker2').datepicker({
-    format: "mm-yyyy",
+    format: "m-yyyy",
     startView: "months", 
     minViewMode: "months",
     autoclose: true
@@ -137,6 +139,29 @@ $('.datepicker21').datepicker({
     autoclose: true
 });
 });
+</script>
+
+<script type="text/javascript">
+$(function(){
+$('.datepicker4').datepicker({
+    format: "yyyy-mm-dd",
+    startDate: '0y',
+    autoclose: true
+});
+});
+</script>
+
+<script type="text/javascript">
+
+$(function(){
+$('.datepicker40').datepicker({
+    format: 'd/m/yyyy',
+    startDate: '-60y',
+    endDate: '+0d',
+    autoclose: true
+});
+});
+
 </script>
 
 </head>

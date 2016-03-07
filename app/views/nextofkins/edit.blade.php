@@ -48,22 +48,16 @@
             <input class="form-control" placeholder="" type="text" name="rship" id="rship" value="{{ $kin->relationship }}">
         </div>
 
+        <div class="form-group">
+            <label for="username">Contact </label>
+            <textarea class="form-control" name="contact" id="contact">{{$kin->contact}}</textarea>
+        </div>
+
          <div class="form-group">
             <label for="username">Goodwill % </label>
             <input class="form-control" placeholder="" type="text" name="goodwill" id="goodwill" value="{{ $kin->goodwill }}">
         </div>
         
-
-        
-
-
-
-
-
-
-
-        
-      
         
         <div class="form-actions form-group">
         

@@ -46,7 +46,9 @@ class EmployeeTypeController extends \BaseController {
 
 		$etype->save();
 
-		return Redirect::route('employee_type.index');
+		Audit::logaudit('Employee Types', 'create', 'created: '.$etype->employee_type_name);
+
+		return Redirect::route('employee_type.index')->withFlashMessage('Employee Type successfully created!');
 	}
 
 	/**
@@ -95,7 +97,9 @@ class EmployeeTypeController extends \BaseController {
 		$etype->employee_type_name = Input::get('name');
 		$etype->update();
 
-		return Redirect::route('employee_type.index');
+		Audit::logaudit('Employee Types', 'update', 'updated: '.$etype->employee_type_name);
+
+		return Redirect::route('employee_type.index')->withFlashMessage('Employee Type successfully updated!');
 	}
 
 	/**
@@ -106,9 +110,11 @@ class EmployeeTypeController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$etype = EType::findOrFail($id);
 		EType::destroy($id);
 
-		return Redirect::route('employee_type.index');
+		Audit::logaudit('Employee Types', 'delete', 'deleted: '.$etype->employee_type_name);
+		return Redirect::route('employee_type.index')->withDeleteMessage('Employee Type successfully deleted!');
 	}
 
 }

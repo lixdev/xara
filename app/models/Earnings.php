@@ -19,7 +19,7 @@ public $table = "earnings";
 public static $rules = [
 		'employee' => 'required',
 		'earning' => 'required',
-		'amount' => 'required|regex:/^\d+(\.\d{2})?$/'
+		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/'
 	];
 
 public static $messages = array(

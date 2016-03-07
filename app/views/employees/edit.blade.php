@@ -6,14 +6,16 @@
     width: 180px;
     height: 180px;
     background-position: center center;
+    background-image:url("{{asset('/public/uploads/employees/photo/'.$employee->photo) }}");
     background-size: cover;
     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
     display: inline-block;
 }
 #signPreview {
     width: 180px;
-    height: 180px;
+    height: 100px;
     background-position: center center;
+    background-image:url("{{asset('/public/uploads/employees/signature/'.$employee->signature) }}");
     background-size: cover;
     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
     display: inline-block;
@@ -21,7 +23,7 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
-console.log(<?php echo public_path().'/uploads/employees/photo/'.$employee->signature; ?>);
+
 
     $("#uploadFile").on("change", function()
     {
@@ -34,14 +36,8 @@ console.log(<?php echo public_path().'/uploads/employees/photo/'.$employee->sign
             
             reader.onloadend = function(){ // set image data as background of div
                 $("#imagePreview").css("background-image", "url("+this.result+")");
-            }else{
-            var reader = new FileReader(); // instance of the FileReader
-            reader.readAsDataURL(files[0]); // read the local file
-            
-            reader.onloadend = function(){ // set image data as background of div
-                $("#imagePreview").css("background-image", "url("+<?php echo public_path().'/uploads/employees/photo/'.$employee->signature; ?>+")");  
             }
-        }
+            }
     });
 
     $('#bank_id').change(function(){
@@ -57,6 +53,7 @@ console.log(<?php echo public_path().'/uploads/employees/photo/'.$employee->sign
 
 });
 </script>
+
 
 
 <script type="text/javascript">
@@ -103,7 +100,7 @@ $(document).ready(function() {
         </div>
         @endif
 
-    <form method="POST" action="{{{ URL::to('employees/update/'.$employee->id) }}}" accept-charset="UTF-8">
+    <form method="POST" action="{{{ URL::to('employees/update/'.$employee->id) }}}" accept-charset="UTF-8" enctype="multipart/form-data">
 
             <div class="row">
             
@@ -125,7 +122,9 @@ $(document).ready(function() {
 
             </div>
 
--->
+-->        
+            <input class="form-control" placeholder="" type="hidden" name="photo" id="photo" value="{{{ $employee->photo}}}" >
+            <input class="form-control" placeholder="" type="hidden" name="sign" id="sign" value="{{{ $employee->signature}}}" >
             <div class="col-lg-4">
 
                  <fieldset>
@@ -161,16 +160,7 @@ $(document).ready(function() {
                         <input class="form-control" placeholder="" type="text" name="passport_number" id="passport_number" value="{{{ $employee->passport_number }}}">
                     </div>
 
-                    <div class="form-group">
-                        <label for="username">Work Permit Number</label>
-                        <input class="form-control" placeholder="" type="text" name="work_permit_number" id="work_permit_number" value="{{{ $employee->work_permit_number }}}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="username">Job Title</label>
-                        <input class="form-control" placeholder="" type="text" name="jtitle" id="jtitle" value="{{{ $employee->job_title }}}">
-                    </div>
-
+                   
                     <div class="form-group">
                         <label for="username">Date of birth</label>
                         <div class="right-inner-addon ">
@@ -205,6 +195,17 @@ $(document).ready(function() {
                 
                     </div>
 
+                    <div class="form-group">
+                        <label for="username">Education Background</label>
+                        <select name="education" id="education" class="form-control">
+                            <option></option>
+                            @foreach($educations as $education)
+                            <option value="{{ $education->id }}"<?= ($employee->education_type_id==$education->id)?'selected="selected"':''; ?>> {{ $education->education_name }}</option>
+                            @endforeach
+
+                        </select>
+                
+                    </div>
 
                     <div class="form-group">
                         <label for="username">Date joined</label>
@@ -223,8 +224,15 @@ $(document).ready(function() {
                     <div class="form-group">
                         <label for="username">Photo</label><br>
                         <div id="imagePreview"></div>
-                        <input class="form-control img" placeholder="" type="file" name="image" id="uploadFile" value="">
+                        <input class="img" placeholder="" type="file" name="image" id="uploadFile" value="{{{ $employee->signature }}}">
                     </div>
+
+                    <div class="form-group">
+                        <label for="username">Signature</label><br>
+                        <div id="signPreview"><img src="{{{ $employee->signature }}}" alt=""></div>
+                        <input class="img" placeholder="" type="file" name="signature" id="signFile" value="{{{ $employee->signature }}}">
+                    </div>
+
                 </fieldset>
 
             </div>
@@ -248,7 +256,7 @@ $(document).ready(function() {
                         <input class="form-control" placeholder="" type="text" name="hospital_insurance_number" id="hospital_insurance_number" value="{{{ $employee->hospital_insurance_number }}}">
                     </div>
                      </fieldset>
-
+                    <br><br><br><br>
                      <fieldset>
                       
                       <div class="form-group"><h3 style='color:Green;strong;margin-top:15px'>Deductions Applicable</h3></div>
@@ -281,7 +289,7 @@ $(document).ready(function() {
                         </label>
                     </div>
                      </fieldset>
-                     
+                     <br><br><br><br>
 
                      <fieldset>
                     <div class="form-group"><h3 style='color:Green;strong'>Payment Information</h3></div>
@@ -336,12 +344,7 @@ $(document).ready(function() {
                         <label for="username">Swift Code</label>
                         <input class="form-control" placeholder="" type="text" name="swift_code" id="swift_code" value="{{{ $employee->swift_code }}}">
                     </div>
-                     <br><br><br>
-                    <div class="form-group">
-                        <label for="username">Signature</label><br>
-                        <div id="signPreview"><img src="{{{ $employee->signature }}}" alt=""></div>
-                        <input class="form-control img" placeholder="" type="file" name="signature" id="signFile" value="{{{ $employee->signature }}}">
-                    </div>
+                     
 
               </fieldset>
 
@@ -352,7 +355,7 @@ $(document).ready(function() {
                  <fieldset>
                     <div class="form-group"><h3 style='color:Green;strong'>Branch Information</h3></div>
                     <div class="form-group">
-                        <label for="username">Employee Branch</label>
+                        <label for="username">Employee Branch<span style="color:red">*</span></label>
                         <select name="branch_id" class="form-control">
                             <option></option>
                             @foreach($branches as $branch)
@@ -365,7 +368,7 @@ $(document).ready(function() {
 
 
                      <div class="form-group">
-                        <label for="username">Employee Department</label>
+                        <label for="username">Employee Department<span style="color:red">*</span></label>
                         <select name="department_id" class="form-control">
                             <option></option>
                             @foreach($departments as $department)
@@ -398,6 +401,27 @@ $(document).ready(function() {
                             @endforeach
 
                         </select>
+
+                         <div class="form-group">
+                        <label for="username">Work Permit Number</label>
+                        <input class="form-control" placeholder="" type="text" name="work_permit_number" id="work_permit_number" value="{{{ $employee->work_permit_number }}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Job Title</label>
+                        <input class="form-control" placeholder="" type="text" name="jtitle" id="jtitle" value="{{{ $employee->job_title }}}">
+                    </div>
+                    
+                     <div class="form-group">
+            
+                        <label for="username">Basic Salary</label>
+                        <input class="form-control" placeholder="" type="text" name="pay" id="pay" value="{{{ $employee->basic_pay }}}">
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                        $('#pay').priceFormat();
+                        });
+                     </script>
+                    </div>
                 
                     </div>
                     
@@ -412,7 +436,7 @@ $(document).ready(function() {
                     </div>
 
                     <div class="form-group">
-                        <label for="username">Office Email</label>
+                        <label for="username">Office Email<span style="color:red">*</span></label>
                         <input class="form-control" placeholder="" type="text" name="email_office" id="email_office" value="{{{ $employee->email_office }}}">
                     </div>
 
@@ -431,12 +455,6 @@ $(document).ready(function() {
                         <textarea class="form-control"  name="address" id="address">{{{ $employee->postal_address }}}</textarea>
                     </div>
 
-                   <div class="form-group" style='margin-top:0px;'>
-                    <div class="form-group"><h3 style='color:Green;strong'>Salary Information</h3></div>
-            
-                        <label for="username">Basic Salary</label>
-                        <input class="form-control" placeholder="" type="text" name="pay" id="pay" value="{{{ $employee->basic_pay }}}">
-                    </div>
         
                    </fieldset>
                   

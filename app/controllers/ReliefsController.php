@@ -11,6 +11,8 @@ class ReliefsController extends \BaseController {
 	{
 		$reliefs = Relief::all();
 
+		Audit::logaudit('Reliefs', 'view', 'viewed reliefs');
+
 		return View::make('reliefs.index', compact('reliefs'));
 	}
 
@@ -46,7 +48,9 @@ class ReliefsController extends \BaseController {
 
 		$relief->save();
 
-		return Redirect::route('reliefs.index');
+		Audit::logaudit('Reliefs', 'create', 'created: '.$relief->relief_name);
+
+		return Redirect::route('reliefs.index')->withFlashMessage('Relief successfully created!');
 	}
 
 	/**
@@ -94,8 +98,9 @@ class ReliefsController extends \BaseController {
 
 		$relief->relief_name = Input::get('name');
 		$relief->update();
+        Audit::logaudit('Reliefs', 'update', 'updated: '.$relief->relief_name);
 
-		return Redirect::route('reliefs.index');
+		return Redirect::route('reliefs.index')->withFlashMessage('Relief successfully updated!');
 	}
 
 	/**
@@ -106,9 +111,10 @@ class ReliefsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+        $relief = Relief::findOrFail($id);
 		Relief::destroy($id);
-
-		return Redirect::route('reliefs.index');
+        Audit::logaudit('Reliefs', 'delete', 'deleted: '.$relief->relief_name);
+		return Redirect::route('reliefs.index')->withDeleteMessage('Relief successfully deleted!');
 	}
 
 }

@@ -10,7 +10,7 @@ class EmployeesController extends \BaseController {
 	public function index()
 	{
 		
-		$employees = Employee::all();
+		$employees = Employee::getActiveEmployee();
 
 		 Audit::logaudit('Employees', 'view', 'viewed employee list');
 
@@ -32,7 +32,8 @@ class EmployeesController extends \BaseController {
 		$etypes = EType::all();
 		$banks = Bank::all();
 		$bbranches = BBranch::all();
-		return View::make('employees.create', compact('branches','departments','etypes','jgroups','banks','bbranches'));
+		$educations = Education::all();
+		return View::make('employees.create', compact('branches','departments','etypes','jgroups','banks','bbranches','educations'));
 	}
 
 
@@ -57,22 +58,26 @@ class EmployeesController extends \BaseController {
         {
         $employee = new Employee;
 
-        if ( Input::hasFile('image')) {
+       if ( Input::hasFile('image')) {
 
             $file = Input::file('image');
             $name = time().'-'.$file->getClientOriginalName();
-            $file = $file->move('public/uploads/passport/', $name);
-            $input['file'] = '/public/uploads/passport/'.$name;
+            $file = $file->move('public/uploads/employees/photo', $name);
+            $input['file'] = '/public/uploads/employees/photo'.$name;
             $employee->photo = $name;
+        }else{
+        	$employee->photo = 'default_photo.png';
         }
 
         if ( Input::hasFile('signature')) {
 
-            $file = Input::file('image');
+            $file = Input::file('signature');
             $name = time().'-'.$file->getClientOriginalName();
-            $file = $file->move('public/uploads/signature/', $name);
-            $input['file'] = '/public/uploads/signature/'.$name;
+            $file = $file->move('public/uploads/employees/signature/', $name);
+            $input['file'] = '/public/uploads/employees/signature/'.$name;
             $employee->signature = $name;
+        }else{
+        	$employee->signature = 'sign_av.jpg';
         }
 
 		$employee->personal_file_number = Input::get('personal_file_number');
@@ -106,7 +111,9 @@ class EmployeesController extends \BaseController {
         $employee->work_permit_number = null;
 	    }
         $employee->job_title = Input::get('jtitle');
-        $employee->basic_pay = Input::get('pay');
+        $employee->education_type_id = Input::get('education');
+        $a = str_replace( ',', '', Input::get('pay') );
+        $employee->basic_pay = $a;
         $employee->gender = Input::get('gender');
         $employee->marital_status = Input::get('status');
         $employee->yob = Input::get('dob');
@@ -177,7 +184,7 @@ class EmployeesController extends \BaseController {
 
 		 Audit::logaudit('Employee', 'create', 'created: '.$employee->personal_file_number.'-'.$employee->first_name.' '.$employee->last_name);
 
-		return Redirect::route('employees.index');
+		return Redirect::route('employees.index')->withFlashMessage('Employee successfully created!');
 		 }
     catch (FormValidationException $e)
     {
@@ -213,7 +220,8 @@ class EmployeesController extends \BaseController {
 		$etypes = EType::all();
 		$banks = Bank::all();
 		$bbranches = BBranch::all();
-		return View::make('employees.edit', compact('branches','departments','etypes','jgroups','banks','bbranches','employee'));
+		$educations = Education::all();
+		return View::make('employees.edit', compact('branches','educations','departments','etypes','jgroups','banks','bbranches','employee'));
 	}
 
 	/**
@@ -236,6 +244,28 @@ class EmployeesController extends \BaseController {
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
+
+        if ( Input::hasFile('image')) {
+
+            $file = Input::file('image');
+            $name = time().'-'.$file->getClientOriginalName();
+            $file = $file->move('public/uploads/employees/photo', $name);
+            $input['file'] = '/public/uploads/employees/photo'.$name;
+            $employee->photo = $name;
+        }else{
+        	$employee->photo = Input::get('photo');
+        }
+
+        if ( Input::hasFile('signature')) {
+
+            $file = Input::file('signature');
+            $name = time().'-'.$file->getClientOriginalName();
+            $file = $file->move('public/uploads/employees/signature/', $name);
+            $input['file'] = '/public/uploads/employees/signature/'.$name;
+            $employee->signature = $name;
+        }else{
+        	$employee->signature = Input::get('sign');
+        }
 
 		$employee->personal_file_number = Input::get('personal_file_number');
 		$employee->first_name = Input::get('fname');
@@ -268,7 +298,9 @@ class EmployeesController extends \BaseController {
         $employee->work_permit_number = null;
 	    }
         $employee->job_title = Input::get('jtitle');
-        $employee->basic_pay = Input::get('pay');
+        $a = str_replace( ',', '', Input::get('pay') );
+        $employee->basic_pay = $a;
+        $employee->education_type_id = Input::get('education');
         $employee->gender = Input::get('gender');
         $employee->marital_status = Input::get('status');
         $employee->yob = Input::get('dob');
@@ -345,7 +377,7 @@ class EmployeesController extends \BaseController {
 		 if(Confide::user()->user_type == 'member'){
 		 	return Redirect::to('dashboard');
 		 } else {
-		 	return Redirect::route('employees.index');
+		 	return Redirect::route('employees.index')->withFlashMessage('Employee successfully updated!');
 		 }
 		
 	}
@@ -366,7 +398,30 @@ class EmployeesController extends \BaseController {
 		 Audit::logaudit('Employee', 'delete', 'deleted: '.$employee->personal_file_number.'-'.$employee->first_name.' '.$employee->last_name);
 
 
-		return Redirect::route('employees.index');
+		return Redirect::route('employees.index')->withDeleteMessage('Employee successfully deleted!');
+	}
+
+	public function deactivate($id)
+	{
+
+		$employee = Employee::findOrFail($id);
+		
+		DB::table('employee')->where('id',$id)->update(array('in_employment'=>'N'));
+
+		Audit::logaudit('Employee', 'deactivate', 'deactivated: '.$employee->personal_file_number.'-'.$employee->first_name.' '.$employee->last_name);
+
+
+		return Redirect::route('employees.index')->withDeleteMessage('Employee successfully deactivated!');
+	}
+
+	public function view($id){
+
+		$employee = Employee::find($id);
+
+		$organization = Organization::find(1);
+
+		return View::make('employees.view', compact('employee'));
+		
 	}
 
 }

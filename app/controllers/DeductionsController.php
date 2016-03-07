@@ -50,7 +50,7 @@ class DeductionsController extends \BaseController {
 
 		Audit::logaudit('Deductions', 'create', 'created: '.$deduction->deduction_name);
 
-		return Redirect::route('deductions.index');
+		return Redirect::route('deductions.index')->withFlashMessage('Deduction successfully created!');
 	}
 
 	/**
@@ -101,7 +101,7 @@ class DeductionsController extends \BaseController {
 
 		Audit::logaudit('Deductions', 'update', 'updated: '.$deduction->deduction_name);
 
-		return Redirect::route('deductions.index');
+		return Redirect::route('deductions.index')->withFlashMessage('Deduction successfully updated!');
 	}
 
 	/**
@@ -118,7 +118,7 @@ class DeductionsController extends \BaseController {
 
 		Audit::logaudit('Deductions', 'delete', 'deleted: '.$deduction->deduction_name);
 
-		return Redirect::route('deductions.index');
+		return Redirect::route('deductions.index')->withDeleteMessage('Deduction successfully deleted!');
 	}
 
 }

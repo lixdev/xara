@@ -11,6 +11,8 @@ class PaymentmethodsController extends \BaseController {
 	{
 		$paymentmethods = Paymentmethod::all();
 
+		Audit::logaudit('Payment methods', 'view', 'viewed payment methods');
+
 		return View::make('paymentmethods.index', compact('paymentmethods'));
 	}
 
@@ -40,7 +42,7 @@ class PaymentmethodsController extends \BaseController {
 
 		Paymentmethod::create($data);
 
-		return Redirect::route('paymentmethods.index');
+		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment method successfully created!');
 	}
 
 	/**
@@ -88,7 +90,7 @@ class PaymentmethodsController extends \BaseController {
 
 		$paymentmethod->update($data);
 
-		return Redirect::route('paymentmethods.index');
+		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment method successfully updated!');
 	}
 
 	/**
@@ -99,9 +101,11 @@ class PaymentmethodsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$paymentmethod = Paymentmethod::findOrFail($id);
 		Paymentmethod::destroy($id);
+		Audit::logaudit('Payment methods', 'delete', 'deleted: '.$paymentmethod->name);
 
-		return Redirect::route('paymentmethods.index');
+		return Redirect::route('paymentmethods.index')->withDeleteMessage('Payment method successfully deleted!');
 	}
 
 }

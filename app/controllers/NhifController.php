@@ -11,6 +11,7 @@ class NhifController extends \BaseController {
 	{
 		$nrates = DB::table('hospital_insurance')->where('income_from', '!=', 0.00)->get();
 
+		Audit::logaudit('NHIF', 'view', 'viewed nhif rates');
 		return View::make('nhif.index', compact('nrates'));
 	}
 
@@ -40,17 +41,23 @@ class NhifController extends \BaseController {
 
 		$nrate = new NhifRates;
 
-		$nrate->income_from = Input::get('i_from');
+		$a = str_replace( ',', '', Input::get('i_from') );
+        $b = str_replace( ',', '', Input::get('i_to') );
+        $c = str_replace( ',', '', Input::get('amount') );
 
-		$nrate->income_to = Input::get('i_to');
+		$nrate->income_from = $a;
 
-		$nrate->hi_amount = Input::get('amount');
+		$nrate->income_to = $b;
+
+		$nrate->hi_amount = $c;
 
         $nrate->organization_id = '1';
 
 		$nrate->save();
 
-		return Redirect::route('nhif.index');
+		Audit::logaudit('NHIF', 'create', 'created: '.$nrate->hi_amount.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+
+		return Redirect::route('nhif.index')->withFlashMessage('Nhif successfully created!');
 	}
 
 	/**
@@ -96,15 +103,21 @@ class NhifController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$nrate->income_from = Input::get('i_from');
+		$a = str_replace( ',', '', Input::get('i_from') );
+        $b = str_replace( ',', '', Input::get('i_to') );
+        $c = str_replace( ',', '', Input::get('amount') );
 
-		$nrate->income_to = Input::get('i_to');
+		$nrate->income_from = $a;
 
-		$nrate->hi_amount = Input::get('amount');
+		$nrate->income_to = $b;
+
+		$nrate->hi_amount = $c;
 
 		$nrate->update();
 
-		return Redirect::route('nhif.index');
+		Audit::logaudit('NHIF', 'update', 'updated: '.$nrate->hi_amount.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+
+		return Redirect::route('nhif.index')->withFlashMessage('Nhif successfully updated!');
 	}
 
 	/**
@@ -115,9 +128,13 @@ class NhifController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$nrate = NhifRates::findOrFail($id);
+
 		NhifRates::destroy($id);
 
-		return Redirect::route('nhif.index');
+		Audit::logaudit('NHIF', 'delete', 'deleted: '.$nrate->hi_amount.' for income from '.$nrate->income_from.' to '.$nrate->income_to);
+
+		return Redirect::route('nhif.index')->withDeleteMessage('Nhif successfully deleted!');
 	}
 
 }

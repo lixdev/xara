@@ -1,3 +1,11 @@
+<?php
+
+function asMoney($value) {
+  return number_format($value, 2);
+}
+
+?>
+
 @extends('layouts.payroll')
 @section('content')
 <br/>
@@ -44,7 +52,9 @@
         <th>Employee</th>
         <th>Type</th>
         <th>Pay rate</th>
+        <th>Period Worked</th>
         <th>Amount</th>
+        <th>Total Amount</th>
         <th>Action</th>
 
       </thead>
@@ -56,10 +66,12 @@
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $overtime->employee->first_name.' '.$overtime->employee->last_name }}</td>
+          <td>{{ $overtime->first_name.' '.$overtime->last_name }}</td>
           <td>{{ $overtime->type }}</td>
           <td>{{ $overtime->rate }}</td>
-          <td>{{ $overtime->amount }}</td>
+          <td>{{ $overtime->period }}</td>
+          <td align="right">{{ asMoney((double)$overtime->amount) }}</td>
+          <td align="right">{{ asMoney((double)$overtime->amount*(double)$overtime->period) }}</td>
           <td>
 
                   <div class="btn-group">
@@ -68,6 +80,8 @@
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{URL::to('overtimes/view/'.$overtime->id)}}">View</a></li>
+
                     <li><a href="{{URL::to('overtimes/edit/'.$overtime->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('overtimes/delete/'.$overtime->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s overtime?'))">Delete</a></li>

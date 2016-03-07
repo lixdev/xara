@@ -9,7 +9,7 @@ class Property extends \Eloquent {
 	public static $rules = [
 		'name' => 'required',
 		'employee_id' => 'required',
-		'amount' => 'required|regex:/^\d+(\.\d{2})?$/',
+		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 		'sdate' => 'required'
 	];
 
@@ -27,6 +27,26 @@ class Property extends \Eloquent {
 	public function employee(){
 
 		return $this->belongsTo('Employee');
+	}
+
+	public static function getIssuer($id){
+
+		$issuer = DB::table('users')
+            ->join('properties', 'users.id', '=', 'properties.issued_by')
+            ->where('issued_by', $id)
+            ->first();
+
+		return $issuer->username;
+	}
+
+	public static function getReceiver($id){
+
+		$receiver = DB::table('users')
+            ->join('properties', 'users.id', '=', 'properties.received_by')
+            ->where('received_by', $id)
+            ->first();
+
+		return $receiver->username;
 	}
 
 }

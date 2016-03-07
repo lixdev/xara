@@ -57,7 +57,7 @@
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $kin->employee->first_name.' '.$kin->employee->last_name }}</td>
+          <td>{{ $kin->first_name.' '.$kin->last_name }}</td>
           <td>{{ $kin->name }}</td>
           @if($kin->id_number!=' ' || $kin->id_number!=null)
           <td>{{ $kin->id_number }}</td>
@@ -78,10 +78,14 @@
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{URL::to('NextOfKins/view/'.$kin->id)}}">View</a></li>   
+
                     <li><a href="{{URL::to('NextOfKins/edit/'.$kin->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('NextOfKins/delete/'.$kin->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s kin?'))">Delete</a></li>
-                    
+                     
+
+                 
                   </ul>
               </div>
 

@@ -77,6 +77,11 @@ console.log($("#issuedby").val());
          <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span></label>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{ $property->monetary }}">
+            <script type="text/javascript">
+           $(document).ready(function() {
+           $('#amount').priceFormat();
+           });
+           </script>
         </div>
         
         <div class="form-group">

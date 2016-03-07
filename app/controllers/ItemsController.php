@@ -11,6 +11,8 @@ class ItemsController extends \BaseController {
 	{
 		$items = Item::all();
 
+		Audit::logaudit('Items', 'view', 'viewed items');
+
 		return View::make('items.index', compact('items'));
 	}
 
@@ -52,6 +54,8 @@ class ItemsController extends \BaseController {
 		$item->reorder_level = Input::get('reorder');
 		$item->duration = Input::get('duration');
 		$item->save();
+
+		Audit::logaudit('Items', 'create', 'created: '.$item->name);
 
 		return Redirect::route('items.index')->withFlashMessage('Item successfully created!');
 	}
@@ -112,6 +116,8 @@ class ItemsController extends \BaseController {
 		$item->duration = Input::get('duration');
 		$item->update();
 
+        Audit::logaudit('Items', 'update', 'updated: '.$item->name);
+
 		return Redirect::route('items.index')->withFlashMessage('Item successfully updated!');
 	}
 
@@ -123,7 +129,10 @@ class ItemsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$item = Item::findOrFail($id);
 		Item::destroy($id);
+
+		Audit::logaudit('Items', 'delete', 'deleted: '.$item->name);
 
 		return Redirect::route('items.index')->withDeleteMessage('Item successfully deleted!');
 	}

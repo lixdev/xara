@@ -11,6 +11,8 @@ class DepartmentsController extends \BaseController {
 	{
 		$departments = Department::all();
 
+		Audit::logaudit('Departments', 'view', 'viewed departments');
+
 		return View::make('departments.index', compact('departments'));
 	}
 
@@ -45,8 +47,10 @@ class DepartmentsController extends \BaseController {
         $department->organization_id = '1';
 
 		$department->save();
+       
+        Audit::logaudit('Department', 'create', 'created: '.$department->department_name);
 
-		return Redirect::route('departments.index');
+		return Redirect::route('departments.index')->withFlashMessage('Department successfully updated!');
 	}
 
 	/**
@@ -95,7 +99,9 @@ class DepartmentsController extends \BaseController {
 		$department->department_name = Input::get('name');
 		$department->update();
 
-		return Redirect::route('departments.index');
+		 Audit::logaudit('Department', 'update', 'updated: '.$department->department_name);
+
+		return Redirect::route('departments.index')->withFlashMessage('Department successfully updated!');
 	}
 
 	/**
@@ -106,9 +112,12 @@ class DepartmentsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$department = Department::findOrFail($id);
+
 		Department::destroy($id);
 
-		return Redirect::route('departments.index');
+        Audit::logaudit('Department', 'delete', 'deleted: '.$department->department_name);
+		return Redirect::route('departments.index')->withDeleteMessage('Deduction successfully deleted!');
 	}
 
 }

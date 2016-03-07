@@ -8,15 +8,17 @@
     height: 180px;
     background-position: center center;
     background-size: cover;
+    background-image:url("{{asset('/public/uploads/employees/photo/default_photo.png') }}");
     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
     display: inline-block;
 }
 #signPreview {
     width: 180px;
-    height: 180px;
+    height: 100px;
     background-position: center center;
     background-size: cover;
     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+    background-image:url("{{asset('/public/uploads/employees/signature/sign_av.jpg') }}");
     display: inline-block;
 }
 </style>
@@ -153,15 +155,6 @@ $(document).ready(function() {
                         <input class="form-control" placeholder="" type="text" name="passport_number" id="passport_number" value="{{{ Input::old('passport_number') }}}">
                     </div>
 
-                    <div class="form-group">
-                        <label for="username">Work Permit Number</label>
-                        <input class="form-control" placeholder="" type="text" name="work_permit_number" id="work_permit_number" value="{{{ Input::old('work_permit_number') }}}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="username">Job Title</label>
-                        <input class="form-control" placeholder="" type="text" name="jtitle" id="jtitle" value="{{{ Input::old('jtitle') }}}">
-                    </div>
 
                     <div class="form-group">
                         <label for="username">Date of birth</label>
@@ -196,15 +189,19 @@ $(document).ready(function() {
                         </select>
                 
                     </div>
-
-
+                    
                     <div class="form-group">
-                        <label for="username">Date joined</label>
-                        <div class="right-inner-addon ">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                        <input class="form-control datepicker"  readonly="readonly" placeholder="" type="text" name="djoined" id="djoined" value="{{{ Input::old('djoined') }}}">
-                        </div>
-                        </div>
+                        <label for="username">Education Background</label>
+                        <select name="education" id="education" class="form-control">
+                            <option></option>
+                            @foreach($educations as $education)
+                            <option value="{{ $education->id }}"> {{ $education->education_name }}</option>
+                            @endforeach
+
+                        </select>
+                
+                    </div>
+
 
                     <div class="form-group">
                         <label for="username">Gender</label><br>
@@ -215,9 +212,15 @@ $(document).ready(function() {
                     <div class="form-group">
                         <label for="username">Photo</label><br>
                         <div id="imagePreview"></div>
-                        <input class="form-control img" placeholder="" type="file" name="image" id="uploadFile" value="{{{ Input::old('image') }}}">
+                        <input class="img" placeholder="" type="file" name="image" id="uploadFile" value="{{{ Input::old('image') }}}">
                     </div>
             
+                     <div class="form-group">
+                        <label for="username">Signature</label><br>
+                        <div id="signPreview"></div>
+                        <input class="img" placeholder="" type="file" name="signature" id="signFile" value="{{{ Input::old('signature') }}}">
+                    </div>
+
                 </fieldset>
 
             </div>
@@ -241,7 +244,7 @@ $(document).ready(function() {
                         <input class="form-control" placeholder="" type="text" name="hospital_insurance_number" id="hospital_insurance_number" value="{{{ Input::old('hospital_insurance_number') }}}">
                     </div>
                      </fieldset>
-
+                     <br><br><br><br>
                      <fieldset>
                       
                       <div class="form-group"><h3 style='color:Green;strong;margin-top:15px'>Deductions Applicable</h3></div>
@@ -274,7 +277,7 @@ $(document).ready(function() {
                         </label>
                     </div>
                      </fieldset>
-                     
+                     <br><br><br><br>
 
                      <fieldset>
                     <div class="form-group"><h3 style='color:Green;strong'>Payment Information</h3></div>
@@ -326,12 +329,7 @@ $(document).ready(function() {
                         <label for="username">Swift Code</label>
                         <input class="form-control" placeholder="" type="text" name="swift_code" id="swift_code" value="{{{ Input::old('swift_code') }}}">
                     </div>
-                    <br><br><br>
-                    <div class="form-group">
-                        <label for="username">Signature</label><br>
-                        <div id="signPreview"></div>
-                        <input class="form-control img" placeholder="" type="file" name="signature" id="signFile" value="{{{ Input::old('signature') }}}">
-                    </div>
+                     
 
               </fieldset>
 
@@ -340,10 +338,10 @@ $(document).ready(function() {
             <div class="col-lg-4">
 
                  <fieldset>
-                    <div class="form-group"><h3 style='color:Green;strong'>Branch Information</h3></div>
+                    <div class="form-group"><h3 style='color:Green;strong'>Company Information</h3></div>
                     <div class="form-group">
-                        <label for="username">Employee Branch</label>
-                        <select name="branch_id" class="form-control" required>
+                        <label for="username">Employee Branch <span style="color:red">*</span></label>
+                        <select name="branch_id" class="form-control">
                             <option></option>
                             @foreach($branches as $branch)
                             <option value="{{ $branch->id }}"> {{ $branch->name }}</option>
@@ -355,8 +353,8 @@ $(document).ready(function() {
 
 
                      <div class="form-group">
-                        <label for="username">Employee Department</label>
-                        <select name="department_id" class="form-control" required>
+                        <label for="username">Employee Department <span style="color:red">*</span></label>
+                        <select name="department_id" class="form-control">
                             <option></option>
                             @foreach($departments as $department)
                             <option value="{{$department->id }}"> {{ $department->department_name }}</option>
@@ -368,7 +366,7 @@ $(document).ready(function() {
 
                      <div class="form-group">
                         <label for="username">Job Group</label>
-                        <select name="jgroup_id" class="form-control" required>
+                        <select name="jgroup_id" class="form-control">
                             <option></option>
                             @foreach($jgroups as $jgroup)
                             <option value="{{ $jgroup->id }}"> {{ $jgroup->job_group_name }}</option>
@@ -381,7 +379,7 @@ $(document).ready(function() {
 
                      <div class="form-group">
                         <label for="username">Employee Type</label>
-                        <select name="type_id" class="form-control" required>
+                        <select name="type_id" class="form-control">
                             <option></option>
                             @foreach($etypes as $etype)
                             <option value="{{$etype->id }}"> {{ $etype->employee_type_name }}</option>
@@ -391,6 +389,35 @@ $(document).ready(function() {
                 
                     </div>
                     
+                    <div class="form-group">
+                        <label for="username">Work Permit Number</label>
+                        <input class="form-control" placeholder="" type="text" name="work_permit_number" id="work_permit_number" value="{{{ Input::old('work_permit_number') }}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Job Title</label>
+                        <input class="form-control" placeholder="" type="text" name="jtitle" id="jtitle" value="{{{ Input::old('jtitle') }}}">
+                    </div>
+
+                    <div class="form-group">
+            
+                        <label for="username">Basic Salary</label>
+                        <input class="form-control" placeholder="" type="text" name="pay" id="pay" value="{{{ Input::old('pay') }}}">
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                        $('#pay').priceFormat();
+                        });
+                     </script>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Date joined</label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control datepicker"  readonly="readonly" placeholder="" type="text" name="djoined" id="djoined" value="{{{ Input::old('djoined') }}}">
+                        </div>
+                        </div>
+
                     <div style='margin-top:0px'></div>
 
                     <fieldset>
@@ -402,7 +429,7 @@ $(document).ready(function() {
                     </div>
 
                     <div class="form-group">
-                        <label for="username">Office Email</label>
+                        <label for="username">Office Email <span style="color:red">*</span></label>
                         <input class="form-control" placeholder="" type="text" name="email_office" id="email_office" value="{{{ Input::old('email_office') }}}">
                     </div>
 
@@ -421,13 +448,7 @@ $(document).ready(function() {
                         <textarea class="form-control"  name="address" id="address">{{{ Input::old('address') }}}</textarea>
                     </div>
 
-                   <div class="form-group" style='margin-top:0px;'>
-                    <div class="form-group"><h3 style='color:Green;strong'>Salary Information</h3></div>
-            
-                        <label for="username">Basic Salary</label>
-                        <input class="form-control" placeholder="" type="text" name="pay" id="pay" value="{{{ Input::old('pay') }}}">
-                    </div>
-        
+                  
                    </fieldset>
                   
                    <fieldset>
@@ -441,10 +462,10 @@ $(document).ready(function() {
                       
                     </fieldset>
 
-                    <div style='margin-top:50px'></div>
+                    <div style='margin-top:80px'></div>
 
                     </fieldset>
-                    <br><br><br> <br><br><br><br><br><br>
+                    
                         <div class="form-actions form-group">
         
                             <button type="submit" class="btn btn-primary btn-sm">Create Employee</button>

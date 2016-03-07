@@ -59,6 +59,11 @@
         <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span> </label>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{{ Input::old('amount') }}}">
+            <script type="text/javascript">
+           $(document).ready(function() {
+           $('#amount').priceFormat();
+           });
+           </script>
         </div>
         
         

@@ -9,7 +9,12 @@ class EmployeeAllowancesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$eallws = EAllowances::all();
+		$eallws = DB::table('employee_allowances')
+		          ->join('employee', 'employee_allowances.employee_id', '=', 'employee.id')
+		          ->join('allowances', 'employee_allowances.allowance_id', '=', 'allowances.id')
+		          ->where('in_employment','=','Y')
+		          ->select('employee_allowances.id','first_name','last_name','allowance_amount','allowance_name')
+		          ->get();
 
 		Audit::logaudit('Employee Allowances', 'view', 'viewed employee allowances');
 
@@ -23,7 +28,9 @@ class EmployeeAllowancesController extends \BaseController {
 	 */
 	public function create()
 	{
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 		$allowances = Allowance::all();
 		return View::make('employee_allowances.create',compact('employees','allowances'));
 	}
@@ -48,7 +55,9 @@ class EmployeeAllowancesController extends \BaseController {
 
 		$allowance->allowance_id = Input::get('allowance');
 
-        $allowance->allowance_amount = Input::get('amount');
+        $a = str_replace( ',', '', Input::get('amount') );
+
+        $allowance->allowance_amount = $a;
 
 		$allowance->save();
 
@@ -56,7 +65,7 @@ class EmployeeAllowancesController extends \BaseController {
 
 		Audit::logaudit('Employee Allowances', 'create', 'assigned: '.$allowance->allowance_amount.' to'.Employee::getEmployeeName(Input::get('employee')));
 
-		return Redirect::route('employee_allowances.index');
+		return Redirect::route('employee_allowances.index')->withFlashMessage('Employee Allowance successfully created!');
 	}
 
 	/**
@@ -104,18 +113,18 @@ class EmployeeAllowancesController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$allowance->employee_id = Input::get('employee');
 
 		$allowance->allowance_id = Input::get('allowance');
 
-        $allowance->allowance_amount = Input::get('amount');
+        $a = str_replace( ',', '', Input::get('amount') );
+
+        $allowance->allowance_amount = $a;
 
 		$allowance->update();
 
-		Audit::logaudit('Employee Allowances', 'update', 'assigned: '.$allowance->allowance_amount.' to'.Employee::getEmployeeName(Input::get('employee')));
+		Audit::logaudit('Employee Allowances', 'update', 'assigned: '.$allowance->allowance_amount.' to '.Employee::getEmployeeName($allowance->employee_id));
 
-
-		return Redirect::route('employee_allowances.index');
+		return Redirect::route('employee_allowances.index')->withFlashMessage('Employee Allowance successfully updated!');
 	}
 
 	/**
@@ -131,10 +140,26 @@ class EmployeeAllowancesController extends \BaseController {
 		EAllowances::destroy($id);
 
 
-		Audit::logaudit('Employee Allowances', 'delete', 'deleted: '.$allowance->allowance_amount);
+		Audit::logaudit('Employee Allowances', 'delete', 'deleted: '.$allowance->allowance_amount.' for '.Employee::getEmployeeName($allowance->employee_id));
 
 
-		return Redirect::route('employee_allowances.index');
+		return Redirect::route('employee_allowances.index')->withDeleteMessage('Employee Allowance successfully deleted!');
 	}
+
+    public function view($id){
+
+		$eallw = DB::table('employee_allowances')
+		          ->join('employee', 'employee_allowances.employee_id', '=', 'employee.id')
+		          ->join('allowances', 'employee_allowances.allowance_id', '=', 'allowances.id')
+		          ->where('employee_allowances.id','=',$id)
+		          ->select('employee_allowances.id','first_name','last_name','middle_name','allowance_amount','allowance_name','photo','signature')
+		          ->first();
+
+		$organization = Organization::find(1);
+
+		return View::make('employee_allowances.view', compact('eallw'));
+		
+	}
+
 
 }

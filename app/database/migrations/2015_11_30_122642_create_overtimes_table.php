@@ -17,6 +17,7 @@ class CreateOvertimesTable extends Migration {
 			$table->increments('id');
 			$table->integer('employee_id')->unsigned()->default('0')->index('overtimes_employee_id_foreign');
             $table->string('type');
+            $table->float('period',15,2);
             $table->string('rate');
 			$table->string('amount')->default('0.00');
 			$table->timestamps();

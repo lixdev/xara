@@ -9,7 +9,12 @@ class NextOfKinsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$kins = Nextofkin::all();
+		$kins = DB::table('employee')
+		          ->join('nextofkins', 'employee.id', '=', 'nextofkins.employee_id')
+		          ->where('in_employment','=','Y')
+		          ->get();
+
+		Audit::logaudit('Next of Kins', 'view', 'viewed employee next of kin');
 
 		return View::make('nextofkins.index', compact('kins'));
 	}
@@ -22,7 +27,9 @@ class NextOfKinsController extends \BaseController {
 	public function create()
 	{
 
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 		return View::make('nextofkins.create', compact('employees'));
 	}
 
@@ -46,11 +53,12 @@ class NextOfKinsController extends \BaseController {
 		$kin->employee_id=Input::get('employee_id');
 		$kin->name = Input::get('name');
 		$kin->relationship = Input::get('rship');
+		$kin->contact = Input::get('contact');
 		$kin->goodwill = Input::get('goodwill');
 		$kin->id_number = Input::get('id_number');
 		$kin->save();
 
-		Audit::logaudit('NextofKins', 'create', 'created: '.$kin->name);
+		Audit::logaudit('NextofKins', 'create', 'created: '.$kin->name.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
 		return Redirect::route('NextOfKins.index')->withFlashMessage('Employee`s next of kin successfully created!');
@@ -101,11 +109,13 @@ class NextOfKinsController extends \BaseController {
         
 		$kin->name = Input::get('name');
 		$kin->relationship = Input::get('rship');
+		$kin->contact = Input::get('contact');
 		$kin->goodwill = Input::get('goodwill');
 		$kin->id_number = Input::get('id_number');
 
-
 		$kin->update();
+
+		Audit::logaudit('NextofKins', 'update', 'updated: '.$kin->name.' for '.Employee::getEmployeeName($kin->employee_id));
 
 		return Redirect::route('NextOfKins.index')->withFlashMessage('Employee`s next of kin successfully updated!');
 	}
@@ -118,9 +128,22 @@ class NextOfKinsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$kin = Nextofkin::findOrFail($id);
 		Nextofkin::destroy($id);
+		Audit::logaudit('NextofKins', 'delete', 'deleted: '.$kin->name.' for '.Employee::getEmployeeName($kin->employee_id));
 
 		return Redirect::route('NextOfKins.index')->withDeleteMessage('Employee`s next of kin successfully deleted!');
 	}
+
+	public function view($id){
+
+		$kin = Nextofkin::find($id);
+
+		$organization = Organization::find(1);
+
+		return View::make('nextofkins.view', compact('kin'));
+		
+	}
+
 
 }

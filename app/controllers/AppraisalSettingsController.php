@@ -11,6 +11,8 @@ class AppraisalSettingsController extends \BaseController {
 	{
 		$appraisals = Appraisalquestion::all();
 
+		Audit::logaudit('Appraisal Settings', 'view', 'viewed appraisal settings');
+
 		return View::make('appraisalsettings.index', compact('appraisals'));
 	}
 

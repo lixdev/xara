@@ -11,6 +11,8 @@ class BranchesController extends \BaseController {
 	{
 		$branches = Branch::all();
 
+		Audit::logaudit('Branches', 'view', 'viewed branches');
+
 		return View::make('branches.index', compact('branches'));
 	}
 
@@ -43,7 +45,8 @@ class BranchesController extends \BaseController {
 		$branch->name = Input::get('name');
 		$branch->save();
 
-		return Redirect::route('branches.index');
+        Audit::logaudit('Branches', 'create', 'created: '.$branch->name);
+		return Redirect::route('branches.index')->withFlashMessage('Branch successfully created!');
 	}
 
 	/**
@@ -92,7 +95,8 @@ class BranchesController extends \BaseController {
 		$branch->name = Input::get('name');
 		$branch->update();
 
-		return Redirect::route('branches.index');
+        Audit::logaudit('Branches', 'update', 'updated: '.$branch->name);
+		return Redirect::route('branches.index')->withFlashMessage('Branch successfully updated!');
 	}
 
 	/**
@@ -103,9 +107,10 @@ class BranchesController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$branch = Branch::findOrFail($id);
 		Branch::destroy($id);
-
-		return Redirect::route('branches.index');
+        Audit::logaudit('Branches', 'delete', 'deleted: '.$branch->name);
+		return Redirect::route('branches.index')->withDeleteMessage('Branch successfully deleted!');
 	}
 
 }

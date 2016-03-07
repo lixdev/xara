@@ -17,6 +17,7 @@ class CreateNextOfKinsTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->string('relationship')->nullable();
+			$table->text('contact')->nullable();
 			$table->float('goodwill', 10, 0)->nullable();
 			$table->string('id_number')->nullable();
 			$table->integer('employee_id')->unsigned()->index('nextofkins_employee_id_foreign');

@@ -65,9 +65,9 @@ function asMoney($value) {
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $property->employee->first_name.' '.$property->employee->last_name }}</td>
+          <td>{{ $property->first_name.' '.$property->last_name }}</td>
           <td>{{ $property->name }}</td>
-          <td align="right">{{ asMoney($property->monetary) }}</td>
+          <td align="right">{{ asMoney((double)$property->monetary) }}</td>
           <td>
 
                   <div class="btn-group">
@@ -76,6 +76,8 @@ function asMoney($value) {
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{URL::to('Properties/view/'.$property->id)}}">View</a></li> 
+                    
                     <li><a href="{{URL::to('Properties/edit/'.$property->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('Properties/delete/'.$property->id)}}" onclick="return (confirm('Are you sure you want to delete this property?'))">Delete</a></li>

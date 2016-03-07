@@ -90,7 +90,7 @@ body {
     </table>
    </div>
 
-
+<br>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
@@ -100,12 +100,11 @@ body {
   <div class="content" style='margin-top:0px;'>
 
 
-    <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0' style='width:300px'>
+    <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0' style='width:350px'>
           {{'<tr><td colspan="2" align="center"><strong>PERIOD : '.$period.'</strong></td></tr>'}}
         <tr><td colspan='2'><strong>PERSONAL DETAILS</strong></td></tr>
-        @foreach($transacts as $transact)
       <tr><td>Payroll Number:</td><td>{{$transact->personal_file_number}}</td></tr>
-      @if($transact->middle_name != null)
+      @if($transact->middle_name != null || $transact->middle_name != ' ')
       <tr><td>Employee Name: </td><td> {{$transact->last_name.' '.$transact->first_name.' '.$transact->middle_name}}</td>
       @else
       <td>Employee Name: </td><td> {{$transact->last_name.' '.$transact->first_name}}</td>
@@ -133,19 +132,23 @@ body {
         <td></td>
         @endif
         </tr>
-        @endforeach
         <tr><td><strong>EARNINGS</strong></td>
         @foreach($currencies as $currency)
         <td><strong>Amount ({{$currency->shortname}})</strong></td>
         @endforeach
         </tr>
-        @foreach($transacts as $transact)
         <tr><td>Basic Pay: </td><td align='right'>{{ Payroll::asMoney($transact->basic_pay) }}</td></tr>
-       @endforeach
 
         @foreach($earnings as $earning)
         @if($earning->earning_name != null)
         <tr><td>{{ $earning->earning_name }}: </td><td align='right'>{{ Payroll::asMoney($earning->earning_amount) }}</td></tr>
+        @else
+        @endif
+       @endforeach
+
+       @foreach($overtimes as $overtime)
+        @if($earning->earning_name != null)
+        <tr><td>{{ 'Overtime Earning - '.$overtime->overtime_type }}: </td><td align='right'>{{ Payroll::asMoney((double)$overtime->overtime_amount*$overtime->overtime_period) }}</td></tr>
         @else
         @endif
        @endforeach
@@ -159,16 +162,19 @@ body {
         @endif
        @endforeach
 
-       @foreach($transacts as $transact)
-        <tr><td><strong>GROSS PAY: </strong></td><td align='right'>{{ Payroll::asMoney($transact->taxable_income) }}</td></tr>
-       @endforeach
+       <tr><td><strong>GROSS PAY: </strong></td><td align='right'><strong>{{ Payroll::asMoney($transact->taxable_income) }}</strong></td></tr>
+    
+        @foreach($rels as $rel)
+        @if($rel->relief_name != null)
+        <tr><td>{{ $rel->relief_name }}: </td><td align='right'>{{ Payroll::asMoney($rel->relief_amount) }}</td></tr>
+        @else
+        @endif
+        @endforeach
 
        <tr><td><strong>DEDUCTIONS</strong><td></td></td>
-        @foreach($transacts as $transact)
-        <tr><td>Paye: </td><td align='right'>{{ Payroll::asMoney($transact->paye) }}</td></tr>
+       <tr><td>Paye: </td><td align='right'>{{ Payroll::asMoney($transact->paye) }}</td></tr>
         <tr><td>Nssf: </td><td align='right'>{{ Payroll::asMoney($transact->nssf_amount) }}</td></tr>
         <tr><td>Nhif: </td><td align='right'>{{ Payroll::asMoney($transact->nhif_amount) }}</td></tr>
-       @endforeach
    
        @foreach($deds as $ded)
         @if($ded->deduction_name != null)
@@ -177,14 +183,10 @@ body {
         @endif
        @endforeach
 
-       @foreach($transacts as $transact)
         <tr><td><strong>TOTAL DEDUCTIONS
-            : </strong></td><td align='right'>{{ Payroll::asMoney($transact->total_deductions) }}</td></tr>
-       @endforeach
+            : </strong></td><td align='right'><strong>{{ Payroll::asMoney($transact->total_deductions) }}</strong></td></tr>
 
-        @foreach($transacts as $transact)
-        <tr><td><strong>NET PAY: </strong></td><td align='right'>{{ Payroll::asMoney($transact->net) }}</td></tr>
-       @endforeach
+        <tr><td><strong>NET PAY: </strong></td><td align='right'><strong>{{ Payroll::asMoney($transact->net) }}</strong></td></tr>
     </table><br>
 <div style='width:300px'>I certify that the above information is correct and I have  received the payment, in full and final settlement</div>
 <br>

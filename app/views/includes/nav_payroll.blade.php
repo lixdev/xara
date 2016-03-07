@@ -14,6 +14,11 @@
                   </li>
 
                   <li>
+                    <a href="{{ URL::to('overtimes') }}"><i class="glyphicon glyphicon-credit-card fa-fw"></i> Overtimes</a>
+                  </li>
+
+
+                  <li>
                     <a href="{{ URL::to('employee_allowances') }}"><i class="glyphicon glyphicon-credit-card fa-fw"></i> Allowances</a>
                   </li>
 

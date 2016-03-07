@@ -9,7 +9,16 @@ class AppraisalsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$appraisals = Appraisal::all();
+		$employees = Appraisal::all();
+
+		$appraisals = DB::table('employee')
+		          ->join('appraisals', 'employee.id', '=', 'appraisals.employee_id')
+		          ->join('appraisalquestions', 'appraisals.appraisalquestion_id', '=', 'appraisalquestions.id')
+		          ->where('in_employment','=','Y')
+		          ->select('appraisals.id','appraisalquestion_id','first_name','last_name','question','performance','appraisals.rate')
+		          ->get();
+
+		Audit::logaudit('Appraisals', 'view', 'viewed appraisals');
 
 		return View::make('appraisals.index', compact('appraisals'));
 	}
@@ -21,7 +30,9 @@ class AppraisalsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 		$appraisals = Appraisalquestion::all();
 		return View::make('appraisals.create',compact('employees','appraisals'));
 	}
@@ -58,7 +69,7 @@ class AppraisalsController extends \BaseController {
 
 		$appraisal->save();
 
-		Audit::logaudit('Employee Appraisal', 'create', 'created: '.$appraisal->question);
+		Audit::logaudit('Employee Appraisal', 'create', 'created: '.$appraisal->question.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
 		return Redirect::route('Appraisals.index')->withFlashMessage('Employee Appraisal successfully created!');
@@ -119,7 +130,7 @@ class AppraisalsController extends \BaseController {
 
 		$appraisal->update();
 
-		Audit::logaudit('Appraisal Question', 'update', 'updated: '.$appraisal->question);
+		Audit::logaudit('Appraisal Question', 'update', 'updated: '.$appraisal->question.' for '.Employee::getEmployeeName($appraisal->employee_id));
 
 
 		return Redirect::route('Appraisals.index')->withFlashMessage('Employee Appraisal successfully updated!');
@@ -137,10 +148,22 @@ class AppraisalsController extends \BaseController {
 		
 		Appraisal::destroy($id);
 
-		Audit::logaudit('Employee Appraisal', 'delete', 'deleted: '.$appraisal->question);
+		Audit::logaudit('Employee Appraisal', 'delete', 'deleted: '.$appraisal->question.' for '.Employee::getEmployeeName($appraisal->employee_id));
 
 
 		return Redirect::route('Appraisals.index')->withDeleteMessage('Employee Appraisal successfully deleted!');
+	}
+
+	public function view($id){
+
+		$appraisal = Appraisal::find($id);
+
+		$user = User::find($appraisal->examiner);
+
+		$organization = Organization::find(1);
+
+		return View::make('appraisals.view', compact('appraisal','user'));
+		
 	}
 
 }

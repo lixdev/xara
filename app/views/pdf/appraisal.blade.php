@@ -97,7 +97,12 @@ body {
     </table>
    </div>
 
+<br>
 
+<?php
+  $d=strtotime($from);
+  $d1=strtotime($to);
+?>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
@@ -106,7 +111,7 @@ body {
 
 	<div class="content" style='margin-top:0px;'>
 
-
+   <div align="center"><strong>Appraisal Report for period between {{date("F j, Y", $d).' and '.date("F j, Y", $d1)}} </strong></div><br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>

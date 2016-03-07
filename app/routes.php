@@ -42,7 +42,7 @@ Route::get('/dashboard', function()
         if(Confide::user()->user_type == 'admin'){
 
              
-          $employees = Employee::all();
+          $employees = Employee::getActiveEmployee();
            return View::make('dashboard', compact('employees'));
 
 
@@ -1363,8 +1363,9 @@ Route::get('employee_type/edit/{id}', 'EmployeeTypeController@edit');
 
 Route::resource('employees', 'EmployeesController');
 Route::post('employees/update/{id}', 'EmployeesController@update');
-Route::get('employees/delete/{id}', 'EmployeesController@destroy');
+Route::get('employees/deactivate/{id}', 'EmployeesController@deactivate');
 Route::get('employees/edit/{id}', 'EmployeesController@edit');
+Route::get('employees/view/{id}', 'EmployeesController@view');
 
 /*
 * occurences routes
@@ -1374,6 +1375,7 @@ Route::resource('occurences', 'OccurencesController');
 Route::post('occurences/update/{id}', 'OccurencesController@update');
 Route::get('occurences/delete/{id}', 'OccurencesController@destroy');
 Route::get('occurences/edit/{id}', 'OccurencesController@edit');
+Route::get('occurences/view/{id}', 'OccurencesController@view');
 
 
 /*
@@ -1384,6 +1386,7 @@ Route::resource('other_earnings', 'EarningsController');
 Route::post('other_earnings/update/{id}', 'EarningsController@update');
 Route::get('other_earnings/delete/{id}', 'EarningsController@destroy');
 Route::get('other_earnings/edit/{id}', 'EarningsController@edit');
+Route::get('other_earnings/view/{id}', 'EarningsController@view');
 
 /*
 * employee reliefs routes
@@ -1393,6 +1396,7 @@ Route::resource('employee_relief', 'EmployeeReliefController');
 Route::post('employee_relief/update/{id}', 'EmployeeReliefController@update');
 Route::get('employee_relief/delete/{id}', 'EmployeeReliefController@destroy');
 Route::get('employee_relief/edit/{id}', 'EmployeeReliefController@edit');
+Route::get('employee_relief/view/{id}', 'EmployeeReliefController@view');
 
 /*
 * employee allowances routes
@@ -1402,6 +1406,7 @@ Route::resource('employee_allowances', 'EmployeeAllowancesController');
 Route::post('employee_allowances/update/{id}', 'EmployeeAllowancesController@update');
 Route::get('employee_allowances/delete/{id}', 'EmployeeAllowancesController@destroy');
 Route::get('employee_allowances/edit/{id}', 'EmployeeAllowancesController@edit');
+Route::get('employee_allowances/view/{id}', 'EmployeeAllowancesController@view');
 
 /*
 * employee deductions routes
@@ -1411,6 +1416,7 @@ Route::resource('employee_deductions', 'EmployeeDeductionsController');
 Route::post('employee_deductions/update/{id}', 'EmployeeDeductionsController@update');
 Route::get('employee_deductions/delete/{id}', 'EmployeeDeductionsController@destroy');
 Route::get('employee_deductions/edit/{id}', 'EmployeeDeductionsController@edit');
+Route::get('employee_deductions/view/{id}', 'EmployeeDeductionsController@view');
 
 /*
 * payroll routes
@@ -1496,7 +1502,7 @@ Route::group(['before' => 'process_payroll'], function() {
 
 Route::get('payrollmgmt', function(){
 
-     $employees = Employee::all();
+     $employees = Employee::getActiveEmployee();
 
   return View::make('payrollmgmt', compact('employees'));
 
@@ -2481,6 +2487,7 @@ Route::resource('overtimes', 'OvertimesController');
 Route::get('overtimes/edit/{id}', 'OvertimesController@edit');
 Route::post('overtimes/update/{id}', 'OvertimesController@update');
 Route::get('overtimes/delete/{id}', 'OvertimesController@destroy');
+Route::get('overtimes/view/{id}', 'OvertimesController@view');
 
 /*
 * employee documents routes
@@ -2496,17 +2503,20 @@ Route::resource('NextOfKins', 'NextOfKinsController');
 Route::post('NextOfKins/update/{id}', 'NextOfKinsController@update');
 Route::get('NextOfKins/delete/{id}', 'NextOfKinsController@destroy');
 Route::get('NextOfKins/edit/{id}', 'NextOfKinsController@edit');
+Route::get('NextOfKins/view/{id}', 'NextOfKinsController@view');
 
 
 Route::resource('Appraisals', 'AppraisalsController');
 Route::post('Appraisals/update/{id}', 'AppraisalsController@update');
 Route::get('Appraisals/delete/{id}', 'AppraisalsController@destroy');
 Route::get('Appraisals/edit/{id}', 'AppraisalsController@edit');
+Route::get('Appraisals/view/{id}', 'AppraisalsController@view');
 
 Route::resource('Properties', 'PropertiesController');
 Route::post('Properties/update/{id}', 'PropertiesController@update');
 Route::get('Properties/delete/{id}', 'PropertiesController@destroy');
 Route::get('Properties/edit/{id}', 'PropertiesController@edit');
+Route::get('Properties/view/{id}', 'PropertiesController@view');
 
 Route::resource('AppraisalSettings', 'AppraisalSettingsController');
 Route::post('AppraisalSettings/update/{id}', 'AppraisalSettingsController@update');

@@ -97,7 +97,7 @@ body {
     </table>
    </div>
 
-
+<br>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>

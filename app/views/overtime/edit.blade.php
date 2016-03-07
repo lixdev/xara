@@ -1,4 +1,34 @@
+<?php
+
+function asMoney($value) {
+  return number_format($value, 2);
+}
+
+?>
+
 @extends('layouts.payroll')
+
+<script type="text/javascript">
+ function totalBalance() {
+      var p = document.getElementById("period").value;
+      var amt = document.getElementById("amount").value.replace(/,/g,'');
+      var total = p * amt * 10;
+      total=total.toLocaleString('en-US',{minimumFractionDigits: 2});
+      document.getElementById("total").value = total;
+
+}
+
+function totalB() {
+      var p = document.getElementById("period").value;
+      var amt = document.getElementById("amount").value.replace(/,/g,'');
+      var total = p * amt ;
+      total=total.toLocaleString('en-US',{minimumFractionDigits: 2});
+      document.getElementById("total").value = total;
+
+}
+
+</script>
+
 @section('content')
 <br/>
 
@@ -45,7 +75,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="username">Rate <span style="color:red">*</span></label>
+                        <label for="username">Pay Rate <span style="color:red">*</span></label>
                         <select name="rate" class="form-control">
                             <option></option>
                             <option value="Normal"<?= ($overtime->rate=='Normal')?'selected="selected"':''; ?>> Normal</option>
@@ -57,11 +87,27 @@
                 
                     </div>
 
+          <div class="form-group">
+            <label for="username">Period Worked<span style="color:red">*</span> </label>
+            <input class="form-control" placeholder="" type="text" onkeypress="totalB()" onkeyup="totalB()" name="period" id="period" value="{{$overtime->period}}">
+           
+        </div>
+
         <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span> </label>
-            <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{$overtime->amount}}">
+            <input class="form-control" placeholder="" type="text" onkeypress="totalBalance()" onkeyup="totalBalance()" name="amount" id="amount" value="{{$overtime->amount}}">
+            <script type="text/javascript">
+           $(document).ready(function() {
+           $('#amount').priceFormat();
+           });
+           </script>
         </div>
         
+        <div class="form-group">
+            <label for="username">Total Amount </label>
+            <input class="form-control" placeholder="" readonly type="text" name="total" id="total" value="{{asMoney((double)$overtime->amount*(double)$overtime->period)}}">
+           
+        </div>
         
         <div class="form-actions form-group">
         

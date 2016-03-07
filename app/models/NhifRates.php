@@ -5,9 +5,9 @@ class NhifRates extends \Eloquent {
 	public $table = "hospital_insurance";
 
 public static $rules = [
-		'i_from' => 'required|regex:/^\d+(\.\d{2})?$/',
-		'i_to' => 'required|regex:/^\d+(\.\d{2})?$/',
-		'amount' => 'required|regex:/^\d+(\.\d{2})?$/',
+		'i_from' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'i_to' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
 	];
 
 public static $messages = array(

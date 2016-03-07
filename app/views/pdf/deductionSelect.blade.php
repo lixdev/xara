@@ -1,4 +1,4 @@
-@extends('layouts.pay_ports')
+@extends('layouts.payroll')
 @section('content')
 <br/>
 

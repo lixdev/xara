@@ -8,19 +8,19 @@
                 <ul class="nav" id="side-menu">
 
                     <li>
-                        <a href="{{ URL::to('payrollReports/selectPeriod') }}" target="_blank"><i class="glyphicon glyphicon-file fa-fw"></i> Leave Applications</a>
+                        <a href="{{ URL::to('payrollReports/selectPeriod') }}"><i class="glyphicon glyphicon-file fa-fw"></i> Leave Applications</a>
                     </li>
 
                     <li>
-                        <a href="{{ URL::to('payrollReports/selectSummaryPeriod') }}" target="_blank"><i class="glyphicon glyphicon-file fa-fw"></i> Leaves Approved</a>
+                        <a href="{{ URL::to('payrollReports/selectSummaryPeriod') }}"><i class="glyphicon glyphicon-file fa-fw"></i> Leaves Approved</a>
                     </li>
 
                     <li>
-                        <a href="{{ URL::to('payrollReports/selectRemittancePeriod') }}" target="_blank"><i class="glyphicon glyphicon-file fa-fw"></i> Leaves Rejected</a>
+                        <a href="{{ URL::to('payrollReports/selectRemittancePeriod') }}"><i class="glyphicon glyphicon-file fa-fw"></i> Leaves Rejected</a>
                     </li>
 
                     <li>
-                        <a href="{{ URL::to('payrollReports/selectAllowance') }}" target="_blank"><i class="glyphicon glyphicon-file fa-fw"></i> Allowance Report</a>
+                        <a href="{{ URL::to('payrollReports/selectAllowance') }}" ><i class="glyphicon glyphicon-file fa-fw"></i> Allowance Report</a>
                     </li>  
 
                     <li>

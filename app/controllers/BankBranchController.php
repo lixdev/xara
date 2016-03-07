@@ -11,6 +11,8 @@ class BankBranchController extends \BaseController {
 	{
 		$bbranches = BBranch::all();
 
+		Audit::logaudit('Bank branches', 'view', 'viewed bank branches');
+
 		return View::make('bank_branch.index', compact('bbranches'));
 	}
 
@@ -48,7 +50,9 @@ class BankBranchController extends \BaseController {
 
 		$bbranch->save();
 
-		return Redirect::route('bank_branch.index');
+		Audit::logaudit('Bank Branch', 'create', 'created: '.$bbranch->bank_branch_name);
+
+		return Redirect::route('bank_branch.index')->withFlashMessage('Bank Branch successfully created!');
 	}
 
 	/**
@@ -98,7 +102,9 @@ class BankBranchController extends \BaseController {
 		$bbranch->branch_code = Input::get('code');
 		$bbranch->update();
 
-		return Redirect::route('bank_branch.index');
+		Audit::logaudit('Bank Branch', 'update', 'updated: '.$bbranch->bank_branch_name);
+
+		return Redirect::route('bank_branch.index')->withFlashMessage('Bank Branch successfully updated!');
 	}
 
 	/**
@@ -109,9 +115,13 @@ class BankBranchController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$bbranch = BBranch::findOrFail($id);
+
 		BBranch::destroy($id);
 
-		return Redirect::route('bank_branch.index');
+		Audit::logaudit('Bank Branch', 'delete', 'deleted: '.$bbranch->bank_branch_name);
+
+		return Redirect::route('bank_branch.index')->withDeleteMessage('Bank Branch successfully deleted!');
 	}
 
 }

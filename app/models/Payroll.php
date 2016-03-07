@@ -98,11 +98,24 @@ public static $rules = [
     return $salary;
    }
 
+   public static function overtimes($id){
+    $earn = 0.00;
+    
+    $total_overtimes = DB::table('overtimes')
+                     ->select(DB::raw('COALESCE(sum(amount*period),0.00) as overtimes'))
+                     ->where('employee_id', '=', $id)
+                     ->get();
+    foreach($total_overtimes as $total_overtime){
+    $otime = $total_overtime->overtimes;
+    }
+    return $otime;
+
+    }
 
     public static function total_benefits($id){
     $total_earnings = 0.00;
     
-    $total_earnings = static::allowances($id)+static::earnings($id)+static::reliefs($id);
+    $total_earnings = static::allowances($id)+static::earnings($id)+static::overtimes($id);
 
     return $total_earnings;
 
@@ -117,6 +130,7 @@ public static $rules = [
 
     }
 
+
     public static function tax($id){
     $paye = 0.00;
     $total_pay = static::gross($id);
@@ -129,28 +143,32 @@ public static $rules = [
     }else if($emp->income_tax_applicable=='1' && $emp->income_tax_relief_applicable=='1'){
     if($taxable>=11135.67 && $taxable<19741){
     $paye = 1016.4+($taxable-10165)*15/100;
-    $paye = $paye-1162.00;
+    $paye = $paye-1162.00-static::reliefs($id);
     }else if($taxable>=19741 && $taxable<29317){
     $paye = 2452.8+($taxable-19741)*20/100;
-    $paye = $paye-1162.00;
+    $paye = $paye-1162.00-static::reliefs($id);
     }else if($taxable>=29317 && $taxable<38893){
     $paye = 4368+($taxable-29317)*25/100;
-    $paye = $paye-1162.00;
+    $paye = $paye-1162.00-static::reliefs($id);
     }else if($taxable>=38893){
     $paye = 6762+($taxable-38893)*30/100;
-    $paye = $paye-1162.00;
+    $paye = $paye-1162.00-static::reliefs($id);
     }else{
     $paye = 0.00;
     }
     }else if($emp->income_tax_applicable=='1' && $emp->income_tax_relief_applicable=='0'){
     if($taxable>=11135.67 && $taxable<19741){
     $paye = 1016.4+($taxable-10165)*15/100;
+    $paye = $paye-static::reliefs($id);
     }else if($taxable>=19741 && $taxable<29317){
     $paye = 2452.8+($taxable-19741)*20/100;
+    $paye = $paye-static::reliefs($id);
     }else if($taxable>=29317 && $taxable<38893){
     $paye = 4368+($taxable-29317)*25/100;
+    $paye = $paye-static::reliefs($id);
     }else if($taxable>=38893){
     $paye = 6762+($taxable-38893)*30/100;
+    $paye = $paye-static::reliefs($id);
     }else{
     $paye = 0.00;
     }
@@ -204,14 +222,26 @@ public static $rules = [
    }
     
     public static function deductions($id){
+    $period = Input::get('period');
+    $part = explode("-", $period);
+    $start = $part[1]."-".$part[0]."-01";
+    $end  = date('Y-m-t', strtotime($start));
+
     $other_ded = 0.00;
     
     $deds = DB::table('employee_deductions')
-                     ->select(DB::raw('COALESCE(sum(deduction_amount),0.00) as total_deduction'))
+                     ->select(DB::raw('COALESCE(sum(deduction_amount),0.00) as total_deduction,instalments'))
                      ->where('employee_id', '=', $id)
+                     ->where('instalments', '>', 0)
+                     ->where('first_day_month','<=',$start)
+                     ->where('last_day_month','>=',$start)
                      ->get();
     foreach($deds as $ded){
+    if($ded->instalments>=1){
     $other_ded = $ded->total_deduction;
+    }else{
+    $other_ded = 0.00;
+    }
     }
     return $other_ded;
    }

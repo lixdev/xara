@@ -15,9 +15,9 @@ class CreateNhifTable extends Migration {
 		Schema::create('hospital_insurance', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->double('income_from',15,2)->default('0.00');
-			$table->double('income_to',15,2)->default('0.00');
-			$table->double('hi_amount',15,2)->default('0.00');
+			$table->string('income_from',20)->default('0.00');
+			$table->string('income_to',20)->default('0.00');
+			$table->string('hi_amount',20)->default('0.00');
 			$table->integer('organization_id');
 			$table->timestamps();
 		});

@@ -43,6 +43,7 @@
             <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}">
         </div>
 
+
         <div class="form-group">
             <label for="username">ID Number</label>
             <input class="form-control" placeholder="" type="text" name="id_number" id="id_number" value="{{{ Input::old('id_number') }}}">
@@ -53,22 +54,16 @@
             <input class="form-control" placeholder="" type="text" name="rship" id="rship" value="{{{ Input::old('rship') }}}">
         </div>
 
+        <div class="form-group">
+            <label for="username">Contact </label>
+            <textarea class="form-control" name="contact" id="contact">{{{ Input::old('contact') }}}</textarea>
+        </div>
+
          <div class="form-group">
             <label for="username">Goodwill % </label>
             <input class="form-control" placeholder="" type="text" name="goodwill" id="goodwill" value="{{{ Input::old('goodwill') }}}">
         </div>
         
-
-        
-
-
-
-
-
-
-
-        
-      
         
         <div class="form-actions form-group">
         

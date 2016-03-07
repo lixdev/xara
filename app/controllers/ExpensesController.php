@@ -11,6 +11,8 @@ class ExpensesController extends \BaseController {
 	{
 		$expenses = Expense::all();
 
+		Audit::logaudit('Expenses', 'view', 'viewed expenses');
+
 		return View::make('expenses.index', compact('expenses'));
 	}
 
@@ -40,7 +42,7 @@ class ExpensesController extends \BaseController {
 
 		Expense::create($data);
 
-		return Redirect::route('expenses.index');
+		return Redirect::route('expenses.index')->withFlashMessage('Expenses successfully created!');
 	}
 
 	/**
@@ -88,7 +90,7 @@ class ExpensesController extends \BaseController {
 
 		$expense->update($data);
 
-		return Redirect::route('expenses.index');
+		return Redirect::route('expenses.index')->withFlashMessage('Expenses successfully updated!');
 	}
 
 	/**
@@ -99,9 +101,10 @@ class ExpensesController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+		$expense = Expense::findOrFail($id);
 		Expense::destroy($id);
-
-		return Redirect::route('expenses.index');
+        Audit::logaudit('Expenses', 'delete', 'deleted: '.$expense->name);
+		return Redirect::route('expenses.index')->withDeleteMessage('Expenses successfully deleted!');
 	}
 
 }

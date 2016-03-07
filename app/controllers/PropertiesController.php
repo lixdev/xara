@@ -9,7 +9,12 @@ class PropertiesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$properties = Property::all();
+		$properties = DB::table('employee')
+		          ->join('properties', 'employee.id', '=', 'properties.employee_id')
+		          ->where('in_employment','=','Y')
+		          ->get();
+
+		Audit::logaudit('Properties', 'view', 'viewed company properties');
 
 		return View::make('properties.index', compact('properties'));
 	}
@@ -22,7 +27,9 @@ class PropertiesController extends \BaseController {
 	public function create()
 	{
 
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 		return View::make('properties.create', compact('employees'));
 	}
 
@@ -48,7 +55,8 @@ class PropertiesController extends \BaseController {
 		$property->description = Input::get('desc');
 		$property->serial = Input::get('serial');
 		$property->digitalserial = Input::get('dserial');
-		$property->monetary = Input::get('amount');
+		$a = str_replace( ',', '', Input::get('amount') );
+		$property->monetary = $a;
 		$property->issued_by = Confide::user()->id;
 		$property->issue_date = Input::get('idate');
 		$property->scheduled_return_date = Input::get('sdate');
@@ -63,7 +71,7 @@ class PropertiesController extends \BaseController {
 		}
 		$property->save();
 
-		Audit::logaudit('Properties', 'create', 'created: '.$property->name);
+		Audit::logaudit('Properties', 'create', 'created: '.$property->name.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
 		return Redirect::route('Properties.index')->withFlashMessage('Company property successfully created!');
@@ -122,7 +130,8 @@ class PropertiesController extends \BaseController {
 		$property->description = Input::get('desc');
 		$property->serial = Input::get('serial');
 		$property->digitalserial = Input::get('dserial');
-		$property->monetary = Input::get('amount');
+		$a = str_replace( ',', '', Input::get('amount') );
+		$property->monetary = $a;
 		$property->scheduled_return_date = Input::get('sdate');
 		if(filter_var(Input::get('active'), FILTER_VALIDATE_BOOLEAN)){
         $property->state = 1;
@@ -136,7 +145,7 @@ class PropertiesController extends \BaseController {
 
 		$property->update();
 
-		Audit::logaudit('Properties', 'update', 'updated: '.$property->name);
+		Audit::logaudit('Properties', 'update', 'updated: '.$property->name.' for '.Employee::getEmployeeName($property->employee_id));
 
 		return Redirect::route('Properties.index')->withFlashMessage('Company Property successfully updated!');
 	}
@@ -153,9 +162,25 @@ class PropertiesController extends \BaseController {
 		
 		Property::destroy($id);
 
-		Audit::logaudit('Properties', 'delete', 'deleted: '.$property->name);
+		Audit::logaudit('Properties', 'delete', 'deleted: '.$property->name.' for '.Employee::getEmployeeName($property->employee_id));
 
 		return Redirect::route('Properties.index')->withDeleteMessage('Company Property successfully deleted!');
+	}
+    
+    public function view($id){
+
+		$property = Property::find($id);
+
+		$user = User::findOrFail($property->issued_by);
+
+		if($property->received_by>0){
+        $retuser = User::findOrFail($property->received_by);
+		}
+
+		$organization = Organization::find(1);
+
+		return View::make('properties.view', compact('property','user','retuser'));
+		
 	}
 
 }

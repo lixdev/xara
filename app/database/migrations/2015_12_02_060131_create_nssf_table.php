@@ -16,10 +16,10 @@ class CreateNssfTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('tier',30);
-			$table->double('income_from',15,2)->default('0.00');
-			$table->double('income_to',15,2)->default('0.00');
-			$table->double('ss_amount_employee',15,2)->default('0.00');
-			$table->double('ss_amount_employer',15,2)->default('0.00');
+			$table->string('income_from',20)->default('0.00');
+			$table->string('income_to',20)->default('0.00');
+			$table->string('ss_amount_employee',20)->default('0.00');
+			$table->string('ss_amount_employer',20)->default('0.00');
 			$table->integer('organization_id');
 			$table->timestamps();
 		});

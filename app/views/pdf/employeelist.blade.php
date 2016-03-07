@@ -97,7 +97,7 @@ body {
     </table>
    </div>
 
-
+<br>
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
@@ -106,7 +106,7 @@ body {
 
 	<div class="content" style='margin-top:0px;'>
 
-
+<div align="center"><strong>Employee List Report </strong></div><br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>

@@ -11,8 +11,8 @@ class AllowancesController extends \BaseController {
 	{
 		$allowances = Allowance::all();
 
-		
-
+        
+		Audit::logaudit('Allowances', 'view', 'viewed allowances');
 
 
 		return View::make('allowances.index', compact('allowances'));
@@ -53,7 +53,7 @@ class AllowancesController extends \BaseController {
 		Audit::logaudit('Allowances', 'create', 'created: '.$allowance->allowance_name);
 
 
-		return Redirect::route('allowances.index');
+		return Redirect::route('allowances.index')->withFlashMessage('Allowance successfully created!');
 	}
 
 	/**
@@ -104,7 +104,7 @@ class AllowancesController extends \BaseController {
 
 		Audit::logaudit('Allowances', 'update', 'updated: '.$allowance->allowance_name);
 
-		return Redirect::route('allowances.index');
+		return Redirect::route('allowances.index')->withFlashMessage('Allowance successfully updated!');
 	}
 
 	/**
@@ -120,7 +120,7 @@ class AllowancesController extends \BaseController {
 
 		Audit::logaudit('Allowances', 'delete', 'deleted: '.$allowance->allowance_name);
 
-		return Redirect::route('allowances.index');
+		return Redirect::route('allowances.index')->withDeleteMessage('Allowance successfully deleted!');
 	}
 
 }

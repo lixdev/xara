@@ -9,7 +9,10 @@ class EarningsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$earnings = Earnings::all();
+		$earnings = DB::table('employee')
+		          ->join('earnings', 'employee.id', '=', 'earnings.employee_id')
+		          ->where('in_employment','=','Y')
+		          ->get();
 
 		Audit::logaudit('Earnings', 'view', 'viewed earnings');
 
@@ -24,7 +27,9 @@ class EarningsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$employees = Employee::all();
+		$employees = DB::table('employee')
+		          ->where('in_employment','=','Y')
+		          ->get();
 		return View::make('other_earnings.create',compact('employees'));
 	}
 
@@ -50,14 +55,16 @@ class EarningsController extends \BaseController {
 
 		$earning->narrative = Input::get('narrative');
 
-        $earning->earnings_amount = Input::get('amount');
+		$a = str_replace( ',', '', Input::get('amount') );
+
+        $earning->earnings_amount = $a;
 
 		$earning->save();
 
-		Audit::logaudit('Earnings', 'create', 'created: '.$earning->earnings_name);
+		Audit::logaudit('Earnings', 'create', 'created: '.$earning->earnings_name.' for '.Employee::getEmployeeName(Input::get('employee')));
 
 
-		return Redirect::route('other_earnings.index');
+		return Redirect::route('other_earnings.index')->withFlashMessage('Earning successfully created!');
 	}
 
 	/**
@@ -81,8 +88,10 @@ class EarningsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$earning = Earnings::find($id);
-		$employees = Employee::all();
+		$earning = DB::table('employee')
+		          ->join('earnings', 'employee.id', '=', 'earnings.employee_id')
+		          ->where('in_employment','=','Y')
+		          ->first();
 
 		return View::make('other_earnings.edit', compact('earning','employees'));
 	}
@@ -104,19 +113,19 @@ class EarningsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$earning->employee_id = Input::get('employee');
-
 		$earning->earnings_name = Input::get('earning');
 
 		$earning->narrative = Input::get('narrative');
 
-        $earning->earnings_amount = Input::get('amount');
+        $a = str_replace( ',', '', Input::get('amount') );
+
+        $earning->earnings_amount = $a;
 
 		$earning->update();
 
-		Audit::logaudit('Earnings', 'update', 'updated: '.$earning->earnings_name);
+		Audit::logaudit('Earnings', 'update', 'updated: '.$earning->earnings_name.' for '.Employee::getEmployeeName($earning->employee_id));
 
-		return Redirect::route('other_earnings.index');
+		return Redirect::route('other_earnings.index')->withFlashMessage('Earning successfully updated!');
 	}
 
 	/**
@@ -130,9 +139,19 @@ class EarningsController extends \BaseController {
 		$earning = Earnings::findOrFail($id);
 		Earnings::destroy($id);
 
-		Audit::logaudit('Earnings', 'delete', 'deleted: '.$earning->earnings_name);
+		Audit::logaudit('Earnings', 'delete', 'deleted: '.$earning->earnings_name.' for '.Employee::getEmployeeName($earning->employee_id));
 
-		return Redirect::route('other_earnings.index');
+		return Redirect::route('other_earnings.index')->withDeleteMessage('Earning successfully deleted!');
+	}
+
+    public function view($id){
+
+		$earning = Earnings::find($id);
+
+		$organization = Organization::find(1);
+
+		return View::make('other_earnings.view', compact('earning'));
+		
 	}
 
 }

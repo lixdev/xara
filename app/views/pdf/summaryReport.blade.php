@@ -151,7 +151,7 @@ body {
     <tr><td width='50'>
      <strong>Currency:</strong></td>
       @foreach($currencies as $currency)
-     <td>{{$currency->shortname}}
+     <td>{{$currency->shortname}}</td>
       @endforeach   
       </tr>
       <tr><td width='50'><strong>Period:</strong></td><td>{{$period}}</td></tr>
@@ -210,7 +210,7 @@ body {
     <td align="right" width="68">{{ asMoney($total_net ) }}</td></tr>
 
      
-    <td align="right" colspan='11'><strong>Total net:</strong></td><td align="right" width="68">{{ asMoney($total_net ) }}</td></tr>
+   <tr> <td align="right" colspan='11'><strong>Total net:</strong></td><td align="right" width="68">{{ asMoney($total_net ) }}</td></tr>
 
     </table>
 
