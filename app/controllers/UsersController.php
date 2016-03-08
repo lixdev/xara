@@ -328,10 +328,14 @@ class UsersController extends Controller
         else
         {
 
-            $user->password = Hash::make($password);
-            $user->update();
+            $pass = Hash::make($password);
+            
+            DB::table('users')->where('id', $user->id)->update(array('password' => $pass));
 
-            return Redirect::to('users/profile/'.$user->id);
+
+           // return Redirect::to('users/profile/'.$user->id);
+
+            return Redirect::to('users/logout');
         }
 
 
@@ -386,7 +390,7 @@ class UsersController extends Controller
 
         $user_id = Confide::user()->id;
 
-        
+        $user = User::find($user_id);
 
         $password_confirmation = Input::get('password_confirmation');
         $password = Input::get('password');
@@ -402,9 +406,10 @@ class UsersController extends Controller
 
 
             
-        $pass = Hash::make($password);
+        $user->password = Hash::make($password);
+        $user->update();
 
-        DB::table('users')->where('id', $user_id)->update(array('password' => $pass));
+        //DB::table('users')->where('id', $user_id)->update(array('password' => $pass));
 
         return Redirect::to('users/logout');
 
