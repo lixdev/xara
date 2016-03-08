@@ -22,4 +22,9 @@ class Branch extends \Eloquent {
 		return $this->hasMany('Journal');
 	}
 
+public static function getName($id){
+
+$branch = Branch::find($id);
+return $branch->name;
+}
 }

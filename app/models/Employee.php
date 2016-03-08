@@ -141,12 +141,7 @@ class Employee extends Eloquent {
 
     public static function getActiveEmployee(){
 
-		$employee = DB::table('employee')
-		          ->join('branches', 'employee.branch_id', '=', 'branches.id')
-                  ->join('departments', 'employee.department_id', '=', 'departments.id')
-		          ->where('in_employment','=','Y')
-		          ->select('employee.id','personal_file_number','first_name','last_name','branch_id','name','department_id','department_name')
-		          ->get();
+		$employee = DB::table('employee')->where('in_employment', '=', 'Y')->get();
 
 		return $employee;
 	}

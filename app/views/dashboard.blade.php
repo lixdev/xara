@@ -106,12 +106,12 @@
           <td>{{ $employee->personal_file_number }}</td>
           <td>{{ $employee->first_name.' '.$employee->last_name}}</td>
           <?php if( $employee->branch_id!='0'){ ?>
-          <td>{{ $employee->name }}</td>
+          <td>{{ Branch::getName($employee->branch_id) }}</td>
           <?php }else{?>
           <td></td>
           <?php } ?>
            <?php if( $employee->department_id!='0'){ ?>
-          <td>{{ $employee->department_name }}</td>
+          <td>{{ Department::getName($employee->department_id) }}</td>
           <?php }else{?>
           <td></td>
           <?php } ?>

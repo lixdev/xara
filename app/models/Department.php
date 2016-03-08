@@ -18,4 +18,11 @@ public static $messages = array(
 		return $this->hasMany('Employee');
 	}
 
+
+public static function getName($id){
+	$depart = Department::find($id);
+
+return $depart->department_name;
+}
+
 }
