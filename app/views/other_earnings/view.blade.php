@@ -24,9 +24,9 @@ function asMoney($value) {
 
 <div class="col-lg-2">
 
-<img src="{{asset('/public/uploads/employees/photo/'.$earning->employee->photo) }}" width="150px" height="130px" alt="{{asset('/public/uploads/employees/photo/default_photo.png') }}"><br>
+<img src="{{asset('/public/uploads/employees/photo/'.$earning->employee->photo) }}" width="150px" height="130px" alt=""><br>
 <br>
-<img src="{{asset('/public/uploads/employees/signature/'.$earning->employee->signature) }}" width="120px" height="50px" alt="{{asset('/public/uploads/employees/signature/sign_av.jpg') }}">
+<img src="{{asset('/public/uploads/employees/signature/'.$earning->employee->signature) }}" width="120px" height="50px" alt="">
 </div>
 
 <div class="col-lg-6">

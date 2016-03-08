@@ -134,14 +134,14 @@ body {
         <td>{{$employee->personal_file_number}}</td>
         <td> {{$employee->last_name.' '.$employee->first_name.' '.$employee->middle_name}}</td>
 
-         @if($employee->branch_id != null)
+         @if($employee->branch_id != 0)
         <td> {{ $employee->branch->name}}</td>
         @else
         <td></td>
         @endif
        
 
-        @if($employee->department_id != null)
+        @if($employee->department_id != 0)
         <td> {{ $employee->department->department_name}}</td>
         @else
         <td></td>
