@@ -228,14 +228,21 @@ public static $rules = [
     $end  = date('Y-m-t', strtotime($start));
 
     $other_ded = 0.00;
+
     
     $deds = DB::table('employee_deductions')
                      ->select(DB::raw('COALESCE(sum(deduction_amount),0.00) as total_deduction,instalments'))
-                     ->where('employee_id', '=', $id)
-                     ->where('instalments', '>', 0)
-                     ->where('first_day_month','<=',$start)
-                     ->where('last_day_month','>=',$start)
-                     ->get();
+                     ->where(function ($query) use ($id,$start){
+                       $query->where('employee_id', '=', $id)
+                             ->where('formular', '=', 'Recurring')
+                             ->where('first_day_month','<=',$start);
+                       })
+                      ->orWhere(function ($query) use ($id,$start) {
+                        $query->where('employee_id', '=', $id)
+                              ->where('instalments', '>', 0)
+                              ->where('first_day_month','<=',$start)
+                              ->where('last_day_month','>=',$start);
+                        })->get();
     foreach($deds as $ded){
     if($ded->instalments>=1){
     $other_ded = $ded->total_deduction;

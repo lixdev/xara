@@ -28,10 +28,7 @@
    
     <fieldset>
 
-        <div class="form-group">
-            <label for="username">Employee</label>
-            <input class="form-control" placeholder="" type="text" readonly name="employee_id" id="employee_id" value="{{ $kin->employee->first_name.' '.$kin->employee->last_name }}">
-        </div>
+            <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee_id" value="{{ $kin->employee->id }}">
 
         <div class="form-group">
             <label for="username">Kin Name</label>
@@ -51,11 +48,6 @@
         <div class="form-group">
             <label for="username">Contact </label>
             <textarea class="form-control" name="contact" id="contact">{{$kin->contact}}</textarea>
-        </div>
-
-         <div class="form-group">
-            <label for="username">Goodwill % </label>
-            <input class="form-control" placeholder="" type="text" name="goodwill" id="goodwill" value="{{ $kin->goodwill }}">
         </div>
         
         

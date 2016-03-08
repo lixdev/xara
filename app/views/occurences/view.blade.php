@@ -12,8 +12,24 @@ function asMoney($value) {
 <div class="row">
 	<div class="col-lg-12">
 
+  @if (Session::has('flash_message'))
+
+      <div class="alert alert-success">
+      {{ Session::get('flash_message') }}
+     </div>
+    @endif
+
+     @if (Session::has('delete_message'))
+
+      <div class="alert alert-danger">
+      {{ Session::get('delete_message') }}
+     </div>
+    @endif
+
 
 <a class="btn btn-info btn-sm "  href="{{ URL::to('occurences/edit/'.$occurence->id)}}">update details</a>
+<a class="btn btn-danger btn-sm " href="{{URL::to('occurences/delete/'.$occurence->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s occurence?'))">Delete</a>
+<a class="btn btn-success btn-sm "  href="{{ URL::to('employees/view/'.$occurence->employee->id)}}">Go Back</a>
 
 <hr>
 </div>	

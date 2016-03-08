@@ -98,9 +98,9 @@ class Employee extends Eloquent {
 		return $this->belongsTo('Department');
 	}
 
-    public function jgroup(){
+    public function jobgroup(){
 
-		return $this->belongsTo('JGroup');
+		return $this->belongsTo('Jobgroup');
 	}
 
 

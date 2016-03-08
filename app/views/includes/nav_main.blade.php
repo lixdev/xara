@@ -15,26 +15,6 @@
                     </li>
 
                      <li>
-                        <a href="{{ URL::to('NextOfKins') }}"><i class="fa fa-users fa-fw"></i> Next Of Kins </a>
-                    </li>
-
-                     <li>
-                        <a href="{{ URL::to('documents') }}"><i class="fa fa-users fa-fw"></i> Employee Documents </a>
-                    </li>
-
-                     <li>
-                        <a href="{{ URL::to('Appraisals') }}"><i class="fa fa-list fa-fw"></i> Appraisals </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ URL::to('Properties') }}"><i class="fa fa-list fa-fw"></i> Company Properties </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ URL::to('occurences') }}"><i class="fa fa-users fa-fw"></i> Employee Occurences </a>
-                    </li>
-
-                     <li>
                         <a href="{{ URL::to('reports/employees') }}"><i class="fa fa-folder fa-fw"></i> Reports </a>
                     </li>
                     

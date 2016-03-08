@@ -1,4 +1,9 @@
 @extends('layouts.hr')
+
+{{HTML::script('media/jquery-1.8.0.min.js') }}
+
+
+
 @section('content')
 <br/>
 
@@ -32,6 +37,45 @@
             <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}">
         </div>
         
+        <div class="form-group">
+            <label for="username">Benefits</label><label for="username" style="margin-left:150px">Amount</label>
+            <?php $i = 1; ?>
+            @foreach($benefits as $benefit)
+            <table>
+            <tr><td width="200">
+
+            <input type="checkbox" name="benefitid[]" id="{{'benefitid_'.$i}}" value="{{$benefit->id}}">
+                             {{$benefit->benefit_name}}
+            </td>
+            <td>
+            <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}" value="{{{ Input::old('amount') }}}">
+            </td>
+            </tr>
+            
+            </table>
+
+            <script type="text/javascript">
+$(document).ready(function(){
+   $("#amount_"+<?php echo $i;?>).hide();
+   $('#benefitid_'+<?php echo $i;?>).click(function(){
+
+    if($('#benefitid_'+<?php echo $i;?>).is(":checked")){
+    $('#benefitid_'+<?php echo $i;?>+':checked').each(function(){
+
+     $("#amount_"+<?php echo $i;?>).show();
+     
+      });
+     }else{
+        $("#amount_"+<?php echo $i;?>).hide();
+     }
+     });
+     $("#amount_"+<?php echo $i;?>).priceFormat();
+    });
+</script>
+
+            <?php $i++; ?>
+            @endforeach
+            </div>
         
         <div class="form-actions form-group">
         

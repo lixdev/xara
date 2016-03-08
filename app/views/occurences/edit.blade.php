@@ -32,15 +32,7 @@
             <input class="form-control" placeholder="" type="text" name="brief" id="brief" value="{{{ $occurence->occurence_brief }}}">
         </div>
        
-       <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <select name="employee" class="form-control">
-                            @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}"<?= ($occurence->employee_id==$employee->id)?'selected="selected"':''; ?>> {{ $employee->first_name.' '.$employee->last_name }}</option>
-                            @endforeach
-                        </select>
-                
-                    </div>   
+      <input class="form-control" placeholder="" type="hidden" readonly name="employee" id="employee" value="{{ $occurence->employee->id }}"> 
 
         <div class="form-group">
                         <label for="username">Occurence Type: <span style="color:red">*</span></label>

@@ -1,6 +1,6 @@
 <?php
 
-class JGroup extends \Eloquent {
+class Jobgroup extends \Eloquent {
 
 public $table = "job_group";
 
@@ -16,9 +16,9 @@ public static $messages = array(
 	protected $fillable = [];
 
 
-	public function employees(){
+	public function employeebenefits(){
 
-		return $this->hasMany('Employee');
+		return $this->hasMany('Employeebenefit');
 	}
 
 }

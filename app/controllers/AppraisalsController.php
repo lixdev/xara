@@ -28,13 +28,14 @@ class AppraisalsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
+		$id = $id;
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
 		          ->get();
 		$appraisals = Appraisalquestion::all();
-		return View::make('appraisals.create',compact('employees','appraisals'));
+		return View::make('appraisals.create',compact('employees','appraisals','id'));
 	}
 
 	/**
@@ -72,7 +73,7 @@ class AppraisalsController extends \BaseController {
 		Audit::logaudit('Employee Appraisal', 'create', 'created: '.$appraisal->question.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
-		return Redirect::route('Appraisals.index')->withFlashMessage('Employee Appraisal successfully created!');
+		return Redirect::to('Appraisals/view/'.$appraisal->id)->withFlashMessage('Employee Appraisal successfully created!');
 	}
 
 	/**
@@ -133,7 +134,7 @@ class AppraisalsController extends \BaseController {
 		Audit::logaudit('Appraisal Question', 'update', 'updated: '.$appraisal->question.' for '.Employee::getEmployeeName($appraisal->employee_id));
 
 
-		return Redirect::route('Appraisals.index')->withFlashMessage('Employee Appraisal successfully updated!');
+		return Redirect::to('Appraisals/view/'.$id)->withFlashMessage('Employee Appraisal successfully updated!');
 	}
 
 	/**
@@ -151,7 +152,7 @@ class AppraisalsController extends \BaseController {
 		Audit::logaudit('Employee Appraisal', 'delete', 'deleted: '.$appraisal->question.' for '.Employee::getEmployeeName($appraisal->employee_id));
 
 
-		return Redirect::route('Appraisals.index')->withDeleteMessage('Employee Appraisal successfully deleted!');
+		return Redirect::to('employees/view/'.$appraisal->employee_id)->withDeleteMessage('Employee Appraisal successfully deleted!');
 	}
 
 	public function view($id){

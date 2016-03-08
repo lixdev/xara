@@ -48,6 +48,12 @@ function asMoney($value) {
       @else
       <tr><td><strong>Deduction Amount: </strong></td><td align="right">{{asMoney($ded->deduction_amount)}}</td></tr>
       @endif
+      @if($ded->formular == 'One Time' || $ded->formular == 'Instalments')
+      <tr><td><strong>Start Date: </strong></td><td>{{$ded->deduction_date}}</td></tr>
+      <tr><td><strong>End Date: </strong></td><td>{{$ded->last_day_month}}</td></tr>
+      @else
+      <tr><td><strong>Start Date: </strong></td><td>{{$ded->deduction_date}}</td></tr>
+      @endif
 </table>
 </div>
 

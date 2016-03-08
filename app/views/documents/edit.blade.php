@@ -27,12 +27,8 @@
          <form method="POST" action="{{{ URL::to('documents/update/'.$document->id) }}}" accept-charset="UTF-8" enctype="multipart/form-data">
    
     <fieldset>
-
-       <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <input class="form-control" placeholder="" type="text" name="employee" id="employee" readonly value="{{ $document->employee->first_name.' '.$document->employee->last_name }}">
-                
-                    </div>        
+    <input class="form-control" placeholder="" type="hidden" name="employee" id="employee" readonly value="{{ $document->employee->id }}">
+                      
 
     <div class="form-group">
                         <label for="username">Current Document</label><span style="color:red">*</span><br>

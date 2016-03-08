@@ -72,6 +72,10 @@
 
     $(document).ready(function() {
     $('#users').DataTable();
+    $('#doc').DataTable();
+    $('#app').DataTable();
+    $('#occ').DataTable();
+    $('#prop').DataTable();
     $('#mobile').DataTable();
     $('#rejected').DataTable();
     $('#app').DataTable();

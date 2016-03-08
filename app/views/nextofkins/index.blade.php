@@ -45,7 +45,6 @@
         <th>Kin Name</th>
          <th>ID Number</th>
          <th>Relationship</th>
-         <th>Goodwill</th>
         <th></th>
 
       </thead>
@@ -69,7 +68,7 @@
            @else
           <td></td>
           @endif
-          <td>{{ $kin->goodwill.' %' }}</td>
+          
           <td>
 
                   <div class="btn-group">

@@ -1,10 +1,10 @@
-@extends('layouts.hr')
+@extends('layouts.earning')
 @section('content')
 <br/>
 
 <div class="row">
 	<div class="col-lg-12">
-  <h3>Job Groups</h3>
+  <h3>Benefit Settings</h3>
 
 <hr>
 </div>	
@@ -13,8 +13,7 @@
 
 <div class="row">
 	<div class="col-lg-12">
-
-     @if (Session::has('flash_message'))
+    @if (Session::has('flash_message'))
 
       <div class="alert alert-success">
       {{ Session::get('flash_message') }}
@@ -30,7 +29,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{ URL::to('job_group/create')}}">new job group</a>
+          <a class="btn btn-info btn-sm" href="{{ URL::to('benefitsettings/create')}}">new benefit</a>
         </div>
         <div class="panel-body">
 
@@ -41,19 +40,19 @@
       <thead>
 
         <th>#</th>
-        <th>Job Group Name</th>
+        <th>Benefit Name</th>
         <th>Action</th>
 
       </thead>
       <tbody>
 
         <?php $i = 1; ?>
-        @foreach($jgroups as $jgroup)
+        @foreach($benefits as $benefit)
 
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $jgroup->job_group_name }}</td>
+          <td>{{ $benefit->benefit_name }}</td>
           <td>
 
                   <div class="btn-group">
@@ -62,15 +61,14 @@
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="{{URL::to('job_group/show/'.$jgroup->id)}}">view</a></li>
-                    <li><a href="{{URL::to('job_group/edit/'.$jgroup->id)}}">Update</a></li>
+                    <li><a href="{{URL::to('benefitsettings/edit/'.$benefit->id)}}">Update</a></li>
                    
-                    <li><a href="{{URL::to('job_group/delete/'.$jgroup->id)}}" onclick="return (confirm('Are you sure you want to delete this job group?'))">Delete</a></li>
+                    <li><a href="{{URL::to('benefitsettings/delete/'.$benefit->id)}}" onclick="return (confirm('Are you sure you want to delete this benefit?'))">Delete</a></li>
                     
                   </ul>
               </div>
 
-          </td>
+                    </td>
 
 
 

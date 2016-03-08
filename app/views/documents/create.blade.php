@@ -28,16 +28,7 @@
    
     <fieldset>
 
-       <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <select name="employee" class="form-control">
-                           <option></option>
-                            @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}"> {{ $employee->first_name.' '.$employee->last_name }}</option>
-                            @endforeach
-                        </select>
-                
-                    </div>        
+            <input class="form-control" placeholder="" type="hidden" name="employee" id="employee" value="{{$id}}">
 
        <div class="form-group">
                         <label for="username">Document</label><span style="color:red">*</span><br>

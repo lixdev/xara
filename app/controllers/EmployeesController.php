@@ -28,7 +28,7 @@ class EmployeesController extends \BaseController {
 		//
 		$branches = Branch::all();
 		$departments = Department::all();
-		$jgroups = JGroup::all();
+		$jgroups = Jobgroup::all();
 		$etypes = EType::all();
 		$banks = Bank::all();
 		$bbranches = BBranch::all();
@@ -216,7 +216,7 @@ class EmployeesController extends \BaseController {
 		$employee = Employee::find($id);
 		$branches = Branch::all();
 		$departments = Department::all();
-		$jgroups = JGroup::all();
+		$jgroups = Jobgroup::all();
 		$etypes = EType::all();
 		$banks = Bank::all();
 		$bbranches = BBranch::all();
@@ -418,9 +418,19 @@ class EmployeesController extends \BaseController {
 
 		$employee = Employee::find($id);
 
+		$appraisals = Appraisal::where('employee_id', $id)->get();
+
+        $kins = Nextofkin::where('employee_id', $id)->get();
+
+        $occurences = Occurence::where('employee_id', $id)->get();
+
+        $properties = Property::where('employee_id', $id)->get();
+
+        $documents = Document::where('employee_id', $id)->get();
+
 		$organization = Organization::find(1);
 
-		return View::make('employees.view', compact('employee'));
+		return View::make('employees.view', compact('employee','appraisals','kins','documents','occurences','properties'));
 		
 	}
 

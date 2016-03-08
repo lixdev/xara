@@ -49,16 +49,9 @@ console.log($("#issuedby").val());
    
     <fieldset>
 
-        <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <select name="employee_id" class="form-control">
-                           <option></option>
-                            @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}"> {{ $employee->first_name.' '.$employee->last_name }}</option>
-                            @endforeach
-                        </select>
+       <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee" value="{{ $id }}"> 
                 
-                    </div>        
+                         
         <div class="form-group">
             <label for="username">Property Name<span style="color:red">*</span></label>
             <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}">

@@ -24,13 +24,14 @@ class NextOfKinsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
-	{
+	public function create($id)
+	{  
+		$id = $id;
 
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
 		          ->get();
-		return View::make('nextofkins.create', compact('employees'));
+		return View::make('nextofkins.create', compact('employees','id'));
 	}
 
 	/**
@@ -54,14 +55,13 @@ class NextOfKinsController extends \BaseController {
 		$kin->name = Input::get('name');
 		$kin->relationship = Input::get('rship');
 		$kin->contact = Input::get('contact');
-		$kin->goodwill = Input::get('goodwill');
 		$kin->id_number = Input::get('id_number');
 		$kin->save();
 
 		Audit::logaudit('NextofKins', 'create', 'created: '.$kin->name.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
-		return Redirect::route('NextOfKins.index')->withFlashMessage('Employee`s next of kin successfully created!');
+		return Redirect::to('NextOfKins/view/'.$kin->id)->withFlashMessage('Employee`s next of kin successfully created!');
 	}
 
 	/**
@@ -110,14 +110,13 @@ class NextOfKinsController extends \BaseController {
 		$kin->name = Input::get('name');
 		$kin->relationship = Input::get('rship');
 		$kin->contact = Input::get('contact');
-		$kin->goodwill = Input::get('goodwill');
 		$kin->id_number = Input::get('id_number');
 
 		$kin->update();
 
 		Audit::logaudit('NextofKins', 'update', 'updated: '.$kin->name.' for '.Employee::getEmployeeName($kin->employee_id));
 
-		return Redirect::route('NextOfKins.index')->withFlashMessage('Employee`s next of kin successfully updated!');
+		return Redirect::to('NextOfKins/view/'.$id)->withFlashMessage('Employee`s next of kin successfully updated!');
 	}
 
 	/**
@@ -132,7 +131,7 @@ class NextOfKinsController extends \BaseController {
 		Nextofkin::destroy($id);
 		Audit::logaudit('NextofKins', 'delete', 'deleted: '.$kin->name.' for '.Employee::getEmployeeName($kin->employee_id));
 
-		return Redirect::route('NextOfKins.index')->withDeleteMessage('Employee`s next of kin successfully deleted!');
+		return Redirect::to('employees/view/'.$kin->employee_id)->withDeleteMessage('Employee`s next of kin successfully deleted!');
 	}
 
 	public function view($id){

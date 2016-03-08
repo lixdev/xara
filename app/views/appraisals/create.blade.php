@@ -59,18 +59,10 @@ width:100px;
 
 		 <form method="POST" action="{{{ URL::to('Appraisals') }}}" accept-charset="UTF-8">
    
-    <fieldset>
-
-        <div class="form-group">
-                        <label for="username">Employee <span style="color:red">*</span></label>
-                        <select name="employee_id" class="form-control">
-                           <option></option>
-                            @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}"> {{ $employee->first_name.' '.$employee->last_name }}</option>
-                            @endforeach
-                        </select>
+        <fieldset>
+         <input class="form-control" placeholder="" type="hidden" name="employee_id" id="employee_id" value="{{$id}}">
                 
-                    </div>        
+                    
 
         <div class="form-group">
                         <label for="username">Appraisal <span style="color:red">*</span></label>

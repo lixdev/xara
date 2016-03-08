@@ -8,6 +8,10 @@
                         <a href="{{ URL::to('allowances') }}"><i class="glyphicon glyphicon-home fa-fw"></i> Allowances</a>
                     </li>
 
+                    <li>
+                        <a href="{{ URL::to('benefitsettings') }}"><i class="fa fa-list fa-fw"></i> Benefits</a>
+                    </li>
+
                      <li>
                         <a href="{{ URL::to('reliefs') }}"><i class="fa fa-list fa-fw"></i> Relief</a>
                     </li>

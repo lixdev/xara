@@ -23,12 +23,13 @@ class OccurencesController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
+		$id=$id;
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
 		          ->get();
-		return View::make('occurences.create',compact('employees'));
+		return View::make('occurences.create',compact('employees','id'));
 	}
 
 	/**
@@ -64,7 +65,7 @@ class OccurencesController extends \BaseController {
 		Audit::logaudit('Occurences', 'create', 'created: '.$occurence->occurence_brief.' for '.Employee::getEmployeeName(Input::get('employee')));
 
 
-		return Redirect::route('occurences.index')->withFlashMessage('Occurence successfully created!');
+		return Redirect::to('occurences/view/'.$occurence->id)->withFlashMessage('Occurence successfully created!');
 	}
 
 	/**
@@ -114,8 +115,6 @@ class OccurencesController extends \BaseController {
 
 		$occurence->occurence_brief = Input::get('brief');
 
-		$occurence->employee_id = Input::get('employee');
-
 		$occurence->occurence_type = Input::get('type');
 
 		$occurence->narrative = Input::get('narrative');
@@ -126,7 +125,7 @@ class OccurencesController extends \BaseController {
 
 		Audit::logaudit('Occurences', 'update', 'updated: '.$occurence->occurence_brief.' for '.Employee::getEmployeeName(Input::get('employee')));
 
-		return Redirect::route('occurences.index')->withFlashMessage('Occurence successfully updated!');
+		return Redirect::to('occurences/view/'.$id)->withFlashMessage('Occurence successfully updated!');
 	}
 
 	/**
@@ -142,7 +141,7 @@ class OccurencesController extends \BaseController {
 
 		Audit::logaudit('Occurences', 'delete', 'deleted: '.$occurence->occurence_brief.' for '.Employee::getEmployeeName($occurence->employee_id));
 
-		return Redirect::route('occurences.index')->withDeleteMessage('Occurence successfully deleted!');
+		return Redirect::to('employees/view/'.$occurence->employee_id)->withDeleteMessage('Occurence successfully deleted!');
 	}
 
     public function view($id){

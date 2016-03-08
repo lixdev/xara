@@ -24,13 +24,14 @@ class DocumentsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
+		$id = $id;
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
 		          ->get();
 
-		return View::make('documents.create', compact('employees'));
+		return View::make('documents.create', compact('employees','id'));
 	}
 
 	/**
@@ -68,7 +69,7 @@ class DocumentsController extends \BaseController {
 
 		Audit::logaudit('Documents', 'create', 'created: '.$document->document_name.' for '.Employee::getEmployeeName(Input::get('employee')));
 
-		return Redirect::route('documents.index')->withFlashMessage('Employee document successfully uploaded!');
+		return Redirect::to('employees/view/'.Input::get('employee'))->withFlashMessage('Employee document successfully uploaded!');
 	}
 
 	/**
@@ -131,7 +132,7 @@ class DocumentsController extends \BaseController {
 
 		Audit::logaudit('Documents', 'update', 'updated: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 
-		return Redirect::route('documents.index')->withFlashMessage('Employee Document successfully updated!');
+		return Redirect::to('employees/view/'.Input::get('employee'))->withFlashMessage('Employee Document successfully updated!');
 	}
 
 	/**
@@ -147,7 +148,7 @@ class DocumentsController extends \BaseController {
 
 		Audit::logaudit('Documents', 'delete', 'deleted: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 
-		return Redirect::route('documents.index')->withDeleteMessage('Employee Document successfully deleted!');
+		return Redirect::to('employees/view/'.Input::get('employee'))->withDeleteMessage('Employee Document successfully deleted!');
 	}
 
     public function getDownload($id){

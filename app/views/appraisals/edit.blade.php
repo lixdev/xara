@@ -61,10 +61,7 @@ width:100px;
    
     <fieldset>
 
-        <div class="form-group">
-            <label for="username">Employee</label>
-            <input class="form-control" placeholder="" type="text" readonly name="employee_id" id="employee_id" value="{{ $appraisal->employee->first_name.' '.$appraisal->employee->last_name }}">
-        </div>  
+            <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee_id" value="{{ $appraisal->employee->id}}"> 
 
         <div class="form-group">
                         <label for="username">Appraisal <span style="color:red">*</span></label>

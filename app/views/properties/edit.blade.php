@@ -49,10 +49,7 @@ console.log($("#issuedby").val());
    
     <fieldset>
          <input class="form-control" placeholder="" type="hidden" readonly name="retby" id="retby" value="{{Confide::user()->username}}">
-        <div class="form-group">
-            <label for="username">Employee</label>
-            <input class="form-control" placeholder="" type="text" readonly name="employee_id" id="employee_id" value="{{ $property->employee->first_name.' '.$property->employee->last_name }}">
-        </div>  
+        <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee_id" value="{{ $property->employee->id }}">  
 
         <div class="form-group">
             <label for="username">Property Name<span style="color:red">*</span></label>

@@ -216,7 +216,7 @@ class EmployeeDeductionsController extends \BaseController {
 		          ->join('employee_deductions', 'employee.id', '=', 'employee_deductions.employee_id')
 		          ->join('deductions', 'employee_deductions.deduction_id', '=', 'deductions.id')
 		          ->where('employee_deductions.id','=',$id)
-		          ->select('employee_deductions.id','first_name','last_name','middle_name','formular','instalments','deduction_amount','deduction_name','photo','signature')
+		          ->select('employee_deductions.id','first_name','last_name','middle_name','formular','instalments','deduction_amount','deduction_name','deduction_date','last_day_month','photo','signature')
 		          ->first();
 
 		$organization = Organization::find(1);

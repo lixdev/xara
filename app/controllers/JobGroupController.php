@@ -9,7 +9,8 @@ class JobGroupController extends \BaseController {
 	 */
 	public function index()
 	{
-		$jgroups = JGroup::all();
+		$jgroups = Jobgroup::all();
+		$benefits = Benefitsetting::all();
 
 		Audit::logaudit('Job Group', 'view', 'viewed employee job group');
 
@@ -23,7 +24,8 @@ class JobGroupController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('job_group.create');
+		$benefits = Benefitsetting::all();
+		return View::make('job_group.create', compact('benefits'));
 	}
 
 	/**
@@ -33,20 +35,41 @@ class JobGroupController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), JGroup::$rules,JGroup::$messages);
+		$validator = Validator::make($data = Input::all(), Jobgroup::$rules,Jobgroup::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$jgroup = new JGroup;
+		$c = count(Input::get('benefitid'));
+
+		$ben = Input::get('benefitid');
+
+        $amt = str_replace( ',', '', Input::get('amount') );
+
+		$jgroup = new Jobgroup;
 
 		$jgroup->job_group_name = Input::get('name');
 
         $jgroup->organization_id = '1';
 
-		$jgroup->save();
+        $jgroup->save();
+
+        $id = Jobgroup::orderBy('id','DESC')->first();
+
+        for ( $i=0; $i< $c; $i++) {
+
+        $benefit = new Employeebenefit;
+
+        $benefit->jobgroup_id=$id->id ;
+        $benefit->benefit_id = $ben[$i];
+        $benefit->amount = $amt[$i];
+        $benefit->save();
+    
+        }
+
+		
 
 		Audit::logaudit('Job Groups', 'create', 'created: '.$jgroup->job_group_name);
 
@@ -61,9 +84,11 @@ class JobGroupController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$jgroup = JGroup::findOrFail($id);
+		$jobgroup = Jobgroup::findOrFail($id);
 
-		return View::make('job_group.show', compact('jgroup'));
+		$benefits = Benefitsetting::all();
+
+		return View::make('job_group.show', compact('jobgroup','benefits'));
 	}
 
 	/**
@@ -74,9 +99,15 @@ class JobGroupController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$jgroup = JGroup::find($id);
+		$jobgroup = Jobgroup::find($id);
 
-		return View::make('job_group.edit', compact('jgroup'));
+		$benefits = Benefitsetting::all();
+
+		$amounts=DB::table('employeebenefits')->where('jobgroup_id',$id)->get();
+
+		$count = DB::table('employeebenefits')->where('jobgroup_id',$id)->count();
+
+		return View::make('job_group.edit', compact('jobgroup','benefits','count','amounts'));
 	}
 
 	/**
@@ -87,17 +118,36 @@ class JobGroupController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$jgroup = JGroup::findOrFail($id);
+		$jgroup = Jobgroup::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), JGroup::$rules,JGroup::$messages);
+		$validator = Validator::make($data = Input::all(), Jobgroup::$rules,Jobgroup::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
+        $c = count(Input::get('benefitid'));
+
+		$ben = Input::get('benefitid');
+        $amt = str_replace( ',', '', Input::get('amount') );
+
 
 		$jgroup->job_group_name = Input::get('name');
 		$jgroup->update();
+
+		DB::table('employeebenefits')->where('jobgroup_id',$id)->delete();
+
+        for ( $i=0; $i< $c; $i++) {
+
+        $benefit = new Employeebenefit;
+
+        $benefit->jobgroup_id=$id;
+        $benefit->benefit_id = $ben[$i];
+        $benefit->amount = $amt[$i];
+        $benefit->save();
+    
+        }
+
         
         Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
 
@@ -112,8 +162,9 @@ class JobGroupController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$jgroup = JGroup::findOrFail($id);
-		JGroup::destroy($id);
+		$jgroup = Jobgroup::findOrFail($id);
+		Jobgroup::destroy($id);
+		DB::table('employeebenefits')->where('jobgroup_id',$id)->delete();
         Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
 		return Redirect::route('job_group.index')->withDeleteMessage('Job group successfully deleted!');
 	}

@@ -69,6 +69,11 @@ class PayrollController extends \BaseController {
     $data7    = DB::table('employee_deductions')
               ->join('transact_deductions','employee_deductions.id','=','transact_deductions.employee_deduction_id')
               ->where('financial_month_year', '=', $period)
+              ->where(function($query){
+                $query->where('formular','=','One Time')
+                      ->orWhere('formular','=','Instalments');
+               })
+              ->where('instalments','>',0)
               ->increment('instalments');
     $data     = DB::table('transact')->where('financial_month_year',$period)->delete(); 
     $data2    = DB::table('transact_allowances')->where('financial_month_year', '=', $period)->delete();

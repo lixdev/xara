@@ -379,7 +379,7 @@ Route::get('template/employees', function(){
 
   $employeetype_data = EType::all();
 
-  $jobgroup_data = JGroup::all();
+  $jobgroup_data = Jobgroup::all();
 
   Excel::create('Employees', function($excel) use($bank_data, $bankbranch_data, $branch_data, $department_data, $employeetype_data, $jobgroup_data,$employees, $data) {
 
@@ -1304,6 +1304,15 @@ Route::get('allowances/delete/{id}', 'AllowancesController@destroy');
 Route::get('allowances/edit/{id}', 'AllowancesController@edit');
 
 /*
+* benefits setting routes
+*/
+
+Route::resource('benefitsettings', 'BenefitSettingsController');
+Route::post('benefitsettings/update/{id}', 'BenefitSettingsController@update');
+Route::get('benefitsettings/delete/{id}', 'BenefitSettingsController@destroy');
+Route::get('benefitsettings/edit/{id}', 'BenefitSettingsController@edit');
+
+/*
 * reliefs routes
 */
 
@@ -1347,6 +1356,7 @@ Route::resource('job_group', 'JobGroupController');
 Route::post('job_group/update/{id}', 'JobGroupController@update');
 Route::get('job_group/delete/{id}', 'JobGroupController@destroy');
 Route::get('job_group/edit/{id}', 'JobGroupController@edit');
+Route::get('job_group/show/{id}', 'JobGroupController@show');
 
 /*
 * employee type routes
@@ -1376,6 +1386,7 @@ Route::post('occurences/update/{id}', 'OccurencesController@update');
 Route::get('occurences/delete/{id}', 'OccurencesController@destroy');
 Route::get('occurences/edit/{id}', 'OccurencesController@edit');
 Route::get('occurences/view/{id}', 'OccurencesController@view');
+Route::get('occurences/create/{id}', 'OccurencesController@create');
 
 
 /*
@@ -2186,7 +2197,7 @@ Route::get('empedit/{id}', function($id){
   $employee = Employee::find($id);
     $branches = Branch::all();
     $departments = Department::all();
-    $jgroups = JGroup::all();
+    $jgroups = Jobgroup::all();
     $etypes = EType::all();
     $banks = Bank::all();
     $bbranches = BBranch::all();
@@ -2498,18 +2509,20 @@ Route::post('documents/update/{id}', 'DocumentsController@update');
 Route::get('documents/delete/{id}', 'DocumentsController@destroy');
 Route::get('documents/edit/{id}', 'DocumentsController@edit');
 Route::get('documents/download/{id}', 'DocumentsController@getDownload');
+Route::get('documents/create/{id}', 'DocumentsController@create');
 
 Route::resource('NextOfKins', 'NextOfKinsController');
 Route::post('NextOfKins/update/{id}', 'NextOfKinsController@update');
 Route::get('NextOfKins/delete/{id}', 'NextOfKinsController@destroy');
 Route::get('NextOfKins/edit/{id}', 'NextOfKinsController@edit');
 Route::get('NextOfKins/view/{id}', 'NextOfKinsController@view');
-
+Route::get('NextOfKins/create/{id}', 'NextOfKinsController@create');
 
 Route::resource('Appraisals', 'AppraisalsController');
 Route::post('Appraisals/update/{id}', 'AppraisalsController@update');
 Route::get('Appraisals/delete/{id}', 'AppraisalsController@destroy');
 Route::get('Appraisals/edit/{id}', 'AppraisalsController@edit');
+Route::get('Appraisals/create/{id}', 'AppraisalsController@create');
 Route::get('Appraisals/view/{id}', 'AppraisalsController@view');
 
 Route::resource('Properties', 'PropertiesController');
@@ -2517,6 +2530,7 @@ Route::post('Properties/update/{id}', 'PropertiesController@update');
 Route::get('Properties/delete/{id}', 'PropertiesController@destroy');
 Route::get('Properties/edit/{id}', 'PropertiesController@edit');
 Route::get('Properties/view/{id}', 'PropertiesController@view');
+Route::get('Properties/create/{id}', 'PropertiesController@create');
 
 Route::resource('AppraisalSettings', 'AppraisalSettingsController');
 Route::post('AppraisalSettings/update/{id}', 'AppraisalSettingsController@update');

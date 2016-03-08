@@ -24,13 +24,13 @@ class PropertiesController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
-
+        $id = $id;
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
 		          ->get();
-		return View::make('properties.create', compact('employees'));
+		return View::make('properties.create', compact('employees','id'));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class PropertiesController extends \BaseController {
 		Audit::logaudit('Properties', 'create', 'created: '.$property->name.' for '.Employee::getEmployeeName(Input::get('employee_id')));
 
 
-		return Redirect::route('Properties.index')->withFlashMessage('Company property successfully created!');
+		return Redirect::to('Properties/view/'.$property->id)->withFlashMessage('Company property successfully created!');
 	}
 
 	/**
@@ -147,7 +147,7 @@ class PropertiesController extends \BaseController {
 
 		Audit::logaudit('Properties', 'update', 'updated: '.$property->name.' for '.Employee::getEmployeeName($property->employee_id));
 
-		return Redirect::route('Properties.index')->withFlashMessage('Company Property successfully updated!');
+		return Redirect::to('Properties/view/'.$id)->withFlashMessage('Company Property successfully updated!');
 	}
 
 	/**
@@ -164,7 +164,7 @@ class PropertiesController extends \BaseController {
 
 		Audit::logaudit('Properties', 'delete', 'deleted: '.$property->name.' for '.Employee::getEmployeeName($property->employee_id));
 
-		return Redirect::route('Properties.index')->withDeleteMessage('Company Property successfully deleted!');
+		return Redirect::to('employees/view/'.$property->employee_id)->withDeleteMessage('Company Property successfully deleted!');
 	}
     
     public function view($id){
