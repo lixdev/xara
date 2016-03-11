@@ -837,7 +837,7 @@ Route::post('import/employees', function(){
       $employee->social_security_number = $result->nssf_number;
       $employee->hospital_insurance_number = $result->nhif_number;
       $employee->email_office = $result->email_address;
-      $employee->basic_pay = $result->basic_pay;
+      $employee->basic_pay = str_replace( ',', '', $result->basic_pay);
       $employee->save();
       
     }

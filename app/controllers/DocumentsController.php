@@ -52,15 +52,15 @@ class DocumentsController extends \BaseController {
         
         $document->employee_id = Input::get('employee');
 
-		$document->document_name = Input::get('type');
-
 		if ( Input::hasFile('path')) {
 
             $file = Input::file('path');
             $name = time().'-'.$file->getClientOriginalName();
             $file = $file->move('public/uploads/employees/documents/', $name);
             $input['file'] = '/public/uploads/employees/documents/'.$name;
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
             $document->document_path = $name;
+            $document->document_name = Input::get('type').'.'.$extension;
         }
 
         $document->description = Input::get('desc');
@@ -115,15 +115,21 @@ class DocumentsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 		
-		$document->document_name = Input::get('type');
-
 		if ( Input::hasFile('path')) {
 
             $file = Input::file('path');
             $name = time().'-'.$file->getClientOriginalName();
             $file = $file->move('public/uploads/employees/documents/', $name);
             $input['file'] = '/public/uploads/employees/documents/'.$name;
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
             $document->document_path = $name;
+            $document->document_name = Input::get('type').'.'.$extension;
+        }else{
+        	$name = Input::get('curpath');
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
+            $document->document_path = $name;
+            $document->document_name = Input::get('type').'.'.$extension;
+
         }
 
         $document->description = Input::get('desc');
@@ -144,7 +150,11 @@ class DocumentsController extends \BaseController {
 	public function destroy($id)
 	{
 		$document = Document::findOrFail($id);
+		$file= public_path(). "/uploads/employees/documents/".$document->document_path;
+        
 		Document::destroy($id);
+        
+		unlink($file);
 
 		Audit::logaudit('Documents', 'delete', 'deleted: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 

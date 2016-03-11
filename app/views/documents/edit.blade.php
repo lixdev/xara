@@ -32,7 +32,7 @@
 
     <div class="form-group">
                         <label for="username">Current Document</label><span style="color:red">*</span><br>
-                        <input class="form-control" placeholder="" type="text" value="{{ $document->document_path }}">
+                        <input class="form-control" placeholder="" type="text" name="curpath" value="{{ $document->document_path }}">
                     </div>
 
        <div class="form-group">
@@ -40,9 +40,14 @@
                         <input class="img" placeholder="" type="file" name="path" id="path" value="{{ $document->document_path }}">
                     </div>
 
+       <?php
+         $name = $document->document_name;
+         $file_name = pathinfo($name, PATHINFO_FILENAME); 
+        ?>
+
         <div class="form-group">
             <label for="username">Document Name <span style="color:red">*</span> </label><br>
-            <input class="form-control" placeholder="" type="text" name="type" id="type" value="{{ $document->document_name }}">
+            <input class="form-control" placeholder="" type="text" name="type" id="type" value="{{ $file_name }}">
         </div>
 
         <div class="form-group">

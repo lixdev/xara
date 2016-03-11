@@ -502,14 +502,17 @@ function asMoney($value) {
 
       </thead>
       <tbody>
-
+          
         <?php $i = 1; ?>
         @foreach($documents as $document)
-
+        <?php
+         $name = $document->document_name;
+         $file_name = pathinfo($name, PATHINFO_FILENAME); 
+        ?>
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $document->document_name }}</td>
+          <td>{{ $file_name }}</td>
           <td>
 
                   <div class="btn-group">
