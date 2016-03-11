@@ -48,30 +48,31 @@
                              {{$benefit->benefit_name}}
             </td>
             <td>
-            <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}" value="{{{ Input::old('amount') }}}">
+            <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}">
             </td>
             </tr>
             
             </table>
 
             <script type="text/javascript">
-$(document).ready(function(){
-   $("#amount_"+<?php echo $i;?>).hide();
-   $('#benefitid_'+<?php echo $i;?>).click(function(){
+            $(document).ready(function(){
+            $("#amount_"+<?php echo $i;?>).hide();
+            $("#amount_"+<?php echo $i;?>).val('0.00');
+            $('#benefitid_'+<?php echo $i;?>).click(function(){
 
-    if($('#benefitid_'+<?php echo $i;?>).is(":checked")){
-    $('#benefitid_'+<?php echo $i;?>+':checked').each(function(){
+            if($('#benefitid_'+<?php echo $i;?>).is(":checked")){
+            $('#benefitid_'+<?php echo $i;?>+':checked').each(function(){
 
-     $("#amount_"+<?php echo $i;?>).show();
-     
-      });
-     }else{
-        $("#amount_"+<?php echo $i;?>).hide();
-     }
-     });
-     $("#amount_"+<?php echo $i;?>).priceFormat();
-    });
-</script>
+            $("#amount_"+<?php echo $i;?>).show();
+            $("#amount_"+<?php echo $i;?>).val('0.00');
+            });
+            }else{
+            $("#amount_"+<?php echo $i;?>).hide();
+            }
+            });
+            $("#amount_"+<?php echo $i;?>).priceFormat();
+            });
+            </script>
 
             <?php $i++; ?>
             @endforeach

@@ -1371,11 +1371,22 @@ Route::get('employee_type/edit/{id}', 'EmployeeTypeController@edit');
 * employees routes
 */
 
+Route::get('deactives', function(){
+
+  $employees = Employee::getDeactiveEmployee();
+
+  return View::make('employees.activate', compact('employees'));
+
+} );
+
+
 Route::resource('employees', 'EmployeesController');
 Route::post('employees/update/{id}', 'EmployeesController@update');
 Route::get('employees/deactivate/{id}', 'EmployeesController@deactivate');
+Route::get('employees/activate/{id}', 'EmployeesController@activate');
 Route::get('employees/edit/{id}', 'EmployeesController@edit');
 Route::get('employees/view/{id}', 'EmployeesController@view');
+Route::get('employees/viewdeactive/{id}', 'EmployeesController@viewdeactive');
 
 /*
 * occurences routes

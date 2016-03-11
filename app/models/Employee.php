@@ -145,5 +145,12 @@ class Employee extends Eloquent {
 
 		return $employee;
 	}
+
+	public static function getDeactiveEmployee(){
+
+		$employee = DB::table('employee')->where('in_employment', '=', 'N')->get();
+
+		return $employee;
+	}
 	
 }

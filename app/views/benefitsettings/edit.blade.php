@@ -1,4 +1,4 @@
-@extends('layouts.earning')
+@extends('layouts.hr')
 @section('content')
 <br/>
 

@@ -414,6 +414,19 @@ class EmployeesController extends \BaseController {
 		return Redirect::route('employees.index')->withDeleteMessage('Employee successfully deactivated!');
 	}
 
+	public function activate($id)
+	{
+
+		$employee = Employee::findOrFail($id);
+		
+		DB::table('employee')->where('id',$id)->update(array('in_employment'=>'Y'));
+
+		Audit::logaudit('Employee', 'activate', 'activated: '.$employee->personal_file_number.'-'.$employee->first_name.' '.$employee->last_name);
+
+
+		return Redirect::to('deactives')->withFlashMessage($employee->personal_file_number.'-'.$employee->first_name.' '.$employee->last_name.' successfully activated!');
+	}
+
 	public function view($id){
 
 		$employee = Employee::find($id);
@@ -431,6 +444,26 @@ class EmployeesController extends \BaseController {
 		$organization = Organization::find(1);
 
 		return View::make('employees.view', compact('employee','appraisals','kins','documents','occurences','properties'));
+		
+	}
+
+	public function viewdeactive($id){
+
+		$employee = Employee::find($id);
+
+		$appraisals = Appraisal::where('employee_id', $id)->get();
+
+        $kins = Nextofkin::where('employee_id', $id)->get();
+
+        $occurences = Occurence::where('employee_id', $id)->get();
+
+        $properties = Property::where('employee_id', $id)->get();
+
+        $documents = Document::where('employee_id', $id)->get();
+
+		$organization = Organization::find(1);
+
+		return View::make('employees.viewdeactive', compact('employee','appraisals','kins','documents','occurences','properties'));
 		
 	}
 

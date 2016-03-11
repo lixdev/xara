@@ -66,15 +66,7 @@ class PayrollController extends \BaseController {
     $part3    = $postedit['period3'];
 
     $period   = $part1.$part2.$part3;  
-    $data7    = DB::table('employee_deductions')
-              ->join('transact_deductions','employee_deductions.id','=','transact_deductions.employee_deduction_id')
-              ->where('financial_month_year', '=', $period)
-              ->where(function($query){
-                $query->where('formular','=','One Time')
-                      ->orWhere('formular','=','Instalments');
-               })
-              ->where('instalments','>',0)
-              ->increment('instalments');
+    
     $data     = DB::table('transact')->where('financial_month_year',$period)->delete(); 
     $data2    = DB::table('transact_allowances')->where('financial_month_year', '=', $period)->delete();
     $data3    = DB::table('transact_deductions')->where('financial_month_year', '=', $period)->delete();
@@ -87,6 +79,17 @@ class PayrollController extends \BaseController {
     }else{
       return 1;
     }
+    
+    DB::table('employee_deductions')
+              ->join('transact_deductions','employee_deductions.id','=','transact_deductions.employee_deduction_id')
+              ->where('financial_month_year', '=', $period)
+              ->where(function($query){
+                $query->where('formular','=','One Time')
+                      ->orWhere('formular','=','Instalments');
+               })
+              ->where('instalments','>',0)
+              ->increment('instalments');
+
     exit();
 	}
 
@@ -130,7 +133,7 @@ class PayrollController extends \BaseController {
 	    foreach($allws as $allw){
         DB::table('transact_allowances')->insert(
         ['employee_id' => $allw->eid, 
-        'employee_allowance_id' => $allw->id, 
+        'allowance_id' => $allw->id, 
         'allowance_name' => $allw->allowance_name,
         'allowance_id' => $allw->allowance_id,
         'allowance_amount' => $allw->allowance_amount,
@@ -166,7 +169,7 @@ class PayrollController extends \BaseController {
 	    foreach($deds as $ded){
 	    DB::table('transact_deductions')->insert(
         ['employee_id' => $ded->eid, 
-        'employee_deduction_id' => $ded->id, 
+        'deduction_id' => $ded->id, 
         'deduction_name' => $ded->deduction_name,
         'deduction_id' => $ded->deduction_id,
         'deduction_amount' => $ded->deduction_amount,
@@ -226,7 +229,7 @@ class PayrollController extends \BaseController {
 	    foreach($rels as $rel){
         DB::table('transact_reliefs')->insert(
         ['employee_id' => $rel->eid, 
-        'employee_relief_id' => $rel->id, 
+        'relief_id' => $rel->id, 
         'relief_name' => $rel->relief_name,
         'relief_id' => $rel->relief_id,
         'relief_amount' => $rel->relief_amount,

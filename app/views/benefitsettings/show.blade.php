@@ -1,1 +1,1 @@
-C:\xampp\htdocs\xaracore\app/views/allowances/show.blade.php
+C:\xampp\htdocs\xaracore\app/views/benefitsettings/show.blade.php

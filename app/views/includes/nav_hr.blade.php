@@ -21,6 +21,10 @@
                     </li>
 
                     <li>
+                        <a href="{{ URL::to('benefitsettings') }}"><i class="fa fa-list fa-fw"></i> Benefits</a>
+                    </li>
+
+                    <li>
                         <a href="{{ URL::to('job_group') }}"><i class="fa fa-users fa-fw"></i> Job Groups</a>
                     </li>
                    

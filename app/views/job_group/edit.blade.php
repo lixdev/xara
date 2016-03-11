@@ -59,9 +59,8 @@ $(document).ready(function() {
                              {{$benefit->benefit_name}}
             </td>
             <td>
-            @foreach($amounts as $amount)
-            <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}" value="{{$amount->amount}}">
-            @endforeach
+            <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}" value="{{$jobgroup->employeebenefit->amount}}">
+          
             </td>
             </tr>
             
@@ -76,7 +75,7 @@ $(document).ready(function() {
             $('#benefitid_'+<?php echo $i;?>+':checked').each(function(){
 
             $("#amount_"+<?php echo $i;?>).show();
-     
+            $("#amount_"+<?php echo $i;?>).val('0.00');
             });
             }else{
              $("#amount_"+<?php echo $i;?>).hide();

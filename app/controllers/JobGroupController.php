@@ -42,11 +42,13 @@ class JobGroupController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
+		$count = DB::table('benefitsettings')->count();
+
 		$c = count(Input::get('benefitid'));
 
 		$ben = Input::get('benefitid');
 
-        $amt = str_replace( ',', '', Input::get('amount') );
+        $amt = str_replace( ',', '', Input::get('amount'));
 
 		$jgroup = new Jobgroup;
 
@@ -58,13 +60,20 @@ class JobGroupController extends \BaseController {
 
         $id = Jobgroup::orderBy('id','DESC')->first();
 
-        for ( $i=0; $i< $c; $i++) {
+        for ( $i=0; $i< $count; $i++) {
 
         $benefit = new Employeebenefit;
-
         $benefit->jobgroup_id=$id->id ;
+
+        if(filter_var($ben[$i], FILTER_VALIDATE_BOOLEAN)){
         $benefit->benefit_id = $ben[$i];
         $benefit->amount = $amt[$i];
+
+        }else{
+        $benefit->benefit_id = $ben[$i];
+        $benefit->amount = $amt[$i+1];
+        }
+
         $benefit->save();
     
         }

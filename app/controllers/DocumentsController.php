@@ -148,7 +148,7 @@ class DocumentsController extends \BaseController {
 
 		Audit::logaudit('Documents', 'delete', 'deleted: '.$document->document_name.' for '.Employee::getEmployeeName($document->employee_id));
 
-		return Redirect::to('employees/view/'.Input::get('employee'))->withDeleteMessage('Employee Document successfully deleted!');
+		return Redirect::to('employees/view/'.$document->employee_id)->withDeleteMessage('Employee Document successfully deleted!');
 	}
 
     public function getDownload($id){

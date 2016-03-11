@@ -59,7 +59,6 @@ function asMoney($value) {
       <tr><td><strong>Relationship: </strong></td><td>{{$kin->relationship}}</td></tr>
       <tr><td><strong>Contact Info: </strong></td><td><pre style="background:none;border:0;margin-left:-9px;margin-top:-6px;font-family:Sans-serif;font-size:14px;">{{$kin->contact}}</pre></td></tr>
       <tr><td><strong>Kin ID Number: </strong></td><td>{{$kin->id_number}}</td></tr>
-      <tr><td><strong>Goodwill: </strong></td><td>{{$kin->goodwill.'%'}}</td></tr>
 </table>
 </div>
 

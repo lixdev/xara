@@ -28,6 +28,10 @@
                     <a href="{{ URL::to('departments') }}"><i class="glyphicon glyphicon-cog fa-fw"></i>   Settings</a>
                   </li>
 
+                   <li>
+                        <a href="{{ URL::to('deactives') }}"><i class="fa fa-users fa-fw"></i> Activate Employee</a>
+                    </li>
+
                     
                     
 

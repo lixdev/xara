@@ -32,7 +32,7 @@
 
        <div class="form-group">
                         <label for="username">Document</label><span style="color:red">*</span><br>
-                        <input class="form-control img" placeholder="" type="file" name="path" id="path" value="{{{ Input::old('path') }}}">
+                        <input class="img" placeholder="" type="file" name="path" id="path" value="{{{ Input::old('path') }}}">
                     </div>
 
         <div class="form-group">
@@ -48,7 +48,7 @@
         
         <div class="form-actions form-group">
         
-          <button type="submit" class="btn btn-primary btn-sm">Create Department</button>
+          <button type="submit" class="btn btn-primary btn-sm">Upload Document</button>
         </div>
 
     </fieldset>
