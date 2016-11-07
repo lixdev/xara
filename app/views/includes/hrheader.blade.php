@@ -7,6 +7,10 @@
 </script>
 
 <header id="header">
+<<<<<<< HEAD
+=======
+            <?php $organization = Organization::find(Confide::user()->organization_id); ?>
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 			<div class="container-center cf">
 				<div class="logo">
 					<a href="{{URL::to('/')}}"><img src="{{ asset('public/uploads/logo/'.$organization->logo) }}"  alt="Logo Estimation" width="120"/></a>			

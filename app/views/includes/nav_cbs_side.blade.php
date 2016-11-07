@@ -40,11 +40,14 @@
                     </a>
                     <ul class="nav">
                       <li>
+<<<<<<< HEAD
                           <a href="{{ URL::to('disbursements') }}"><i class="fa fa-money"></i>
                                 Disbursement Options
                           </a>
                       </li>
                       <li>
+=======
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
                           <a href="{{ URL::to('loans') }}"><i class="fa fa-tags fa-fw"></i> Loan Applications</a>
                       </li>
                       <li>

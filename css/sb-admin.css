@@ -6,7 +6,11 @@ body {
     background-color: #f8f8f8;
     background-image: url('../images/pattern-4.png');
     background-repeat: repeat;
+<<<<<<< HEAD
     background-attachment: fixed;
+=======
+    background-attachment: fixed !important;
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
     font-family: 'Roboto' !important;
 }
 
@@ -42,14 +46,22 @@ header#header{
     /*width: 87% !important;
     margin: 0 auto !important;*/
     padding: 0 15px !important;
+<<<<<<< HEAD
     padding-top: 80px !important;
+=======
+    padding-top: 20px !important;
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
     min-height: 100vh;
     background-color: #fff;
     background-image: url('../img/slides/bg/001.jpg') !important;
     background-repeat: no-repeat;
+<<<<<<< HEAD
       /*height: 70%;
       text-align: center;*/
       background-position: center center;
+=======
+    background-position: center center;
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 }
 
 #page-wrapper .row{

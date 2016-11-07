@@ -1,5 +1,6 @@
-@extends('layouts.accounting')
+@extends('layouts.member')
 @section('content')
+<<<<<<< HEAD
 <br/>
 @if(Session::has('status'))
   <div class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -9,6 +10,9 @@
     <strong>{{{ Session::get('status') }}}</strong> 
   </div>      
 @endif  
+=======
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 <div class="row">
   <div class="col-lg-12">
   <h3>Loan Application</h3>
@@ -44,10 +48,14 @@
 
         <div class="form-group">
             <label for="username">Approval Date </label>
+<<<<<<< HEAD
             <div class="right-inner-addon ">
             <i class="glyphicon glyphicon-calendar"></i>
             <input readonly class="form-control datepicker" placeholder="" type="text" name="date_approved" id="date_approved" value="{{ date('Y-m-d') }}">
         </div>
+=======
+            <input class="form-control datepicker" placeholder="" type="date" name="date_approved" id="date_approved" value="{{ date('Y-m-d') }}">
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
         </div>
         <div class="form-group">
             <label for="username">Amount Approved</label>

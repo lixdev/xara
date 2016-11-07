@@ -20,7 +20,15 @@
                     <li>
                         <a href="{{ URL::to('journals/create') }}"><i class="fa fa-check fa-fw"></i> Add Journal Entry</a>
                     </li>
-
+                    
+                    <li>
+                        <a href="#"><i class="fa fa-university fa-fw"></i> Banking<i class="fa fa-caret-down fa-fw"></i></a>
+                        <ul class="nav">
+                            <li><a href="{{ URL::to('bankAccounts') }}"><i class="fa fa-university fa-fw"></i> Bank Accounts</a></li>
+                            <li><a href="{{ URL::to('bankReconciliation/report') }}"><i class="fa fa-file fa-fw"></i> Reconciliation Report</a></li>
+                        </ul>
+                        
+                    </li>
                     
                 </ul>
 

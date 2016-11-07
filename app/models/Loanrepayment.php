@@ -18,13 +18,28 @@ class Loanrepayment extends \Eloquent {
 
 
 	public static function getPrincipalPaid($loanaccount){
+<<<<<<< HEAD
 			$paid = DB::table('loanrepayments')->where('organization_id','=',Confide::User()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('principal_paid');
+=======
+
+
+			$paid = DB::table('loanrepayments')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('principal_paid');
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 			return $paid;
 	}
 
 
 	public static function getInterestPaid($loanaccount){
+<<<<<<< HEAD
 			$paid = DB::table('loanrepayments')->where('organization_id','=',Confide::User()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('interest_paid');		
+=======
+
+
+			$paid = DB::table('loanrepayments')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('interest_paid');
+
+			
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 			return $paid;
 	}
 

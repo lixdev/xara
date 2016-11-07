@@ -134,12 +134,22 @@ $('#loanproduct_id').change(function(){
             </select>
         </div>
         <div class="form-group">
+<<<<<<< HEAD
             <label for="username">Application Date <span style="color:red">*</span></label>
             <div class="right-inner-addon">
               <i class="glyphicon glyphicon-calendar"></i>
               <input class="form-control datepicker" readonly placeholder="" type="date" name="application_date" id="application_date" value="{{ date('Y-m-d')}}">
             </div>
         </div>
+=======
+            <label for="username">Application Date </label>
+            <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control datepicker"  readonly="readonly" placeholder=""  type="text" name="application_date" id="application_date" value="{{{ Input::old('application_date') }}}">
+                        </div>
+                        </div>
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
         <div class="form-group">
             <label for="username" id="amt">Amount Applied <span style="color:red">*</span></label>
             <input class="form-control" placeholder="" type="text" name="amount_applied" id="amount_applied" value="{{{ Input::old('amount_applied') }}}">

@@ -366,6 +366,7 @@ public function purchases(){
         $pdf = PDF::loadView('erpreports.quotation', compact('orders','erporder','txorders','count' ,'organization'))->setPaper('a4')->setOrientation('potrait');
     
         return $pdf->stream('quotation.pdf');
+<<<<<<< HEAD
         
     }
 
@@ -465,6 +466,107 @@ public function purchases(){
         
     }
 
+=======
+        
+    }
+
+
+
+
+
+
+    public function PurchaseOrder($id){
+
+        $orders = DB::table('erporders')
+                ->join('erporderitems', 'erporders.id', '=', 'erporderitems.erporder_id')
+                ->join('items', 'erporderitems.item_id', '=', 'items.id')
+                ->join('clients', 'erporders.client_id', '=', 'clients.id')
+                ->where('erporders.id','=',$id)
+                ->where('erporders.organization_id',Confide::user()->organization_id)
+                ->select('clients.name as client','items.name as item','quantity','clients.address as address',
+                  'clients.phone as phone','clients.email as email','erporders.id as id',
+                  'discount_amount','erporders.order_number as order_number','price','description')
+                ->get();
+
+        $txorders = DB::table('tax_orders')
+                ->join('erporders', 'tax_orders.order_number', '=', 'erporders.order_number')
+                ->join('taxes', 'tax_orders.tax_id', '=', 'taxes.id')
+                ->where('erporders.organization_id',Confide::user()->organization_id)
+                ->where('erporders.id','=',$id)
+                ->get();
+
+        $count = DB::table('tax_orders')->where('organization_id',Confide::user()->organization_id)->count();
+
+        $erporder = Erporder::findorfail($id);
+
+
+        $organization = Organization::find(Confide::user()->organization_id);
+
+        $pdf = PDF::loadView('erpreports.PurchaseOrder', compact('orders','erporder','txorders','count' ,'organization'))->setPaper('a4')->setOrientation('potrait');
+    
+        return $pdf->stream('Purchase Order.pdf');
+        
+    }
+
+
+    public function selectSalesPeriod()
+    {
+       $sales = Erporder::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('pdf.erpfinancials.selectSalesPeriod',compact('sales'));
+    }
+
+    public function selectPurchasesPeriod()
+    {
+       $purchases = Erporder::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectPurchasesPeriod',compact('purchases'));
+    }
+
+
+    public function selectClientsPeriod()
+    {
+       $clients = Client::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectClientsPeriod',compact('clients'));
+    }
+
+     public function selectItemsPeriod()
+    {
+       $items = Item::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectItemsPeriod',compact('items'));
+    }
+
+    public function selectExpensesPeriod()
+    {
+       $expenses = Expense::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectExpensesPeriod',compact('expenses'));
+    }
+
+     public function selectPaymentsPeriod()
+    {
+       $payments = Payment::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectPaymentsPeriod',compact('payments'));
+    }
+
+    public function selectStockPeriod()
+    {
+       $stocks = Item::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectStocksPeriod',compact('stocks'));
+    }
+
+
+    public function accounts(){
+
+        $accounts = Account::where('organization_id',Confide::user()->organization_id)->where('active',true)->get();
+
+
+        $organization = Organization::find(Confide::user()->organization_id);
+
+        $pdf = PDF::loadView('erpreports.accountsReport', compact('accounts', 'organization'))->setPaper('a4')->setOrientation('potrait');
+    
+        return $pdf->stream('Account Balances.pdf');
+        
+    }
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
     /**
      * SEND QUOTATION AS AN ATTACHMENT
      */
@@ -532,5 +634,94 @@ public function purchases(){
 
 
 
+<<<<<<< HEAD
+=======
+    /**
+     * GENERATE BANK RECONCILIATION REPORT
+     */
+    public function displayRecOptions(){
+        $bankAccounts = DB::table('bank_accounts')
+                        ->where('organization_id',Confide::user()->organization_id)
+                        ->get();
+
+        $bookAccounts = DB::table('accounts')
+                        ->where('category', 'ASSET')
+                        ->where('organization_id',Confide::user()->organization_id)
+                        ->get();
+
+        return View::make('erpreports.recOptions', compact('bankAccounts','bookAccounts'));
+    }
+
+    public function showRecReport(){
+        $bankAcID = Input::get('bank_account');
+        $bookAcID = Input::get('book_account');
+        $recMonth = Input::get('rec_month'); 
+
+        //get statement id
+        $bnkStmtID = DB::table('bank_statements')
+                    ->where('stmt_month', $recMonth)
+                    ->where('organization_id',Confide::user()->organization_id)
+                    ->pluck('id');
+
+        $bnkStmtBal = DB::table('bank_statements')
+                            ->where('bank_account_id', $bankAcID)
+                            ->where('stmt_month', $recMonth)
+                            ->where('organization_id',Confide::user()->organization_id)
+                            ->select('bal_bd')
+                            ->first();
+
+        $acTransaction = DB::table('account_transactions')
+                            ->where('status', '=', 'RECONCILED')
+                            ->where('bank_statement_id', $bnkStmtID)
+                            ->where('organization_id',Confide::user()->organization_id)
+                            ->whereMonth('transaction_date', '=', substr($recMonth, 0, 2))
+                            ->whereYear('transaction_date', '=', substr($recMonth, 3, 6))
+                            ->select('id','account_credited','account_debited','transaction_amount')
+                            ->get();
+
+        $bkTotal = 0;
+        foreach($acTransaction as $acnt){
+            if($acnt->account_debited == $bookAcID){
+                $bkTotal += $acnt->transaction_amount;
+            } else if($acnt->account_credited == $bookAcID){
+                $bkTotal -= $acnt->transaction_amount;
+            }
+        }
+
+        $additions = DB::table('account_transactions')
+                            ->where('status', '=', 'RECONCILED')
+                            ->where('bank_statement_id', $bnkStmtID)
+                            ->where('organization_id',Confide::user()->organization_id)
+                            ->whereMonth('transaction_date', '<>', substr($recMonth, 0, 2))
+                            ->whereYear('transaction_date', '=', substr($recMonth, 3, 6))
+                            ->select('id','description','account_credited','account_debited','transaction_amount')
+                            ->get();
+
+        $add = [];
+        $less = [];
+        foreach($additions as $additions){
+            if($additions->account_debited == $bookAcID){
+                array_push($add, $additions);
+            } else if($additions->account_credited == $bookAcID){
+                array_push($less, $additions);
+            }
+        }
+
+        $organization = Organization::find(1);
+
+        $pdf = PDF::loadView('erpreports.bankReconciliationReport', compact('recMonth','organization','bnkStmtBal','bkTotal','add','less'))->setPaper('a4')->setOrientation('potrait');
+        return $pdf->stream('Reconciliation Reports');
+        /*if(count($bnkStmtBal) == 0 || $bkTotal == 0 || count($additions) == 0 ){
+            return "Error";
+            //return View::make('erpreports.bankReconciliationReport')->with('error','Cannot generate report for this Reconciliation! Please check paremeters!');
+        } else{
+            return "Success";*/
+            return View::make('erpreports.bankReconciliationReport', compact('recMonth','organization','bnkStmtBal','bkTotal','add','less'));
+        //}
+    }
+
+
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 
 }

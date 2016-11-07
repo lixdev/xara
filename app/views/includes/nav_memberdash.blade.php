@@ -10,8 +10,16 @@
                     <span class="icon-bar"></span>
                 </button>
                 <?php 
+<<<<<<< HEAD
                     $organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->pluck('name');                
                 ?> 
+=======
+
+    $organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->pluck('name');
+
+    
+?> 
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
                 <a class="navbar-brand"  href="{{ URL::to('/')}}" > <?php echo $organization; ?></a>
             </div>
             <!-- /.navbar-header -->

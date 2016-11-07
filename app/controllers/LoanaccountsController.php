@@ -16,6 +16,7 @@ class LoanaccountsController extends \BaseController {
 
     public function guarantor()
 	{
+
 		 $member = Member::where('email',Confide::user()->email)->first();
 		//$loanaccounts = Loanaccount::where('member_id',$member->id)->get();
         $loanaccounts = DB::table('loanaccounts')

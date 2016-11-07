@@ -10,6 +10,7 @@
 
                     <li>
                         <a href="{{ URL::to('memberloans') }}"><i class="fa fa-tasks fa-fw"></i> Loans</a>
+<<<<<<< HEAD
                     </li>
 
                     <li>
@@ -23,6 +24,24 @@
                     </li>
                     <li>
                         <a href="{{ URL::to('savings') }}"><i class="glyphicon glyphicon-folder-close fa-fw"></i> Savings</a>
+=======
+                    </li>
+
+                    <li>
+                        <a href="{{ URL::to('guarantorapproval') }}"><i class="fa fa-user fa-fw"></i> Guarantor Approval</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ URL::to('savings') }}"><i class="glyphicon glyphicon-folder-close fa-fw"></i> Savings</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ URL::to('member/shares') }}"><i class="fa fa-money fa-fw"></i> Shares </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ URL::to('shop') }}"><i class="fa fa-home fa-fw"></i> Shop</a>
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
                     </li>
 
                     <li>

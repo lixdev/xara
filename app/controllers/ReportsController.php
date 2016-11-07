@@ -9707,6 +9707,7 @@ public function members(){
     
   }
 
+<<<<<<< HEAD
 public function creditappraisal($id,$loanid){
     $member = Member::where('id','=',$id)->get()->first();
     $loans= Loanaccount::where('member_id','=',$id)
@@ -9732,6 +9733,9 @@ public function creditappraisal($id,$loanid){
     return $pdf->stream('Member Credit Appraisal Report.pdf');
     
   }
+=======
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 
   public function savinglisting(){
 
