@@ -1,4 +1,6 @@
-@include('includes.head')
+@include('includes.headl')
+
+<?php $organization = Organization::find(1);?>
 
 <div class="container">
         <div class="row">
@@ -8,10 +10,30 @@
                       
                     <div class="panel-body">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {{ HTML::image("images/ourlogo.png", "Logo") }}
+                        <img src="{{asset('public/uploads/logo/'.$organization->logo)}}" alt="logo" width="50%">
 
                         <br>
-               
+                        <hr>
+                       @if (Session::has('flash_message'))
+
+                      <div class="alert alert-success">
+                      {{ Session::get('flash_message') }}
+                      </div>
+                      @endif
+
+                      @if (Session::has('delete_message'))
+
+                      <div class="alert alert-danger">
+                      {{ Session::get('delete_message') }}
+                      </div>
+                      @endif
+
+                      @if (Session::get('notice'))
+                      <div class="alert alert-danger">
+                        <div class="alert">{{ Session::get('notice') }}</div>
+                      </div>
+                      @endif  
+
                         {{ Confide::makeLoginForm()->render() }}
                     </div>
                 </div>

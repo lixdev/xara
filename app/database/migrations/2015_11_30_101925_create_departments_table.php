@@ -16,17 +16,11 @@ class CreateDepartmentsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('department_name');
-			$table->integer('organization_id')->unsigned()->default('0')->index('departments_organization_id_foreign');
+			$table->integer('organization_id')->unsigned();
+			$table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict')->onUpdate('cascade');
 			$table->timestamps();
 		});
 
-		DB::table('departments')->insert(array(
-            array('department_name' => 'Information Technology','organization_id' => '1'),
-            array('department_name' => 'Management','organization_id' => '1'),
-            array('department_name' => 'Marketing','organization_id' => '1'),
-            array('department_name' => 'Finance','organization_id' => '1'),
-            array('department_name' => 'Human Resource','organization_id' => '1'),
-        ));
 	}
 
 

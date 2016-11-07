@@ -9,7 +9,7 @@ class SavingaccountsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$savingaccounts = Savingaccount::all();
+		$savingaccounts = Savingaccount::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('savingaccounts.index', compact('savingaccounts'));
 	}
@@ -23,7 +23,7 @@ class SavingaccountsController extends \BaseController {
 	{
 
 		$member = Member::findOrFail($id);
-		$savingproducts = Savingproduct::all(); 
+		$savingproducts = Savingproduct::where('organization_id',Confide::user()->organization_id)->get();
 		return View::make('savingaccounts.create', compact('member', 'savingproducts'));
 	}
 
@@ -51,9 +51,10 @@ class SavingaccountsController extends \BaseController {
 		$savingaccount->member()->associate($member);
 		$savingaccount->savingproduct()->associate($savingproduct);
 		$savingaccount->account_number = $acc_no;
+		$savingaccount->organization_id = Confide::user()->organization_id;
 		$savingaccount->save();
 
-		return Redirect::route('savingaccounts.index');
+		return Redirect::to('/member/savingaccounts/'.Input::get('member_id'));
 	}
 
 	/**

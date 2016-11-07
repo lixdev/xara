@@ -8,8 +8,6 @@
 
 	<div class="col-lg-12">
 
-		<br/>
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
     			<a class="btn btn-info btn-sm" href="{{ URL::to('users/create')}}">new user</a>

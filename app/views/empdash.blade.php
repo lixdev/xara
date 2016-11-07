@@ -2,11 +2,6 @@
 @section('content')
 
 
-
-
-
-<br><br>
-
 @if (Session::get('notice'))
             <div class="alert alert-info">{{ Session::get('notice') }}</div>
         @endif

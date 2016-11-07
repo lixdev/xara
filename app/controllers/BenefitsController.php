@@ -9,7 +9,7 @@ class BenefitsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$benefits = Benefitsetting::all();
+		$benefits = Benefitsetting::where('organization_id',Confide::user()->organization_id)->get();
 
         
 		Audit::logaudit('Benefits', 'view', 'viewed benefits');
@@ -46,7 +46,7 @@ class BenefitsController extends \BaseController {
 
 		$benefit->benefit_name = Input::get('name');
 
-        $benefit->organization_id = '1';
+                $benefit->organization_id = Confide::user()->organization_id;
 
 		$benefit->save();
 

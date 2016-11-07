@@ -1,6 +1,5 @@
-@extends('layouts.accounting')
+@extends('layouts.member')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -37,28 +36,15 @@
          <div class="form-group">
             <label for="username">Member </label>
             <select class="form-control" name="member_id">
-                <option value="{{$loanguarantor->member->id}}">{{$loanguarantor->member->membership_no}} {{$loanguarantor->member->name}}</option>
                 <option>--------------------------</option>
                 @foreach($members as $member)
-                <option value="{{$member->id}}">{{ $member->membership_no  }} {{ $member->name }}</option>
+                <option value="{{$member->id}}"<?= ($loanguarantor->member_id==$member->id)?'selected="selected"':''; ?>>{{ $member->membership_no  }} {{ $member->name }}</option>
                 @endforeach
             </select>
             
         </div>
 
 
-
-        <div class="form-group">
-            <label for="username">Guarantee Amount </label>
-            <input class="form-control" placeholder="" type="date" name="amount" id="amount" value="{{$loanguarantor->amount }}">
-        </div>
-
-
-        
-
-        
-      
-        
         <div class="form-actions form-group">
         
         

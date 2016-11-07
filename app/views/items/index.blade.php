@@ -10,9 +10,9 @@ function asMoney($value) {
 @extends('layouts.erp')
 @section('content')
 
-<br><div class="row">
+<div class="row">
 	<div class="col-lg-12">
-  <h3>Items</h3>
+  <h4><font color='green'>Items</font></h4>
 
 <hr>
 </div>	
@@ -51,6 +51,7 @@ function asMoney($value) {
         <th>#</th>
         <th>Name</th>
         <th>Description</th>
+        <th>Type</th>
         <th>Purchase Price</th>
         <th>Selling Price</th>
         <th></th>
@@ -66,6 +67,7 @@ function asMoney($value) {
           <td> {{ $i }}</td>
           <td>{{ $item->name }}</td>
           <td>{{ $item->description }}</td>
+          <td>{{ $item->type }}</td>
           <td align="right">{{ asMoney($item->purchase_price) }}</td>
           <td align="right">{{ asMoney($item->selling_price) }}</td>
           <td>

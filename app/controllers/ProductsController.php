@@ -9,7 +9,7 @@ class ProductsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$products = Product::all();
+		$products = Product::where('organization_id',Confide::user()->organization_id)->get();
 
 		
 
@@ -24,7 +24,7 @@ class ProductsController extends \BaseController {
 	public function create()
 	{
 
-		$vendors = Vendor::all();
+		$vendors = Vendor::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('products.create', compact('vendors'));
 	}
@@ -73,6 +73,7 @@ class ProductsController extends \BaseController {
 		$product->description = Input::get('description');
 		$product->price = Input::get('price');
 		$product->status = "active";
+		$product->organization_id = Confide::user()->organization_id;
 		$product->save();
 
 		return Redirect::route('products.index');
@@ -104,7 +105,7 @@ class ProductsController extends \BaseController {
 		
 
 		$product = Product::find($id);
-		$vendors = Vendor::all();
+		$vendors = Vendor::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('products.edit', compact('product', 'vendors'));
 	}
@@ -158,9 +159,9 @@ class ProductsController extends \BaseController {
 
 	public function shop(){
 
-		$products = Product::all();
+		$products = Product::where('organization_id',Confide::user()->organization_id)->get();
 
-		$loans = Loanproduct::all();
+		$loans = Loanproduct::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('shop.index', compact('products', 'loans'));
 	}

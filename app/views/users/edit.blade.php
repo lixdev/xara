@@ -7,8 +7,6 @@
 
 	<div class="col-lg-5">
 
-		<br/>
-
       <form method="POST" action="{{{ URL::to('users/update/'.$user->id) }}}" accept-charset="UTF-8">
    
     <fieldset>

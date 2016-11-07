@@ -9,7 +9,7 @@ class ReliefsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$reliefs = Relief::all();
+		$reliefs = Relief::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Reliefs', 'view', 'viewed reliefs');
 
@@ -44,7 +44,7 @@ class ReliefsController extends \BaseController {
 
 		$relief->relief_name = Input::get('name');
 
-        $relief->organization_id = '1';
+                $relief->organization_id = Confide::user()->organization_id;
 
 		$relief->save();
 

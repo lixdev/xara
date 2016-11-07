@@ -1,10 +1,5 @@
 @extends('layouts.ports')
 @section('content')
-<br/>
-
-
-
-
 
 <div class="row">
 	<div class="col-lg-12">
@@ -34,16 +29,24 @@
       </li>
 
 
-      <li>
-
-        <a href="reports/blank" target="_blank">Blank report template</a>
-
-      </li>
-
+<!--
 
       <li>
 
         <a href="reports/combined" target="_blank">Combined Member Statement</a>
+
+      </li>
+-->
+
+       <li>
+
+        <a href="reports/deduction" >Monthly Deduction Report</a>
+
+      </li>
+
+      <li>
+
+        <a href="reports/blank" target="_blank">Blank report template</a>
 
       </li>
 

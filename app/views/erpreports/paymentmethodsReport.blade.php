@@ -31,15 +31,15 @@ body {
   line-height: 1.428571429;
   color: #333;
   background-color: #fff;
-}
 
 
-
- @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ @page { margin: 50px 30px; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 100px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
- .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
+ .footer { position: fixed; left: 0px; bottom: -60px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
+
+
 
 
 
@@ -50,7 +50,7 @@ body {
 <body>
 
   <div class="header">
-     <table >
+       <table >
 
       <tr>
 
@@ -58,17 +58,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{asset('public/uploads/logo/'.$organization->logo)}}" alt="logo" width="100%">
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
-          {{ $organization->website}}<br>
+          {{ strtoupper($organization->name)}}
+          </strong><br><p>
+          {{ $organization->phone}}<br><p> 
+          {{ $organization->email}}<br><p> 
+          {{ $organization->website}}<br><p>
           {{ $organization->address}}
        
 
@@ -95,8 +95,8 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
-   <div align="center"><strong>Payment Methods Report</strong></div>
+	<div class="content" style='margin-top:70px;'>
+   <div align="center"><strong>Payment Methods Report as at {{date('d-M-Y')}}</strong></div><br>
 
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
@@ -104,9 +104,9 @@ body {
         
 
 
-        <td width='20'><strong># </strong></td>
-        <td><strong>Name </strong></td>
-        <td><strong>account </strong></td>
+        <th width='20'><strong># </strong></th>
+        <th><strong>Name </strong></th>
+        <th><strong>account </strong></th>
       </tr>
       <?php $i =1; ?>
       @foreach($paymentmethods as $paymentmethod)

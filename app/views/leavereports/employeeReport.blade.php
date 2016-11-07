@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style='margin-top:-150px;'>
      <table >
 
       <tr>
@@ -67,16 +67,16 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{asset('public/uploads/logo/'.$organization->logo)}}" alt="{{ $organization->logo }}" width="150px"/>
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -96,17 +96,17 @@ body {
 
     </table>
    </div>
-
+<br>
 
 
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
    </div>
 
-
-	<div class="content" style='margin-top:0px;'>
+<br>
+	<div class="content" style='margin-top:-70px;'>
    <div align="center"><strong>Employees on Leaves Report for {{$leavetype->name}}</strong></div>
-
+<br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>
@@ -129,13 +129,17 @@ body {
 
        <td td width='20'>{{$i}}</td>
         <td> {{ $emp->personal_file_number }}</td>
-        <td> {{ $emp->last_name.' '.$emp->first_name }}</td>
+        @if($emp->middle_name != null || $emp->middle_name != '')
+        <td> {{$emp->first_name.' '.$emp->middle_name.' '.$emp->last_name}}</td>
+        @else
+        <td> {{$emp->first_name.' '.$emp->last_name}}</td>
+        @endif
         <td> {{ $emp->name }}</td>
         <td> {{ $emp->date_approved }}</td>
         <td> {{ $emp->approved_start_date }}</td>
         <td> {{ $emp->approved_end_date }}</td>
-        <td> {{ Leaveapplication::getLeaveDays($emp->applied_start_date, $emp->applied_end_date)}}</td>
-        </tr>
+        <td>{{Leaveapplication::getDays($emp->approved_end_date,$emp->approved_start_date,$emp->is_weekend,$emp->is_holiday)+1}}</td>
+       </tr>
       <?php $i++; ?>
    
     @endforeach

@@ -1,6 +1,5 @@
 @extends('layouts.savings')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -45,12 +44,8 @@
         <div class="form-group">
             <label for="username">Currency</label>
             <select class="form-control" name="currency" required>
-
-                @foreach($currencies as $currency)
+ 
                 <option value="{{ $currency->shortname }}"> {{ $currency->name }}</option>
-                @endforeach
-               
-
 
             </select>
         </div>

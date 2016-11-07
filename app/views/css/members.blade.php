@@ -1,6 +1,5 @@
-@extends('layouts.css')
+@extends('layouts.member')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -60,16 +59,16 @@
           
                   <ul class="dropdown-menu" role="menu">
                     @if($member->is_css_active == false)
-                    <li><a href="{{URL::to('portal/activate/'.$member->id)}}">Activate</a></li>
+                    <li><a href="{{URL::to('memberportal/activate/'.$member->id)}}">Activate</a></li>
                    @endif
 
                     @if($member->is_css_active == true)
 
-                    <li><a href="{{URL::to('portal/deactivate/'.$member->id)}}">Deactivate</a></li>
+                    <li><a href="{{URL::to('memberportal/deactivate/'.$member->id)}}">Deactivate</a></li>
 
                     @endif
 
-                    <li><a href="{{URL::to('css/reset/'.$member->id)}}">Reset Password</a></li>
+                    <li><a href="{{URL::to('membercss/reset/'.$member->id)}}">Reset Password</a></li>
                     
                   </ul>
               </div>

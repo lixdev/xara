@@ -9,7 +9,7 @@ class ShareaccountsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$shareaccounts = Shareaccount::all();
+		$shareaccounts = Shareaccount::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('shareaccounts.index', compact('shareaccounts'));
 	}
@@ -51,6 +51,8 @@ class ShareaccountsController extends \BaseController {
 		$shareaccount->account_number = $acc;
 
 		$shareaccount->opening_date = date();
+		
+		$shareaccount->organization_id = Confide::user()->organization_id;
 
 		$shareaccount->save();
 

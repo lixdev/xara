@@ -9,7 +9,7 @@ class LoantransactionsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$loantransactions = Loantransaction::all();
+		$loantransactions = Loantransaction::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('loantransactions.index', compact('loantransactions'));
 	}
@@ -123,7 +123,7 @@ class LoantransactionsController extends \BaseController {
 		$balance = $credit - $debit;
 		*/
 
-		$organization = Organization::findOrFail(1);
+		$organization = Organization::findOrFail(Confide::user()->organization_id);
 
 		$pdf = PDF::loadView('pdf.loanstatement', compact('transactions', 'organization', 'account'))->setPaper('a4')->setOrientation('potrait');;
  	
@@ -139,7 +139,7 @@ class LoantransactionsController extends \BaseController {
 
 		$transaction = Loantransaction::findOrFail($id);
 
-		$organization = Organization::findOrFail(1);
+		$organization = Organization::findOrFail(Confide::user()->organization_id);
 
 		$pdf = PDF::loadView('pdf.loanreports.receipt', compact('transaction', 'organization'))->setPaper('a5')->setOrientation('potrait');;
  	

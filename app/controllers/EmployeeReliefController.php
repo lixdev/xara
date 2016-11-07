@@ -13,7 +13,8 @@ class EmployeeReliefController extends \BaseController {
 		          ->join('employee_relief', 'employee.id', '=', 'employee_relief.employee_id')
 		          ->join('relief', 'employee_relief.relief_id', '=', 'relief.id')
 		          ->where('in_employment','=','Y')
-		          ->select('employee_relief.id','first_name','last_name','relief_amount','relief_name')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->select('employee_relief.id','first_name','middle_name','last_name','relief_amount','relief_name')
 		          ->get();
 		Audit::logaudit('Employee Reliefs', 'view', 'viewed employee relief');
 		return View::make('employee_relief.index', compact('rels'));
@@ -26,12 +27,34 @@ class EmployeeReliefController extends \BaseController {
 	 */
 	public function create()
 	{
+		
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->get();
-		$reliefs = Relief::all();
-		return View::make('employee_relief.create',compact('employees','reliefs'));
+		$reliefs = Relief::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('employee_relief.create',compact('employees','reliefs','currency'));
 	}
+
+	public function createrelief()
+	{
+      $postrelief = Input::all();
+      $data = array('relief_name' => $postrelief['name'], 
+      	            'organization_id' => Confide::user()->organization_id,
+      	            'created_at' => DB::raw('NOW()'),
+      	            'updated_at' => DB::raw('NOW()'));
+      $check = DB::table('relief')->insertGetId( $data );
+
+		if($check > 0){
+         
+		Audit::logaudit('Reliefs', 'create', 'created: '.$postrelief['name']);
+        return $check;
+        }else{
+         return 1;
+        }
+      
+	}    
 
 	/**
 	 * Store a newly created branch in storage.
@@ -86,10 +109,12 @@ class EmployeeReliefController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+		
 		$rel = ERelief::find($id);
-		$employees = Employee::all();
-        $reliefs = Relief::all();
-		return View::make('employee_relief.edit', compact('rel','employees','reliefs'));
+		$employees = Employee::where('employee.organization_id',Confide::user()->organization_id)->get();
+                $reliefs = Relief::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+                $currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('employee_relief.edit', compact('rel','employees','reliefs','currency'));
 	}
 
 	/**
@@ -143,10 +168,11 @@ class EmployeeReliefController extends \BaseController {
 		          ->join('employee_relief', 'employee.id', '=', 'employee_relief.employee_id')
 		          ->join('relief', 'employee_relief.relief_id', '=', 'relief.id')
 		          ->where('employee_relief.id','=',$id)
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->select('employee_relief.id','first_name','last_name','relief_amount','relief_name','middle_name','photo','signature')
 		          ->first();
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('employee_relief.view', compact('rel'));
 		

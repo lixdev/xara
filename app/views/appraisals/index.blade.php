@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -48,6 +47,15 @@
         <th></th>
 
       </thead>
+      <tfoot>
+
+        <th>#</th>
+        <th>Employee</th>
+        <th>Appraisal Question</th>
+        <th>Performance</th>
+        <th>Score</th>
+
+      </tfoot>
       <tbody>
 
         <?php $i = 1; ?>
@@ -57,7 +65,11 @@
           
 
           <td> {{ $i }}</td>
+          @if($appraisal->middle_name == null || $appraisal->middle_name == '')
           <td>{{ $appraisal->first_name.' '.$appraisal->last_name }}</td>
+          @else
+          <td>{{ $appraisal->first_name.' '.$appraisal->middle_name.' '.$appraisal->last_name }}</td>
+          @endif
           <td>{{ Appraisalquestion::getQuestion($appraisal->appraisalquestion_id) }}</td>
           <td>{{ $appraisal->performance }}</td>
           <td>{{ $appraisal->rate.' / '. Appraisalquestion::getScore($appraisal->appraisalquestion_id) }}</td>

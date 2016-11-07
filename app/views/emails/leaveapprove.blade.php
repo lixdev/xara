@@ -41,4 +41,5 @@ Hello {{$name}},
 
 <br><br>
 <p>Regards,</p>
-<p>Xpose Limited.</p>
+<?php $organization = Organization::find(Confide::user()->organization_id);?>
+<p>{{$organization->name}}</p>

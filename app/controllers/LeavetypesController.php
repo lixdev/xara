@@ -9,7 +9,7 @@ class LeavetypesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$leavetypes = Leavetype::all();
+		$leavetypes = Leavetype::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('leavetypes.index', compact('leavetypes'));
 	}

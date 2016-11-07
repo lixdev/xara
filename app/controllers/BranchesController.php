@@ -9,7 +9,7 @@ class BranchesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$branches = Branch::all();
+		$branches = Branch::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Branches', 'view', 'viewed branches');
 
@@ -43,6 +43,7 @@ class BranchesController extends \BaseController {
 		$branch = new Branch;
 
 		$branch->name = Input::get('name');
+		$branch->organization_id = Confide::user()->organization_id;
 		$branch->save();
 
         Audit::logaudit('Branches', 'create', 'created: '.$branch->name);
@@ -108,9 +109,15 @@ class BranchesController extends \BaseController {
 	public function destroy($id)
 	{
 		$branch = Branch::findOrFail($id);
+		$app  = DB::table('employee')->where('branch_id',$id)->count();
+		if($app>0){
+			return Redirect::route('branches.index')->withDeleteMessage('Cannot delete this branch because its assigned to an employee(s)!');
+		}else{
+		
 		Branch::destroy($id);
         Audit::logaudit('Branches', 'delete', 'deleted: '.$branch->name);
 		return Redirect::route('branches.index')->withDeleteMessage('Branch successfully deleted!');
 	}
+}
 
 }

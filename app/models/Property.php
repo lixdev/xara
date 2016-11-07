@@ -9,7 +9,7 @@ class Property extends \Eloquent {
 	public static $rules = [
 		'name' => 'required',
 		'employee_id' => 'required',
-		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/',
+		'amount' => 'required|regex:/^(\$?(?(?=\()(\())\d+(?:,\d+)?(?:\.\d+)?(?(2)\)))$/',
 		'sdate' => 'required'
 	];
 

@@ -22,16 +22,13 @@ class Order extends \Eloquent {
 
 	public static function submitOrder($product, $member){
 
-
-
-		
-
 		$order = new Order;
 
 		$order->product()->associate($product);
 		$order->order_date = date('Y-m-d');
 		$order->customer_name = $member->name;
 		$order->customer_number = $member->membership_no;
+		$order->organization_id = Confide::user()->organization_id;
 		$order->save();
 	}
 

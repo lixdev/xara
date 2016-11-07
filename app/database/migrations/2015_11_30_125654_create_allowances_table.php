@@ -16,7 +16,8 @@ class CreateAllowancesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('allowance_name');
-			$table->integer('organization_id')->unsigned()->default('0')->index('allowances_organization_id_foreign');
+			$table->integer('organization_id')->unsigned();
+			$table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict')->onUpdate('cascade');
 			$table->timestamps();
 		});
 

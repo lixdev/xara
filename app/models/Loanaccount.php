@@ -62,7 +62,7 @@ class Loanaccount extends \Eloquent {
 		$application->interest_rate = $loanproduct->interest_rate;
 		$application->period = $loanproduct->period;
 		$application->repayment_duration = array_get($data, 'repayment_duration');
-		
+		$application->organization_id = Confide::user()->organization_id;
 		$application->save();
 
 		Audit::logAudit(date('Y-m-d'), Confide::user()->username, 'loan application', 'Loans', array_get($data, 'amount_applied'));
@@ -113,7 +113,7 @@ class Loanaccount extends \Eloquent {
 		$application->interest_rate = $loanproduct->interest_rate;
 		$application->period = array_get($data, 'repayment');
 
-		
+		$application->organization_id = Confide::user()->organization_id;
 		
 		$application->repayment_duration = array_get($data, 'repayment');
 		$application->loan_purpose = array_get($data, 'purpose');
@@ -184,6 +184,23 @@ class Loanaccount extends \Eloquent {
 	}
 
 
+	public static function getEMPTacsix($loanaccount){
+
+		 
+		$principal = $loanaccount->amount_disbursed;
+		$rate = $loanaccount->interest_rate/100;
+		$time = $loanaccount->repayment_duration;
+
+		$interest = $principal * $rate * $time;
+		$amount = $principal + $interest;
+
+		$amt = $amount/$time;
+
+		return $amt;
+
+	}
+
+
 
 	public static function getInterestAmount($loanaccount){
 
@@ -194,7 +211,7 @@ class Loanaccount extends \Eloquent {
 
 		$time = $loanaccount->repayment_duration;
 
-		$formula = $loanaccount->loanproduct->formula;
+		$formula = DB::table('loanproducts')->where('organization_id',Confide::user()->organization_id)->where('id', '=', $loanaccount->loanproduct_id)->pluck('formula');
 
 		if($formula == 'SL'){
 
@@ -368,6 +385,19 @@ class Loanaccount extends \Eloquent {
 		$principal_bal = $principal_amount - $principal_paid;
 
 		return $principal_bal;
+	}
+
+
+	public static function getDeductionAmount($loanaccount, $date){
+
+       $part = explode("-", $date);
+       $start_date = $part[1]."-".$part[0]."-01";
+       $end_date  = date('Y-m-t', strtotime($start_date));
+       $start  = date('Y-m-01', strtotime($end_date));
+
+	   $amount = DB::table('loantransactions')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->where('type','credit')->whereBetween('date', array($start, $end_date))->sum('amount');
+
+		return $amount;
 	}
 	
 }

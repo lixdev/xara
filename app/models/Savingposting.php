@@ -28,6 +28,7 @@ class Savingposting extends \Eloquent {
 			$posting->debit_account = $cash_account;
 			$posting->credit_account = $saving_control_acc;
 			$posting->savingproduct()->associate($product);
+			$posting->organization_id = Confide::user()->organization_id;
 			$posting->save();
 
 
@@ -40,6 +41,7 @@ class Savingposting extends \Eloquent {
 			$posting->debit_account = $saving_control_acc;
 			$posting->credit_account = $cash_account;
 			$posting->savingproduct()->associate($product);
+			$posting->organization_id = Confide::user()->organization_id;
 			$posting->save();
 
 
@@ -52,6 +54,7 @@ class Savingposting extends \Eloquent {
 			$posting->debit_account = $cash_account;
 			$posting->credit_account = $fee_income_acc;
 			$posting->savingproduct()->associate($product);
+			$posting->organization_id = Confide::user()->organization_id;
 			$posting->save();
 
 

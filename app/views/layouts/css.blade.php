@@ -1,6 +1,7 @@
+<div class="main_wrapper">
 @include('includes.head')
-@include('includes.nav')
-@include('includes.nav_main')
+@include('includes.navcbs')
+@include('includes.nav_cbs')
 
 <div id="page-wrapper">
             <div class="row">
@@ -13,3 +14,4 @@
         </div>
         <!-- /#page-wrapper -->
 @include('includes.footer')
+</div>

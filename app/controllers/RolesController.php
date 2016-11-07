@@ -16,7 +16,7 @@ class RolesController extends Controller
     */
     public function index(){
 
-        $roles = Role::all();
+        $roles = Role::where('organization_id',Confide::user()->organization_id)->get();
 
         return View::make('roles.index')->with('roles', $roles);
     }
@@ -58,8 +58,8 @@ class RolesController extends Controller
     public function create()
     {
 
-        $categories = DB::table('permissions')->select('category')->distinct()->get();
-        $permissions = Permission::all();
+        $categories = DB::table('permissions')->whereNull('organization_id')->select('category')->distinct()->get();
+        $permissions = Permission::whereNull('organization_id')->get();
         
         
         return View::make('roles.create', compact('permissions', 'categories'));
@@ -82,6 +82,8 @@ class RolesController extends Controller
         $role = new Role;
 
         $role->name = Input::get('name');
+        
+        $role->organization_id = Confide::user()->organization_id;
 
         $role->save();
 

@@ -33,18 +33,22 @@ return array(
 
 
 	'nav' => array(
+		'home' => 'Home',
 		'dashboard' => 'Dashboard',
 		'members' => 'Members',
 		'accounting' => 'Accounting',
 		'reports' => 'Reports',
 		'administration' => 'Administration',
+		'hr' => 'Human Resource',
 		'payroll' => 'Payroll',
-		'erp' => 'ERP',
-		'leave' => 'Leave',
+		'erp' => 'Financials (ERP)',
+		'leave' => 'Leave Management',
 		'cbs' => 'CBS',
 		'payroll_leave' => 'Payroll & Leave',
-		'employees' => 'Employees',
+		'employees' => 'HR',
 		'css' => 'Portal',
+		'emp_css' => 'Employee Portal',
+		'cbscss' => 'CSS',
 		'inventory' => 'Inventory',
 		
 

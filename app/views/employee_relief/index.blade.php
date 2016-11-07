@@ -8,7 +8,6 @@ function asMoney($value) {
 
 @extends('layouts.payroll')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -55,6 +54,16 @@ function asMoney($value) {
         <th>Action</th>
 
       </thead>
+
+     <tfoot>
+
+        <th>#</th>
+        <th>Employee</th>
+        <th>Relief Type</th>
+        <th>Amount</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -63,7 +72,11 @@ function asMoney($value) {
         <tr>
 
           <td> {{ $i }}</td>
+          @if($rel->middle_name == null || $rel->middle_name == '')
           <td>{{ $rel->first_name.' '.$rel->last_name }}</td>
+          @else
+          <td>{{ $rel->first_name.' '.$rel->middle_name.' '.$rel->last_name }}</td>
+          @endif
           <td>{{ $rel->relief_name }}</td>
           <td align="right">{{ asMoney((double)$rel->relief_amount) }}</td>
           <td>

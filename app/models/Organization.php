@@ -58,17 +58,63 @@ public static function getOrganizationName(){
 
 }
 
+public static function getActive(){
+
+	$organization_id = Confide::user()->organization_id;
+
+	$organization = Organization::find($organization_id);
+
+	return $organization;
+
+}
+
 
 public static function getUserOrganization(){
 
-	$organization_id = 1;
+	$organization_id = Confide::user()->organization_id;
 
 	$organization = Organization::find($organization_id);
 
 	return $organization;
 }
 
+public static function createKey($string){
+$key = "#&sdfdfs789fs7d";
+$encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, md5(md5($key))));
+return $encoded;
+}
 
+public static function decodeKey($string){
+$key = "#&sdfdfs789fs7d";
+$decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+return $decoded;
+}
+
+public static function binToStr($input)
+{
+    if (!is_string($input))
+        return false;
+    $chunks = str_split($input,8);
+    $ret = '';
+    foreach ($chunks as $chunk)
+    {
+        $ret .= chr(bindec($chunk));
+    }
+    return $ret;
+}
+ 
+public static function strToBin($input)
+{
+    if (!is_string($input))
+        return false;
+    $ret = '';
+    for ($i = 0; $i < strlen($input); $i++)
+    {
+        $temp = decbin(ord($input{$i}));
+        $ret .= str_repeat("0", 8 - strlen($temp)) . $temp;
+    }
+    return $ret;
+}
 
 public function encode($string){
 
@@ -147,7 +193,7 @@ return $encoded;
 
 
 
-public function decode($string, $keycode){
+public static function decode($string, $keycode){
 
 
 
@@ -229,7 +275,9 @@ public function unique_id($l) {
 
 
 
-
+function generateRandomString($length = 10) {
+    return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+}
 
 
 public function license_key_generator($license_code){

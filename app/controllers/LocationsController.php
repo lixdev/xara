@@ -9,8 +9,7 @@ class LocationsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$locations = Location::all();
-
+		$locations = Location::where('organization_id',Confide::user()->organization_id)->get();
 		return View::make('locations.index', compact('locations'));
 	}
 
@@ -42,6 +41,7 @@ class LocationsController extends \BaseController {
 
 		$location->name = Input::get('name');
 		$location->description = Input::get('description');
+		$location->organization_id = Confide::user()->organization_id;
 		$location->save();
 
 		return Redirect::route('locations.index')->withFlashMessage('Store has been successfully created!');

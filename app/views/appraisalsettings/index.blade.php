@@ -1,8 +1,6 @@
 @extends('layouts.hr')
 @section('content')
 
-<br/>
-
 <div class="row">
 	<div class="col-lg-12">
   <h3>Appraisal Settings</h3>
@@ -57,7 +55,7 @@
 
           <td>{{ $i }}</td>
           <td>{{ $appraisal->question }}</td>
-          <td>{{ $appraisal->category }}</td>
+          <td>{{ Appraisalcategory::getCategory($appraisal->appraisalcategory_id) }}</td>
           <td>{{ $appraisal->rate }}</td>
           <td>
 

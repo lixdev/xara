@@ -1,6 +1,6 @@
 @extends('layouts.organization')
 @section('content')
-<br/>
+
 <?php
 
 
@@ -83,7 +83,7 @@ function asMoney($value) {
         </tr>
         <tr><td><strong>Citizenship:</strong></td>
         @if($employee->citizenship != null)
-        <td>{{$employee->citizenship}}</td>
+        <td>{{$employee->citizenship->name}}</td>
         @else
         <td></td>
         @endif
@@ -132,11 +132,12 @@ function asMoney($value) {
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#employeeinfo" aria-controls="employeeinfo" role="tab" data-toggle="tab">Employee Information</a></li>
-    <li role="presentation"><a href="#kins" aria-controls="kins" role="tab" data-toggle="tab">Emergency Contact</a></li>
+    <li role="presentation"><a href="#kins" aria-controls="kins" role="tab" data-toggle="tab">Next of Kin</a></li>
     <li role="presentation"><a href="#documents" aria-controls="documents" role="tab" data-toggle="tab">Documents</a></li>
     <li role="presentation"><a href="#appraisals" aria-controls="appraisals" role="tab" data-toggle="tab">Appraisal</a></li>
     <li role="presentation"><a href="#properties" aria-controls="properties" role="tab" data-toggle="tab">Company Property</a></li>
     <li role="presentation"><a href="#occurences" aria-controls="occurences" role="tab" data-toggle="tab">Occurence</a></li>
+    <li role="presentation"><a href="#benefits" aria-controls="benefits" role="tab" data-toggle="tab">Benefits</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -192,6 +193,13 @@ function asMoney($value) {
         <td></td>
         @endif
         </tr>
+
+        @if($employee->type_id == 2)
+        <tr><td><strong> Start Date </strong></td><td> {{ $employee->start_date}}</td></tr>
+        <tr><td><strong> End Date </strong></td><td> {{ $employee->end_date}}</td></tr>
+        @else
+        
+        @endif
         
         <tr><td><strong>Work Permit: </strong></td>
         @if($employee->work_permit_number != null)
@@ -255,7 +263,14 @@ function asMoney($value) {
   <div class="col-lg-4" >
     <table class="table table-bordered table-hover">
       <tr><td colspan="2"><strong><span style="color:green">Bank Information</span></strong></td></tr>
-<tr><td><strong>Employee Bank: </strong></td>
+      <tr><td><strong>Mode of Payment:</strong></td>
+        @if($employee->mode_of_payment == 'Others')
+        <td>{{$employee->custom_field1}}</td>
+        @else
+        <td>{{$employee->mode_of_payment}}</td>
+        @endif
+        </tr>
+      <tr><td><strong>Employee Bank: </strong></td>
         @if($employee->bank_id != 0)
         <td>
             <?php 
@@ -395,13 +410,11 @@ function asMoney($value) {
           <div class="col-lg-12">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{ URL::to('NextOfKins/create/'.$employee->id)}}">new kin</a>
-        </div>
+      
         <div class="panel-body">
 
 
-    <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="users" width="1000" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -413,6 +426,16 @@ function asMoney($value) {
         <th></th>
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>Kin Name</th>
+         <th>ID Number</th>
+         <th>Relationship</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -441,8 +464,6 @@ function asMoney($value) {
           
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('NextOfKins/view/'.$kin->id)}}">View</a></li>   
-
-                    <li><a href="{{URL::to('NextOfKins/edit/'.$kin->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('NextOfKins/delete/'.$kin->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s kin?'))">Delete</a></li>
                      
@@ -483,31 +504,45 @@ function asMoney($value) {
     <div class="col-lg-12">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{ URL::to('documents/create/'.$employee->id)}}">new employee document</a>
-        </div>
+     
         <div class="panel-body">
 
 
-    <table id="doc" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="doc" width="1000" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
 
         <th>#</th>
         <th>Document Type</th>
-        <th>Action</th>
+        <th>From Date</th>
+        <th>End Date</th>
+        <th></th>
 
       </thead>
-      <tbody>
 
+      <tfoot>
+
+        <th>#</th>
+        <th>Document Type</th>
+        <th>From Date</th>
+        <th>End Date</th>
+
+      </tfoot>
+      <tbody>
+          
         <?php $i = 1; ?>
         @foreach($documents as $document)
-
+        <?php
+         $name = $document->document_name;
+         $file_name = pathinfo($name, PATHINFO_FILENAME); 
+        ?>
         <tr>
 
           <td> {{ $i }}</td>
-          <td>{{ $document->document_name }}</td>
+          <td>{{ $file_name }}</td>
+          <td>{{ $document->from_date }}</td>
+          <td>{{ $document->expiry_date }}</td>
           <td>
 
                   <div class="btn-group">
@@ -516,8 +551,7 @@ function asMoney($value) {
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
-                   <li><a href="{{URL::to('documents/download/'.$document->id)}}">Download</a></li>
-                    <li><a href="{{URL::to('documents/edit/'.$document->id)}}">Update</a></li>
+                   <li><a href='{{asset("public/uploads/employees/documents/".$document->document_path)}}'>Download</a></li>
                    
                     <li><a href="{{URL::to('documents/delete/'.$document->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s document?'))">Delete</a></li>
                     
@@ -556,13 +590,11 @@ function asMoney($value) {
     <div class="col-lg-12">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{  URL::to('Appraisals/create/'.$employee->id)}}">new appraisal</a>
-        </div>
+      
         <div class="panel-body">
 
 
-    <table id="app" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="appr" width="1000" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -574,6 +606,16 @@ function asMoney($value) {
         <th></th>
 
       </thead>
+
+       <tfoot>
+
+        <th>#</th>
+        <th>Appraisal Question</th>
+        <th>Performance</th>
+        <th>Score</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -595,8 +637,6 @@ function asMoney($value) {
           
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('Appraisals/view/'.$appraisal->id)}}">View</a></li> 
-
-                    <li><a href="{{URL::to('Appraisals/edit/'.$appraisal->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('Appraisals/delete/'.$appraisal->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s appraisal?'))">Delete</a></li>
                     
@@ -635,13 +675,11 @@ function asMoney($value) {
     <div class="col-lg-12">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{ URL::to('Properties/create/'.$employee->id)}}">new property</a>
-        </div>
+      
         <div class="panel-body">
 
 
-    <table id="prop" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="prop" width="1000" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -653,6 +691,15 @@ function asMoney($value) {
         <th></th>
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>Name</th>
+         <th>Amount</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -672,8 +719,6 @@ function asMoney($value) {
           
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('Properties/view/'.$property->id)}}">View</a></li> 
-                    
-                    <li><a href="{{URL::to('Properties/edit/'.$property->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('Properties/delete/'.$property->id)}}" onclick="return (confirm('Are you sure you want to delete this property?'))">Delete</a></li>
                     
@@ -716,22 +761,28 @@ function asMoney($value) {
     <div class="col-lg-12">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-          <a class="btn btn-info btn-sm" href="{{ URL::to('occurences/create/'.$employee->id)}}">new occurence</a>
-        </div>
+      
         <div class="panel-body">
 
 
-    <table id="occ" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="occ" width="1000" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
 
         <th>#</th>
         <th>Occurence</th>
-        <th>Action</th>
+        <th></th>
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>Occurence</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -750,8 +801,6 @@ function asMoney($value) {
           
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('occurences/view/'.$occurence->id)}}">View</a></li>
-
-                    <li><a href="{{URL::to('occurences/edit/'.$occurence->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('occurences/delete/'.$occurence->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s occurence?'))">Delete</a></li>
                     
@@ -781,7 +830,46 @@ function asMoney($value) {
     </div>
 
 
-	</div>
+  </div>
+
+
+  <div role="tabpanel" class="tab-pane" id="benefits">
+
+        <br>
+
+     <div class="row">
+          <div class="col-lg-12">
+
+    
+
+          <div class="row">
+
+
+           <div class="col-lg-6">
+
+             <table class="table table-bordered table-hover">
+           
+      <tr><td><strong>Name: </strong></td><td><strong>Amount</strong></td></tr>
+      @if($count>0)
+      @foreach($benefits as $benefit)
+      <tr><td>{{Benefitsetting::getBenefit($benefit->benefit_id)}}</td>
+      <td>{{asMoney($benefit->amount)}}</td></tr>
+      @endforeach
+
+      @else
+      <tr><td colspan="2" align="center">Not found</td></tr>
+      @endif
+</table>
+</div>
+
+</div>
+   
+
+        
+    </div>
+
+</div>
+</div>
 
 </div>
 </div>

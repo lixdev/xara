@@ -9,8 +9,8 @@ class JobGroupController extends \BaseController {
 	 */
 	public function index()
 	{
-		$jgroups = Jobgroup::all();
-		$benefits = Benefitsetting::all();
+		$jgroups = Jobgroup::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$benefits = Benefitsetting::where('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Job Group', 'view', 'viewed employee job group');
 
@@ -24,7 +24,7 @@ class JobGroupController extends \BaseController {
 	 */
 	public function create()
 	{
-		$benefits = Benefitsetting::all();
+		$benefits = Benefitsetting::where('organization_id',Confide::user()->organization_id)->get();
 		return View::make('job_group.create', compact('benefits'));
 	}
 
@@ -44,9 +44,11 @@ class JobGroupController extends \BaseController {
 
 		$count = DB::table('benefitsettings')->count();
 
-		$c = count(Input::get('benefitid'));
+		$c = count(Input::get('chbox'));
 
-		$ben = Input::get('benefitid');
+		$a = count(Input::get('amount'));
+
+		$ben = Input::get('chbox');
 
         $amt = str_replace( ',', '', Input::get('amount'));
 
@@ -54,28 +56,19 @@ class JobGroupController extends \BaseController {
 
 		$jgroup->job_group_name = Input::get('name');
 
-        $jgroup->organization_id = '1';
+        $jgroup->organization_id = Confide::user()->organization_id;
 
         $jgroup->save();
 
         $id = Jobgroup::orderBy('id','DESC')->first();
 
-        for ( $i=0; $i< $count; $i++) {
-
+        for ( $i=0; $i< $c; $i++) {
         $benefit = new Employeebenefit;
         $benefit->jobgroup_id=$id->id ;
-
-        if(filter_var($ben[$i], FILTER_VALIDATE_BOOLEAN)){
         $benefit->benefit_id = $ben[$i];
         $benefit->amount = $amt[$i];
 
-        }else{
-        $benefit->benefit_id = $ben[$i];
-        $benefit->amount = $amt[$i+1];
-        }
-
         $benefit->save();
-    
         }
 
 		
@@ -95,9 +88,11 @@ class JobGroupController extends \BaseController {
 	{
 		$jobgroup = Jobgroup::findOrFail($id);
 
-		$benefits = Benefitsetting::all();
+		$benefits = Employeebenefit::where('jobgroup_id', $id)->get();
 
-		return View::make('job_group.show', compact('jobgroup','benefits'));
+		$count = Employeebenefit::where('jobgroup_id', $id)->count();
+
+		return View::make('job_group.view', compact('jobgroup','benefits','count'));
 	}
 
 	/**
@@ -110,13 +105,13 @@ class JobGroupController extends \BaseController {
 	{
 		$jobgroup = Jobgroup::find($id);
 
-		$benefits = Benefitsetting::all();
+		$benefits = Employeebenefit::where('jobgroup_id', $id)->where('organization_id',Confide::user()->organization_id)->get();
 
-		$amounts=DB::table('employeebenefits')->where('jobgroup_id',$id)->get();
+		$bens = Benefitsetting::where('organization_id',Confide::user()->organization_id)->get();
 
-		$count = DB::table('employeebenefits')->where('jobgroup_id',$id)->count();
+		$count = Employeebenefit::where('jobgroup_id', $id)->where('organization_id',Confide::user()->organization_id)->count();
 
-		return View::make('job_group.edit', compact('jobgroup','benefits','count','amounts'));
+		return View::make('job_group.edit', compact('jobgroup','benefits','count','bens'));
 	}
 
 	/**
@@ -135,28 +130,49 @@ class JobGroupController extends \BaseController {
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
-        $c = count(Input::get('benefitid'));
+        $count = DB::table('benefitsettings')->where('organization_id',Confide::user()->organization_id)->count();
 
-		$ben = Input::get('benefitid');
-        $amt = str_replace( ',', '', Input::get('amount') );
+		$c = count(Input::get('chbox'));
 
+		$c1 = count(Input::get('chbox1'));
+
+		$count= Input::get('count');
+
+		$ben = Input::get('chbox');
+
+		$bens = Input::get('chbox1');
+
+        $amt = str_replace( ',', '', Input::get('amount'));
+
+        $amts = str_replace( ',', '', Input::get('amount1'));
 
 		$jgroup->job_group_name = Input::get('name');
-		$jgroup->update();
 
-		DB::table('employeebenefits')->where('jobgroup_id',$id)->delete();
+        $jgroup->update();
 
+        if($count>0){
+        Employeebenefit::where('jobgroup_id', $id)->delete();
         for ( $i=0; $i< $c; $i++) {
-
         $benefit = new Employeebenefit;
-
         $benefit->jobgroup_id=$id;
         $benefit->benefit_id = $ben[$i];
         $benefit->amount = $amt[$i];
+
         $benefit->save();
-    
+        }
+        }else{
+         for ( $i=0; $i< $c1; $i++) {
+        $benefit = new Employeebenefit;
+        $benefit->jobgroup_id=$id;
+        $benefit->benefit_id = $bens[$i];
+        $benefit->amount = $amts[$i];
+
+        $benefit->save();
         }
 
+        }
+
+         
         
         Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
 
@@ -172,10 +188,16 @@ class JobGroupController extends \BaseController {
 	public function destroy($id)
 	{
 		$jgroup = Jobgroup::findOrFail($id);
+		$jct  = DB::table('employee')->where('job_group_id',$id)->count();
+		if($jct>0){
+			return Redirect::route('job_group.index')->withDeleteMessage('Cannot delete this job group because its assigned to an employee(s)!');
+		}else{
+		
 		Jobgroup::destroy($id);
 		DB::table('employeebenefits')->where('jobgroup_id',$id)->delete();
         Audit::logaudit('Job Groups', 'update', 'updated: '.$jgroup->job_group_name);
 		return Redirect::route('job_group.index')->withDeleteMessage('Job group successfully deleted!');
 	}
+}
 
 }

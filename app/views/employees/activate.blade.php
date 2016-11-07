@@ -1,9 +1,5 @@
-@extends('layouts.organization')
+@extends('layouts.organization1')
 @section('content')
-
-<br><br>
-
-
 
 <div class="row">
   
@@ -15,11 +11,7 @@
 
 
 <div class="row">
-  
-
-
   <div class="col-lg-12">
-
 @if (Session::has('flash_message'))
 
       <div class="alert alert-success">
@@ -38,22 +30,38 @@
       <div class="panel-heading">
           <h4>Deactivated Employees</h4>
         </div>
-        <div class="panel-body">
+        <div class="panel-body table-responsive">
 
-      <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
-
-
+      <table id="users" class="table table-condensed table-bordered table-responsive table-hover" style="font-size:11px">
       <thead>
 
         <th>#</th>
-        <th>Personal File Number</th>
-        <th>Employee Name</th>
-        <th>Employee Branch</th>
-        <th>Employee Department</th>
+        <th style="font-size:11px;">PFN</th>
+        <th style="font-size:11px;">Employee Name</th>
+        <th style="font-size:11px;">ID</th>
+        <th style="font-size:11px;">KRA PIN</th>
+        <th style="font-size:11px;">NSSF NO.</th>
+        <th style="font-size:11px;">NHIF NO.</th>
+        <th style="font-size:11px;">Branch</th>
+        <th style="font-size:11px;">Department</th>
 
-        <th>Action</th>
+        <th style="font-size:11px;">Action</th>
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>PFN</th>
+        <th>Employee Name</th>
+        <th>ID</th>
+        <th>Kra Pin</th>
+        <th>Nssf NO.</th>
+        <th>Nhif NO.</th>
+        <th>Branch</th>
+        <th>Department</th>
+
+      </tfoot>
       <tbody>
 
         <?php $i = 1; ?>
@@ -63,7 +71,11 @@
 
           <td> {{ $i }}</td>
           <td>{{ $employee->personal_file_number }}</td>
-          <td>{{ $employee->first_name.' '.$employee->last_name}}</td>
+          <td width="150">{{ $employee->first_name.' '.$employee->last_name}}</td>
+          <td>{{ $employee->identity_number }}</td>
+          <td>{{ $employee->pin }}</td>
+          <td>{{ $employee->social_security_number }}</td>
+          <td>{{ $employee->hospital_insurance_number }}</td>
           <?php if( $employee->branch_id!=0){ ?>
           <td>{{ Branch::getName($employee->branch_id) }}</td>
           <?php }else{?>
@@ -81,7 +93,7 @@
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul class="dropdown-menu" style="margin-left:0" role="menu">
 
                     <li><a href="{{URL::to('employees/viewdeactive/'.$employee->id)}}">View</a></li>
                    
@@ -101,6 +113,7 @@
 
 
     </table>
+    </div>
 </div>
 </div>
 

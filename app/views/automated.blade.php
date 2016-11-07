@@ -1,6 +1,5 @@
 @extends('layouts.system')
 @section('content')
-<br/><br/>
 
 <div class="row">
 	<div class="col-lg-1">
@@ -29,25 +28,30 @@
 <div class="col-lg-5 ">
 
 	
-<form method="POST" action="{{{ URL::to('automated') }}}"  enctype="multipart/form-data">
+<form method="POST" action="{{{ URL::to('automated/savin') }}}"  enctype="multipart/form-data">
  
 
 
 		<input type="hidden" value="savings" name="category">
 
         
+         <div class="form-group " >
 
+            <label>Period</label>
+            <input type="text" class="form-control datepicker2" readonly="readonly" name="period">
+
+         </div>
 
         <div class="form-group savingproduct" id="savingproduct">
             <label for="username">Saving Products </label>
             <select name="savingproduct" class="form-control " >
 
-                <?php $date = date('Y-m-d'); $category = 'saving'; ?>
+                
 
                 @foreach($savingproducts as $savingproduct)
-                 @if(!Autoprocess::checkProcessed($date, $category, $savingproduct))
+                
                 <option value="{{$savingproduct->id}}">{{$savingproduct->name}}</option>
-                @endif
+              
                 @endforeach
                 
 

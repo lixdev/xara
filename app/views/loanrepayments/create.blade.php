@@ -1,10 +1,7 @@
 @extends('layouts.member')
 @section('content')
-<br/>
 
 <?php
-
-
 function asMoney($value) {
   return number_format($value, 2);
 }
@@ -14,17 +11,11 @@ function asMoney($value) {
 <div class="row">
 	<div class="col-lg-12">
   <h3>Loan Application</h3>
-
 <hr>
 </div>	
 </div>
-
-
 <div class="row">
 	<div class="col-lg-5">
-
-    
-		
 		 @if ($errors->has())
         <div class="alert alert-danger">
             @foreach ($errors->all() as $error)
@@ -81,57 +72,29 @@ function asMoney($value) {
 
        
 
-          <td>Duration Due</td><td>{{ asMoney(Loanaccount::getTotalDue($loanaccount))}}</td>
+          <td>Amount Due</td><td>{{ asMoney(Loanaccount::getTotalDue($loanaccount))}}</td>
         </tr>
         </table>
 
         <input class="form-control" placeholder="" type="hidden" name="loanaccount_id" id="loanaccount_id" value="{{ $loanaccount->id }}">
-
-        <div class="form-group">
-            <label for="username">Repayment Date </label>
-            <input class="form-control" placeholder="" type="date" name="date" id="date" value="{{{ Input::old('date') }}}">
-        </div>
-
-
+         <div class="form-group">
+                        <label for="username">Repayment Date <span style="color:red">*</span></label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input required class="form-control datepicker" readonly="readonly" placeholder="" type="text" name="date" id="date" value="">
+                    </div>
+       </div>
         <div class="form-group">
             <label for="username">Amount</label>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{{ Input::old('amount') }}}">
         </div>
-
-
-         
-        
-
-
-        
-      
-        
         <div class="form-actions form-group">
-        
-        
-
           <button type="submit" class="btn btn-primary btn-sm">Submit Payment</button> 
         </div>
-
     </fieldset>
 </form>
-
- 
-
   </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
 <!-- organizations Modal -->
 <div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -141,13 +104,6 @@ function asMoney($value) {
         <h4 class="modal-title" id="myModalLabel">Loan Schedule</h4>
       </div>
       <div class="modal-body">
-
-
-        
-        
-
-
-
         
       </div>
       <div class="modal-footer">
@@ -161,18 +117,5 @@ function asMoney($value) {
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @stop

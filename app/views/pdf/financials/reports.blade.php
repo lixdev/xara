@@ -1,10 +1,5 @@
 @extends('layouts.ports')
 @section('content')
-<br/>
-
-
-
-
 
 <div class="row">
 	<div class="col-lg-12">
@@ -18,7 +13,7 @@
 <div class="row">
 	<div class="col-lg-5">
 
-   <form method="post" action="{{URL::to('reports/financials')}}">
+   <form method="post" action="{{URL::to('reports/financials')}}" target="_blank">
 
 
       <div class="form-group">
@@ -37,8 +32,12 @@
 
         <div class="form-group">
             <label for="username">As at Date </label>
-            <input class="form-control" placeholder="" type="date" name="date" id="date" value="{{date('Y-m-d')}}">
-        </div>
+            <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control datepicker" readonly="readonly" placeholder="" type="text" name="date" id="date" value="{{date('Y-m-d')}}">
+                    </div>
+                    </div>
+           
 
 
         <div class="form-actions form-group">

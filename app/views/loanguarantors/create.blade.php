@@ -1,6 +1,5 @@
-@extends('layouts.accounting')
+@extends('layouts.member')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -46,17 +45,6 @@
             
         </div>
 
-
-
-        <div class="form-group">
-            <label for="username">Guarantee Amount </label>
-            <input class="form-control" placeholder="" type="date" name="amount" id="amount" value="{{{ Input::old('amount') }}}">
-        </div>
-
-
-        
-
-        
       
         
         <div class="form-actions form-group">

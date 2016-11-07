@@ -17,8 +17,10 @@ class CreateBankBranchesTable extends Migration {
 			$table->increments('id');
 			$table->string('branch_code',30)->nullable();
 			$table->string('bank_branch_name');
-			$table->integer('bank_id')->unsigned()->default('0')->index('bank_branches_bank_id_foreign');
-			$table->integer('organization_id')->unsigned()->default('0')->index('bank_branches_organization_id_foreign');
+			$table->integer('bank_id')->unsigned();
+			$table->foreign('bank_id')->references('id')->on('banks')->onDelete('restrict')->onUpdate('cascade');
+			$table->integer('organization_id')->unsigned();
+			$table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict')->onUpdate('cascade');
 			$table->timestamps();
 		});
 	}

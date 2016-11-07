@@ -1,6 +1,5 @@
-@extends('layouts.payroll')
+@extends('layouts.portspay')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -24,7 +23,7 @@
         </div>
         @endif
 
-		 <form method="POST" action="{{URL::to('payrollReports/deductions')}}" accept-charset="UTF-8">
+		 <form target="_blank" method="POST" action="{{URL::to('payrollReports/deductions')}}" accept-charset="UTF-8">
    
     <fieldset>
 
@@ -37,23 +36,28 @@
        </div>
 
             <div class="form-group">
-                        <label for="username">Select:</label>
-                        <select name="deduction" class="form-control">
+                        <label for="username">Select: <span style="color:red">*</span></label>
+                        <select required name="deduction" class="form-control">
                             <option></option>
+                            <option value='All'>All</option>
                             @foreach($deds as $ded)
-                            <option value="{{$ded->id}}"> {{ $ded->deduction_name }}</option>
+                            <option value="{{$ded->deduction_name}}"> {{ $ded->deduction_name }}</option>
                             @endforeach
 
                         </select>
                 
             </div>
 
-                        <div class="checkbox">
-                        <label>
-                            <input type="checkbox" checked name="sel">
-                              Select All
-                        </label>
-                    </div>
+                    
+            <div class="form-group">
+                        <label for="username">Download as: <span style="color:red">*</span></label>
+                        <select required name="format" class="form-control">
+                            <option></option>
+                            <option value="excel"> Excel</option>
+                            <option value="pdf"> PDF</option>
+                        </select>
+                
+            </div>
         
         <div class="form-actions form-group">
         

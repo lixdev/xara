@@ -1,9 +1,9 @@
 @extends('layouts.erp')
 @section('content')
 
-<br><div class="row">
+<div class="row">
 	<div class="col-lg-12">
-  <h3>Stock</h3>
+  <h4><font color='green'>Stock</font></h4>
 
 <hr>
 </div>	
@@ -42,6 +42,8 @@
 
         <th>#</th>
         <th>Item</th>
+        <!-- <th>Stock In</th>
+        <th>Stock Out</th> -->
         <th>Stock Amount</th>
        <!-- <th></th> -->
 
@@ -55,6 +57,8 @@
 
           <td> {{ $i }}</td>
           <td>{{ $item->name }}</td>
+          <!-- <td>{{ $item->quantity_in }}</td>
+          <td>{{ $item->quantity_out }}</td>  -->         
           <td>{{Stock::getStockAmount($item)}}</td>
            
         <!--
@@ -77,7 +81,18 @@
 
         </tr>
 
-        <?php $i++; ?>
+          
+        <?php
+        $reorder = (Stock::getStockAmount($item) < $item->reorder_level);
+        $message = "Running low on "." ". $item->name." ".$item->description." ."."Please reorder" ;
+       
+
+        if ($reorder) 
+          
+        echo "<script type='text/javascript'> alert('$message');</script>";
+           
+        $i++; 
+        ?>
         @endforeach
 
 

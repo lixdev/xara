@@ -13,16 +13,16 @@ class Overtime extends \Eloquent {
 
 public static $rules = [
         'employee' => 'required',
-		'type' => 'required',
-		'rate' => 'required',
-		'amount' => 'required'
+        'type' => 'required',
+        'period' => 'required|numeric'
+		
 	];
 
 	public static $messsages = array(
         'employee.required'=>'Please select employee!',
         'type.required'=>'Please select overtime type!',
-        'rate.required'=>'Please select pay rate!',
-        'amount.required'=>'Please insert amount!',
+        'period.required'=>'Please insert period worked!',
+        'period.numeric'=>'Please insert a valid period!',
     );
 
 	// Don't forget to fill this array

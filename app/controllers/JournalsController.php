@@ -9,7 +9,7 @@ class JournalsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$journals = Journal::all();
+		$journals = Journal::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('journals.index', compact('journals'));
 	}
@@ -22,7 +22,7 @@ class JournalsController extends \BaseController {
 	public function create()
 	{
 
-		$accounts = Account::all();
+		$accounts = Account::where('organization_id',Confide::user()->organization_id)->where('active',true)->get();
 		return View::make('journals.create', compact('accounts'));
 	}
 
@@ -48,7 +48,8 @@ class JournalsController extends \BaseController {
 			'credit_account' => Input::get('credit_account'),
 			'description' => Input::get('description'),
 			'amount' => Input::get('amount'),
-			'initiated_by' => Input::get('user')
+			'initiated_by' => Input::get('user'),
+			'organization_id' => Confide::user()->organization_id
 			);
 		
 		$journal = new Journal;

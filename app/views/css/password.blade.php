@@ -1,8 +1,6 @@
 @extends('layouts.membercss')
 @section('content')
 
-<br/>
-
 <div class="row">
 
 	<div class="col-lg-5">

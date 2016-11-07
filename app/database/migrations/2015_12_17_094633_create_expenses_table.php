@@ -16,7 +16,9 @@ class CreateExpensesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
+			$table->string('amount');
 			$table->string('type');
+			$table->date('date')->nullable();
 			$table->integer('account_id')->unsigned();
 			$table->foreign('account_id')->references('id')->on('accounts');
 			$table->timestamps();

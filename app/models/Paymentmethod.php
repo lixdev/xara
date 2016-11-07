@@ -4,8 +4,14 @@ class Paymentmethod extends \Eloquent {
 
 	// Add your validation rules here
 	public static $rules = [
-		// 'title' => 'required'
+	'name' => 'required',
+	'account' => 'required'
 	];
+
+	public static $messages = array(
+    	'name.required'=>'Please insert payment method!',
+        'account.required'=>'Please select account!',
+    );
 
 	// Don't forget to fill this array
 	protected $fillable = [];

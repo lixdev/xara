@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style='margin-top:-150px;'>
      <table >
 
       <tr>
@@ -67,16 +67,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">
+
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -104,10 +105,12 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
+	<div class="content" style='margin-top:-50px;'>
    <table>
     <tr><td width="50"><strong>Employer:</strong></td><td>
           {{ strtoupper($organization->name)}}</td></tr>
+          <tr><td width="80"><strong>Employee Code:</strong></td>
+          <td width="80">{{$organization->nssf_no}}</td></tr>
           {{'<tr><td width="50"><strong>Period</strong> : </td><td>'.$period.'</td></tr>'}}
           <tr><td width="50"><strong>Due Date: </strong></td>
             <td>
@@ -145,7 +148,11 @@ body {
       @foreach($nssfs as $nssf)
       <tr>
         <td> {{ $nssf->personal_file_number }}</td>
-        <td> {{ $nssf->last_name.' '.$nssf->first_name }}</td>
+         @if($nssf->middle_name != null || $nssf->middle_name != '')
+        <td> {{$nssf->first_name.' '.$nssf->middle_name.' '.$nssf->last_name}}</td>
+        @else
+        <td> {{$nssf->first_name.' '.$nssf->last_name}}</td>
+        @endif
         <td> {{ $nssf->identity_number }}</td>
         <td> {{ $nssf->social_security_number }}</td>
         <td align="right"> {{ asMoney($nssf->nssf_amount*2) }}</td>

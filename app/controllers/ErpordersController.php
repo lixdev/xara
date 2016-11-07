@@ -9,7 +9,7 @@ class ErpordersController extends \BaseController {
 	 */
 	public function index()
 	{
-		$erporders = Erporder::all();
+		$erporders = Erporder::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('erporders.index', compact('erporders'));
 	}
@@ -40,8 +40,11 @@ class ErpordersController extends \BaseController {
 
 		Erporder::create($data);
 
+		   			
+
 		return Redirect::route('erporders.index');
 	}
+}
 
 	/**
 	 * Display the specified erporder.

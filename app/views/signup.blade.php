@@ -1,4 +1,7 @@
-@include('includes.head')
+@include('includes.headl')
+
+{{HTML::script('media/jquery-1.8.0.min.js') }}
+
 
 <div class="container">
 
@@ -12,11 +15,11 @@
 
 
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {{ HTML::image("images/logo.png", "Logo") }}
+                        <img src="{{asset('images/xara.png')}}" alt="logo" width="50%">
 
 		<br/><br>
 
-      <form method="POST" action="{{{ URL::to('users') }}}" accept-charset="UTF-8">
+      <form method="POST" id="signupform" action="{{{ URL::to('users') }}}" accept-charset="UTF-8">
 
         <input class="form-control" type="hidden" name="user_type" id="user_type" value="admin">
    
@@ -44,6 +47,10 @@
             <input class="form-control" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" type="password" name="password_confirmation" id="password_confirmation" required>
         </div>
 
+        <hr>
+
+        
+
         @if (Session::get('error'))
             <div class="alert alert-error alert-danger">
                 @if (is_array(Session::get('error')))
@@ -54,22 +61,18 @@
 
         @if (Session::get('notice'))
             <div class="alert">{{ Session::get('notice') }}</div>
-        @endif
-
-        
-
-
-
-
-
-
-
-        
+        @endif        
       
         
         <div class="form-actions form-group">
         
           <button type="submit" class="btn btn-primary btn-sm">Create Account</button>
+        </div>
+
+
+        <div class="form-actions form-group">
+        
+          <a href="{{{ URL::to('/') }}}">Login</a>
         </div>
 
     </fieldset>

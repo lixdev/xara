@@ -16,6 +16,7 @@ class CreateErpordersTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('client_id')->unsigned();
+			$table->foreign('client_id')->references('id')->on('clients');
 			$table->date('date')->nullable();
 			$table->string('status')->nullablle();
 			$table->double('total_amount')->nullable();
@@ -23,7 +24,6 @@ class CreateErpordersTable extends Migration {
 			$table->string('type');
 			$table->boolean('is_lease')->default(0);
 			$table->string('payment_type')->nullable();
-			$table->integer('paymentmethod_id')->unsigned();
 			$table->string('order_number')->nullable();
 			$table->string('inv_number')->nullable();
 			$table->date('due_date')->nullable();

@@ -9,7 +9,7 @@ class OrdersController extends \BaseController {
 	 */
 	public function index()
 	{
-		$orders = Order::all();
+		$orders = Order::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('orders.index', compact('orders'));
 	}
@@ -44,6 +44,7 @@ class OrdersController extends \BaseController {
 		$order->order_date = date('d-m-Y');
 		$order->customer_name = $member->member_name;
 		$order->customer_number = $member->member_account;
+		$order->organization_id = Confide::user()->organization_id;
 		$order->save();
 
 		$application = new Application;
@@ -52,6 +53,7 @@ class OrdersController extends \BaseController {
 		$application->member_account = $member->member_account;
 		$application->member = $member->member_name;
 		$application->amount = Input::get('product_price');
+		$application->organization_id = Confide::user()->organization_id;
 		$application->save();
 
 		return Redirect::route('orders.index');

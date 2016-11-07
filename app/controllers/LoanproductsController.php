@@ -9,9 +9,22 @@ class LoanproductsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$loanproducts = Loanproduct::all();
+		$loanproducts = Loanproduct::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('loanproducts.index', compact('loanproducts'));
+	}
+
+	public function memberloanshow($id)
+	{
+		/*$loanproduct = DB::table('loanaccounts')
+		          ->join('loanproducts', 'loanaccounts.loanproduct_id', '=', 'loanaccounts.id')
+		          ->join('members', 'loanaccounts.member_id', '=', 'member.id')
+		          ->where('loanaccounts','=',$id)
+		          ->select('members.name as mname','loanproducts.name as name','short_name','interest_rate','period','formula','amortization')
+		          ->first();*/
+		$loanaccount = loanaccount::findOrFail($id);
+
+		return View::make('css.memberloanshow', compact('loanaccount'));
 	}
 
 	/**
@@ -22,11 +35,11 @@ class LoanproductsController extends \BaseController {
 	public function create()
 	{
 
-		$accounts = Account::all();
-		$currencies = Currency::all();
-		$charges = DB::table('charges')->where('category', '=', 'loan')->get();
+		$accounts = Account::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		$charges = DB::table('charges')->where('organization_id',Confide::user()->organization_id)->where('category', '=', 'loan')->get();
 		
-		return View::make('loanproducts.create', compact('accounts', 'charges', 'currencies'));
+		return View::make('loanproducts.create', compact('accounts', 'charges', 'currency'));
 	}
 
 	/**
@@ -71,7 +84,7 @@ class LoanproductsController extends \BaseController {
 	{
 		$loanproduct = Loanproduct::find($id);
 
-		$currencies = Currency::all();
+		$currencies = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
 
 		return View::make('loanproducts.edit', compact('loanproduct', 'currencies'));
 	}

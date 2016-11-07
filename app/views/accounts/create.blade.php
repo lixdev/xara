@@ -1,6 +1,5 @@
 @extends('layouts.accounting')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -50,6 +49,11 @@
         <div class="form-group">
             <label for="username">Account Name</label>
             <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Account Balance</label>
+            <input class="form-control" placeholder="" type="text" name="balance" id="balance" value="{{{ Input::old('balance') }}}">
         </div>
 
 

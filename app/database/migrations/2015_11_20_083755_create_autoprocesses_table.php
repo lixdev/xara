@@ -15,7 +15,7 @@ class CreateAutoprocessesTable extends Migration {
 		Schema::create('autoprocesses', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->date('date');
+			$table->string('period');
 			$table->boolean('is_completed')->default(0);
 			$table->string('category');
 			$table->integer('product_id');

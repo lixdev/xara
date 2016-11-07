@@ -9,7 +9,7 @@ class NssfController extends \BaseController {
 	 */
 	public function index()
 	{
-		$nrates = DB::table('social_security')->where('income_from', '!=', 0.00)->get();
+		$nrates = DB::table('social_security')->whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->where('income_from', '!=', 0.00)->get();
 
 		Audit::logaudit('NSSF', 'view', 'viewed nssf rates');
 
@@ -57,7 +57,7 @@ class NssfController extends \BaseController {
 
 		$nrate->ss_amount_employer = $d;
 
-        $nrate->organization_id = '1';
+                $nrate->organization_id = Confide::user()->organization_id;
 
 		$nrate->save();
 

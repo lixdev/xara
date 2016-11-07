@@ -9,9 +9,7 @@ class ItemsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$items = Item::all();
-
-		Audit::logaudit('Items', 'view', 'viewed items');
+		$items = Item::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('items.index', compact('items'));
 	}
@@ -23,9 +21,7 @@ class ItemsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$itemcategories = Itemcategory::all();
-
-		return View::make('items.create', compact('itemcategories'));
+		return View::make('items.create');
 	}
 
 	/**
@@ -45,17 +41,17 @@ class ItemsController extends \BaseController {
 		$item = new Item;
 
 		$item->name = Input::get('name');
+		$item->date = date('Y-m-d');
 		$item->description = Input::get('description');
 		$item->purchase_price= Input::get('pprice');
 		$item->selling_price = Input::get('sprice');
-		$item->category = Input::get('category');
 		$item->sku= Input::get('sku');
 		$item->tag_id = Input::get('tag');
 		$item->reorder_level = Input::get('reorder');
-		$item->duration = Input::get('duration');
-		$item->save();
+                $item->organization_id = Confide::user()->organization_id;
+		$item->type = Input::get('type');		
 
-		Audit::logaudit('Items', 'create', 'created: '.$item->name);
+		$item->save();
 
 		return Redirect::route('items.index')->withFlashMessage('Item successfully created!');
 	}
@@ -83,9 +79,7 @@ class ItemsController extends \BaseController {
 	{
 		$item = Item::find($id);
 
-		$itemcategories = Itemcategory::all();
-
-		return View::make('items.edit', compact('item', 'itemcategories'));
+		return View::make('items.edit', compact('item'));
 	}
 
 	/**
@@ -109,14 +103,13 @@ class ItemsController extends \BaseController {
 		$item->description = Input::get('description');
 		$item->purchase_price= Input::get('pprice');
 		$item->selling_price = Input::get('sprice');
-		$item->category = Input::get('category');
 		$item->sku= Input::get('sku');
 		$item->tag_id = Input::get('tag');
 		$item->reorder_level = Input::get('reorder');
-		$item->duration = Input::get('duration');
-		$item->update();
 
-        Audit::logaudit('Items', 'update', 'updated: '.$item->name);
+		$item->type = Input::get('type');
+
+		$item->update();
 
 		return Redirect::route('items.index')->withFlashMessage('Item successfully updated!');
 	}
@@ -129,10 +122,7 @@ class ItemsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$item = Item::findOrFail($id);
 		Item::destroy($id);
-
-		Audit::logaudit('Items', 'delete', 'deleted: '.$item->name);
 
 		return Redirect::route('items.index')->withDeleteMessage('Item successfully deleted!');
 	}

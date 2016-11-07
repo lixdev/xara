@@ -16,7 +16,8 @@ class CreateAppraisalQuestionsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('question');
-			$table->string('category');
+			$table->integer('appraisalcategory_id')->unsigned();
+			$table->foreign('appraisalcategory_id')->references('id')->on('appraisalcategories')->onDelete('restrict')->onUpdate('cascade');
 			$table->integer('rate')->nullable()->default('10');
 			$table->timestamps();
 		});

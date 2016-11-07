@@ -1,9 +1,7 @@
 @extends('layouts.membercss')
 @section('content')
-<br/>
 
 <?php
-
 
 function asMoney($value) {
   return number_format($value, 2);

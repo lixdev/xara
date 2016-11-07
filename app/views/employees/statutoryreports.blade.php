@@ -1,10 +1,5 @@
-@extends('layouts.payroll')
+@extends('layouts.stat_ports')
 @section('content')
-<br/>
-
-
-
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -30,6 +25,10 @@
 
        <li>
           <a href="{{ URL::to('payrollReports/selectPayePeriod') }}">PAYE Returns</a>
+       </li>
+
+       <li>
+          <a href="{{ URL::to('itax/download') }}">Download Itax Template</a>
        </li>
 
        <li>

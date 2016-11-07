@@ -16,16 +16,10 @@ class CreateDeductionsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('deduction_name');
-			$table->integer('organization_id')->unsigned()->default('0')->index('deductions_organization_id_foreign');
+			$table->integer('organization_id')->unsigned();
+			$table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict')->onUpdate('cascade');
 			$table->timestamps();
 		});
-
-		DB::table('deductions')->insert(array(
-            array('deduction_name' => 'Salary Advance','organization_id' => '1'),
-            array('deduction_name' => 'Loans','organization_id' => '1'),
-            array('deduction_name' => 'Savings','organization_id' => '1'),
-            array('deduction_name' => 'Breakages and spoilages','organization_id' => '1'),
-        ));
 	}
 
 

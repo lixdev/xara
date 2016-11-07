@@ -9,7 +9,7 @@ class LoanrepaymentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$loanrepayments = Loanrepayment::all();
+		$loanrepayments = Loanrepayment::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('loanrepayments.index', compact('loanrepayments'));
 	}
@@ -140,7 +140,7 @@ class LoanrepaymentsController extends \BaseController {
 
 		$principal_paid = Loanrepayment::getPrincipalPaid($loanaccount);
 
-		$principal_due = $loanaccount->amount_disbursed - $principal_paid;
+		$principal_due = ($loanaccount->amount_disbursed +$loanaccount->top_up_amount) - $principal_paid;
 
 		$interest_due = Loanaccount::intBalOffset($loanaccount);
 
@@ -153,7 +153,7 @@ class LoanrepaymentsController extends \BaseController {
 
 		$loanaccount = Loanaccount::findOrFail($id);
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		$principal_paid = Loanrepayment::getPrincipalPaid($loanaccount);
 

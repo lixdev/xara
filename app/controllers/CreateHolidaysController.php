@@ -9,7 +9,7 @@ class CreateHolidaysController extends \BaseController {
 	 */
 	public function index()
 	{
-		$holidays = Holiday::all();
+		$holidays = Holiday::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('holidays.index',compact('holidays'));
 	}
@@ -41,8 +41,9 @@ class CreateHolidaysController extends \BaseController {
 		}
 
 		$holidays = new Holiday;
-        $holidays->holidays_name = Input::get('holidays_name');
+                $holidays->holidays_name = Input::get('holidays_name');
 		$holidays->holidays_date = Input::get('holidays_date');
+		$holidays->organization_id = Confide::user()->organization_id;
 		$holidays->save();
 		return Redirect::route('holidays.index');
 	}
