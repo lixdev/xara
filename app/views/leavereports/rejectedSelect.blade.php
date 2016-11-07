@@ -1,6 +1,5 @@
-@extends('layouts.leave')
+@extends('layouts.leave_ports')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -24,7 +23,7 @@
         </div>
         @endif
 
-		 <form method="POST" action="{{URL::to('leaveReports/rejectedleaves')}}" accept-charset="UTF-8">
+		 <form target="_blank" method="POST" action="{{URL::to('leaveReports/rejectedleaves')}}" accept-charset="UTF-8">
    
     <fieldset>
 
@@ -43,6 +42,16 @@
                         <input required class="form-control datepicker3" readonly="readonly" placeholder="" type="text" name="period1" id="period1" value="{{{ Input::old('period1') }}}">
                     </div>
        </div>
+
+       <div class="form-group">
+                        <label for="username">Download as: <span style="color:red">*</span></label>
+                        <select required name="format" class="form-control">
+                            <option></option>
+                            <option value="excel"> Excel</option>
+                            <option value="pdf"> PDF</option>
+                        </select>
+                
+            </div>
 
                         
         

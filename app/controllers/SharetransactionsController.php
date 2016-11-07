@@ -9,7 +9,7 @@ class SharetransactionsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$sharetransactions = Sharetransaction::all();
+		$sharetransactions = Sharetransaction::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('sharetransactions.index', compact('sharetransactions'));
 	}
@@ -55,6 +55,7 @@ class SharetransactionsController extends \BaseController {
 		$sharetransaction->amount = Input::get('amount');
 		$sharetransaction->type = Input::get('type');
 		$sharetransaction->description = Input::get('description');
+		$sharetransaction->organization_id = Confide::user()->organization_id;
 		$sharetransaction->save();
 
 		return Redirect::to('sharetransactions/show/'.$shareaccount->id);
@@ -74,8 +75,8 @@ class SharetransactionsController extends \BaseController {
 
 		$account = Shareaccount::findOrFail($id);
 
-		$credit = DB::table('sharetransactions')->where('shareaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
-		$debit = DB::table('sharetransactions')->where('shareaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
+		$credit = DB::table('sharetransactions')->where('organization_id',Confide::user()->organization_id)->where('shareaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
+		$debit = DB::table('sharetransactions')->where('organization_id',Confide::user()->organization_id)->where('shareaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
 
 		$balance = $credit - $debit;
 
@@ -91,8 +92,12 @@ class SharetransactionsController extends \BaseController {
 		}
 		
 
-		return View::make('sharetransactions.show', compact('account', 'shares'));
+        if(Confide::user()->user_type == 'member'){
+        return View::make('sharetransactions.cssshow', compact('account', 'shares'));
+        }else{
 
+		return View::make('sharetransactions.show', compact('account', 'shares'));
+        }
 		
 	}
 

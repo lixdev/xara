@@ -11,7 +11,10 @@ class EarningsController extends \BaseController {
 	{
 		$earnings = DB::table('employee')
 		          ->join('earnings', 'employee.id', '=', 'earnings.employee_id')
+		          ->join('earningsettings', 'earnings.earning_id', '=', 'earningsettings.id')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->select('earnings.id','first_name','middle_name','last_name','earnings_amount','earning_name')
 		          ->get();
 
 		Audit::logaudit('Earnings', 'view', 'viewed earnings');
@@ -27,11 +30,35 @@ class EarningsController extends \BaseController {
 	 */
 	public function create()
 	{
+		
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->get();
-		return View::make('other_earnings.create',compact('employees'));
+		$earnings = Earningsetting::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('other_earnings.create',compact('employees','earnings','currency'));
 	}
+
+	public function createearning()
+	{
+      $postearning = Input::all();
+      $data = array('earning_name' => $postearning['name'], 
+      	            'organization_id' => Confide::user()->organization_id,
+      	            'created_at' => DB::raw('NOW()'),
+      	            'updated_at' => DB::raw('NOW()'));
+      $check = DB::table('earningsettings')->insertGetId( $data );
+     // $id = DB::table('earningsettings')->insertGetId( $data );
+
+		if($check > 0){
+         
+		Audit::logaudit('Earningsettings', 'create', 'created: '.$postearning['name']);
+        return $check;
+        }else{
+         return 1;
+        }
+      
+	} 
 
 	/**
 	 * Store a newly created branch in storage.
@@ -51,13 +78,50 @@ class EarningsController extends \BaseController {
 
 		$earning->employee_id = Input::get('employee');
 
-		$earning->earnings_name = Input::get('earning');
+		$earning->earning_id = Input::get('earning');
 
 		$earning->narrative = Input::get('narrative');
 
-		$a = str_replace( ',', '', Input::get('amount') );
+		$earning->formular = Input::get('formular');
 
+		if(Input::get('formular') == 'Instalments'){
+		$earning->instalments = Input::get('instalments');
+        $insts = Input::get('instalments');
+
+		$a = str_replace( ',', '', Input::get('amount') );
         $earning->earnings_amount = $a;
+
+        $d=strtotime(Input::get('ddate'));
+
+        $earning->earning_date = date("Y-m-d", $d);
+
+        $effectiveDate = date('Y-m-d', strtotime("+".($insts-1)." months", strtotime(Input::get('ddate'))));
+
+        $First  = date('Y-m-01', strtotime(Input::get('ddate')));
+        $Last   = date('Y-m-t', strtotime($effectiveDate));
+
+        $earning->first_day_month = $First;
+
+        $earning->last_day_month = $Last;
+
+	    }else{
+	    $earning->instalments = '1';
+        $a = str_replace( ',', '', Input::get('amount') );
+        $earning->earnings_amount = $a;
+
+        $d=strtotime(Input::get('ddate'));
+
+        $earning->earning_date = date("Y-m-d", $d);
+
+        $First  = date('Y-m-01', strtotime(Input::get('ddate')));
+        $Last   = date('Y-m-t', strtotime(Input::get('ddate')));
+        
+
+        $earning->first_day_month = $First;
+
+        $earning->last_day_month = $Last;
+
+	    }
 
 		$earning->save();
 
@@ -91,9 +155,13 @@ class EarningsController extends \BaseController {
 		$earning = DB::table('employee')
 		          ->join('earnings', 'employee.id', '=', 'earnings.employee_id')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->where('earnings.id','=',$id)
 		          ->first();
 
-		return View::make('other_earnings.edit', compact('earning','employees'));
+	   $earningsettings = Earningsetting::all();
+       $currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('other_earnings.edit', compact('earning','employees','earningsettings','currency'));
 	}
 
 	/**
@@ -113,13 +181,50 @@ class EarningsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$earning->earnings_name = Input::get('earning');
+		$earning->earning_id = Input::get('earning');
 
 		$earning->narrative = Input::get('narrative');
 
-        $a = str_replace( ',', '', Input::get('amount') );
+        $earning->formular = Input::get('formular');
 
+		if(Input::get('formular') == 'Instalments'){
+		$earning->instalments = Input::get('instalments');
+        $insts = Input::get('instalments');
+
+		$a = str_replace( ',', '', Input::get('amount') );
         $earning->earnings_amount = $a;
+
+        $d=strtotime(Input::get('ddate'));
+
+        $earning->earning_date = date("Y-m-d", $d);
+
+        $effectiveDate = date('Y-m-d', strtotime("+".($insts-1)." months", strtotime(Input::get('ddate'))));
+
+        $First  = date('Y-m-01', strtotime(Input::get('ddate')));
+        $Last   = date('Y-m-t', strtotime($effectiveDate));
+
+        $earning->first_day_month = $First;
+
+        $earning->last_day_month = $Last;
+
+	    }else{
+	    $earning->instalments = '1';
+        $a = str_replace( ',', '', Input::get('amount') );
+        $earning->earnings_amount = $a;
+
+        $d=strtotime(Input::get('ddate'));
+
+        $earning->earning_date = date("Y-m-d", $d);
+
+        $First  = date('Y-m-01', strtotime(Input::get('ddate')));
+        $Last   = date('Y-m-t', strtotime(Input::get('ddate')));
+        
+
+        $earning->first_day_month = $First;
+
+        $earning->last_day_month = $Last;
+
+	    }
 
 		$earning->update();
 
@@ -137,18 +242,20 @@ class EarningsController extends \BaseController {
 	public function destroy($id)
 	{
 		$earning = Earnings::findOrFail($id);
+		
 		Earnings::destroy($id);
 
 		Audit::logaudit('Earnings', 'delete', 'deleted: '.$earning->earnings_name.' for '.Employee::getEmployeeName($earning->employee_id));
 
 		return Redirect::route('other_earnings.index')->withDeleteMessage('Earning successfully deleted!');
-	}
+	
+}
 
     public function view($id){
 
 		$earning = Earnings::find($id);
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('other_earnings.view', compact('earning'));
 		

@@ -9,7 +9,7 @@ class GroupsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$groups = Group::all();
+		$groups = Group::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('groups.index', compact('groups'));
 	}
@@ -42,6 +42,7 @@ class GroupsController extends \BaseController {
 
 		$group->name = Input::get('name');
 		$group->description = Input::get('description');
+		$group->organization_id = Confide::user()->organization_id;
 		$group->save();
 
 		return Redirect::route('groups.index');

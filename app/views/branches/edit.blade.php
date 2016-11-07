@@ -1,6 +1,5 @@
 @extends('layouts.organization')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">

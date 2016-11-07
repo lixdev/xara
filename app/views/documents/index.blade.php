@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -54,6 +53,7 @@
         <tr>
 
           <td> {{ $i }}</td>
+          @if($document->middle_name == null || $document->middle_name == '')
           <td>{{ $document->first_name.' '.$document->last_name }}</td>
           <td>{{ $document->document_name }}</td>
           <td>

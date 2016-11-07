@@ -18,20 +18,13 @@ class Loanrepayment extends \Eloquent {
 
 
 	public static function getPrincipalPaid($loanaccount){
-
-
-			$paid = DB::table('loanrepayments')->where('loanaccount_id', '=', $loanaccount->id)->sum('principal_paid');
-
+			$paid = DB::table('loanrepayments')->where('organization_id','=',Confide::User()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('principal_paid');
 			return $paid;
 	}
 
 
 	public static function getInterestPaid($loanaccount){
-
-
-			$paid = DB::table('loanrepayments')->where('loanaccount_id', '=', $loanaccount->id)->sum('interest_paid');
-
-			
+			$paid = DB::table('loanrepayments')->where('organization_id','=',Confide::User()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->sum('interest_paid');		
 			return $paid;
 	}
 
@@ -192,6 +185,7 @@ class Loanrepayment extends \Eloquent {
 		$repayment->loanaccount()->associate($loanaccount);
 		$repayment->date = $date;
 		$repayment->principal_paid = $principal_due;
+		$repayment->organization_id = Confide::user()->organization_id;
 		$repayment->save();
 
 
@@ -201,6 +195,7 @@ class Loanrepayment extends \Eloquent {
 			'credit_account' =>$account['credit'] , 
 			'debit_account' =>$account['debit'] ,
 			'date' => $date,
+			'organization_id' => Confide::user()->organization_id,
 			'amount' => $principal_due,
 			'initiated_by' => 'system',
 			'description' => 'principal repayment'
@@ -224,6 +219,7 @@ class Loanrepayment extends \Eloquent {
 		$repayment->loanaccount()->associate($loanaccount);
 		$repayment->date = $date;
 		$repayment->interest_paid = $interest_due;
+		$repayment->organization_id = Confide::user()->organization_id;
 		$repayment->save();
 
 
@@ -234,6 +230,7 @@ class Loanrepayment extends \Eloquent {
 			'credit_account' =>$account['credit'] , 
 			'debit_account' =>$account['debit'] ,
 			'date' => $date,
+			'organization_id' => Confide::user()->organization_id,
 			'amount' => $interest_due,
 			'initiated_by' => 'system',
 			'description' => 'interest repayment'

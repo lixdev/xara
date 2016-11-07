@@ -9,7 +9,7 @@ class HolidaysController extends \BaseController {
 	 */
 	public function index()
 	{
-		$holidays = Holiday::all();
+		$holidays = Holiday::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('holidays.index', compact('holidays'));
 	}

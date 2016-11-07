@@ -8,7 +8,6 @@ function asMoney($value) {
 
 @extends('layouts.payroll')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -50,14 +49,23 @@ function asMoney($value) {
 
         <th>#</th>
         <th>Employee</th>
-        <th>Type</th>
-        <th>Pay rate</th>
         <th>Period Worked</th>
         <th>Amount</th>
         <th>Total Amount</th>
         <th>Action</th>
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>Employee</th>
+        <th>Period Worked</th>
+        <th>Amount</th>
+        <th>Total Amount</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -66,9 +74,11 @@ function asMoney($value) {
         <tr>
 
           <td> {{ $i }}</td>
+          @if($overtime->middle_name == null || $overtime->middle_name == '')
           <td>{{ $overtime->first_name.' '.$overtime->last_name }}</td>
-          <td>{{ $overtime->type }}</td>
-          <td>{{ $overtime->rate }}</td>
+          @else
+          <td>{{ $overtime->first_name.' '.$overtime->middle_name.' '.$overtime->last_name }}</td>
+          @endif
           <td>{{ $overtime->period }}</td>
           <td align="right">{{ asMoney((double)$overtime->amount) }}</td>
           <td align="right">{{ asMoney((double)$overtime->amount*(double)$overtime->period) }}</td>

@@ -9,7 +9,7 @@ class DepartmentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$departments = Department::all();
+		$departments = Department::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Departments', 'view', 'viewed departments');
 
@@ -44,7 +44,7 @@ class DepartmentsController extends \BaseController {
 
 		$department->department_name = Input::get('name');
 
-        $department->organization_id = '1';
+                $department->organization_id = Confide::user()->organization_id;
 
 		$department->save();
        
@@ -113,11 +113,16 @@ class DepartmentsController extends \BaseController {
 	public function destroy($id)
 	{
 		$department = Department::findOrFail($id);
-
+        $dept  = DB::table('employee')->where('department_id',$id)->count();
+		if($dept>0){
+			return Redirect::route('departments.index')->withDeleteMessage('Cannot delete this departments because its assigned to an employee(s)!');
+		}else{
 		Department::destroy($id);
 
         Audit::logaudit('Department', 'delete', 'deleted: '.$department->department_name);
 		return Redirect::route('departments.index')->withDeleteMessage('Deduction successfully deleted!');
 	}
+
+}
 
 }

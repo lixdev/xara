@@ -33,18 +33,16 @@ class User extends Eloquent implements ConfideUserInterface {
 	*
 	*/
 	public static $rules = [
-        'create' => [
             'username' => 'required|alpha_dash',
             'email'    => 'required|email',
-            'password' => 'required|min:4',
-        ]
+            'password' => 'required|min:4|confirmed',
         
     ];
 
 
     public static function exists($employee){
 
-    	$exists = DB::table('users')->where('username', '=', $employee->personal_file_number)->count();
+    	$exists = DB::table('users')->where('organization_id',Confide::user()->organization_id)->where('username', '=', $employee->personal_file_number)->count();
 
     	if($exists >= 1){
     		return true;

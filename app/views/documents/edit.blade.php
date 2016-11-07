@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
     <div class="col-lg-12">
@@ -32,7 +31,7 @@
 
     <div class="form-group">
                         <label for="username">Current Document</label><span style="color:red">*</span><br>
-                        <input class="form-control" placeholder="" type="text" name="curpath" value="{{ $document->document_path }}">
+                        <input readonly class="form-control" placeholder="" type="text" name="curpath" value="{{ $document->document_path }}">
                     </div>
 
        <div class="form-group">
@@ -54,7 +53,22 @@
             <label for="username">Description </label><br>
             <textarea name="desc" class="form-control" id="desc">{{ $document->description }}</textarea>
         </div>
+
+        <div class="form-group">
+                        <label for="username">Date From </label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control expiry" readonly="readonly" placeholder="" required type="text" name="fdate" id="fdate" value="{{ $document->from_date }}">
+                    </div>
+                  </div>
         
+         <div class="form-group">
+                        <label for="username">End Date</label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control expiry" readonly="readonly" placeholder="" required type="text" name="edate" id="edate" value="{{ $document->expiry_date }}">
+                    </div>
+                  </div>
         
         <div class="form-actions form-group">
         

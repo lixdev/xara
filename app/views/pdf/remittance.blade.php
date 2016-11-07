@@ -69,7 +69,7 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">
     
         </td>
 
@@ -84,6 +84,7 @@ body {
        
 
         </td>
+        
         
 
       </tr>
@@ -184,12 +185,14 @@ $total = 0;
        @foreach($member->loanaccounts as $loanaccount)
 
         @if($loanaccount->loanproduct->name == $loanproduct->name)
+        @if($loanaccount->is_disbursed && Loantransaction::getLoanBalance($loanaccount) > 10 )
 
-        <?php $total = $total + Loanaccount::getEMP($loanaccount); 
+        <?php $total = $total + Loanaccount::getTotalDue($loanaccount); 
          
         ?>
          
-        {{asMoney(Loanaccount::getEMP($loanaccount) ) }}
+        {{ asMoney(Loanaccount::getEMPTacsix($loanaccount))}}
+        @endif
         @endif
 
        

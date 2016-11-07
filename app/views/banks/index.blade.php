@@ -1,6 +1,5 @@
 @extends('layouts.hr')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -41,6 +40,7 @@
       <thead>
 
         <th>#</th>
+        <th>Bank Code</th>
         <th>Bank Name</th>
         <th>Action</th>
 
@@ -53,6 +53,7 @@
         <tr>
 
           <td> {{ $i }}</td>
+          <td>{{ $bank->bank_code }}</td>
           <td>{{ $bank->bank_name }}</td>
           <td>
 

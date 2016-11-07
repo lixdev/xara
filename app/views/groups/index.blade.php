@@ -1,6 +1,5 @@
 @extends('layouts.organization')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -49,7 +48,7 @@
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul class="dropdown-menu" style="margin-left:0" role="menu">
                     <li><a href="{{URL::to('groups/edit/'.$group->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('groups/delete/'.$group->id)}}">Delete</a></li>

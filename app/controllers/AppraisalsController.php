@@ -9,13 +9,14 @@ class AppraisalsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$employees = Appraisal::all();
+		$employees = Appraisal::where('organization_id',Confide::user()->organization_id)->get();
 
 		$appraisals = DB::table('employee')
 		          ->join('appraisals', 'employee.id', '=', 'appraisals.employee_id')
 		          ->join('appraisalquestions', 'appraisals.appraisalquestion_id', '=', 'appraisalquestions.id')
 		          ->where('in_employment','=','Y')
-		          ->select('appraisals.id','appraisalquestion_id','first_name','last_name','question','performance','appraisals.rate')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->select('appraisals.id','appraisalquestion_id','first_name','middle_name','last_name','question','performance','appraisals.rate')
 		          ->get();
 
 		Audit::logaudit('Appraisals', 'view', 'viewed appraisals');
@@ -28,14 +29,36 @@ class AppraisalsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create($id)
+	public function create()
 	{
-		$id = $id;
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->get();
-		$appraisals = Appraisalquestion::all();
-		return View::make('appraisals.create',compact('employees','appraisals','id'));
+		$appraisals = Appraisalquestion::where('organization_id',Confide::user()->organization_id)->get();
+		$categories = Appraisalcategory::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		return View::make('appraisals.create',compact('employees','appraisals','categories'));
+	}
+
+	public function createquestion()
+	{
+      $postapp = Input::all();
+      $data = array('appraisalcategory_id' => $postapp['category'], 
+      	            'rate' => $postapp['rate'], 
+      	            'question' => $postapp['question'],
+      	            'organization_id' => Confide::user()->organization_id,
+      	            'created_at' => DB::raw('NOW()'),
+      	            'updated_at' => DB::raw('NOW()'));
+      $check = DB::table('appraisalquestions')->insertGetId( $data );
+
+		if($check > 0){
+         
+		Audit::logaudit('Appraisalquestions', 'create', 'created: '.$postapp['question']);
+        return $check;
+        }else{
+         return 1;
+        }
+      
 	}
 
 	/**
@@ -58,15 +81,17 @@ class AppraisalsController extends \BaseController {
 
 		$appraisal->appraisalquestion_id = Input::get('appraisal_id');
 
-        $appraisal->performance = Input::get('performance');
+                $appraisal->performance = Input::get('performance');
 
-        $appraisal->rate = Input::get('score');
+                $appraisal->rate = Input::get('score');
 
-        $appraisal->examiner = Confide::user()->id;
+                $appraisal->examiner = Confide::user()->id;
 
-        $appraisal->appraisaldate = Input::get('date');
+                $appraisal->appraisaldate = Input::get('date');
 
-        $appraisal->comment = Input::get('comment');
+                $appraisal->comment = Input::get('comment');
+                
+                $appraisal->organization_id = Confide::user()->organization_id;
 
 		$appraisal->save();
 
@@ -98,10 +123,10 @@ class AppraisalsController extends \BaseController {
 	public function edit($id)
 	{
 		$appraisal = Appraisal::find($id);
-		$appraisalqs = Appraisalquestion::all();
+		$appraisalqs = Appraisalquestion::where('organization_id',Confide::user()->organization_id)->get();
 		$user = User::find($appraisal->examiner);
-
-		return View::make('appraisals.edit', compact('appraisal','appraisalqs','user'));
+                $categories = Appraisalcategory::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		return View::make('appraisals.edit', compact('appraisal','appraisalqs','user','categories'));
 	}
 
 	/**
@@ -127,7 +152,11 @@ class AppraisalsController extends \BaseController {
 
         $appraisal->rate = Input::get('score');
 
+        $appraisal->appraisaldate = Input::get('date');
+
         $appraisal->comment = Input::get('comment');
+        
+        $appraisal->organization_id= Confide::user()->organization_id;
 
 		$appraisal->update();
 
@@ -161,7 +190,7 @@ class AppraisalsController extends \BaseController {
 
 		$user = User::find($appraisal->examiner);
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('appraisals.view', compact('appraisal','user'));
 		

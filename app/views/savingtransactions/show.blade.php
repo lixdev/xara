@@ -1,6 +1,5 @@
 @extends('layouts.member')
 @section('content')
-<br/>
 
 <?php
 
@@ -76,6 +75,7 @@ function asMoney($value) {
         <th>Debit (DR)</th>
          <th>Credit (CR)</th>
          <th></th>
+         <th></th>
        
      
 
@@ -107,6 +107,13 @@ function asMoney($value) {
           <td>
 
 <a  href="{{ URL::to('savingtransactions/receipt/'.$transaction->id)}}" target="_blank"> <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Receipt</a>
+
+
+          </td> 
+
+           <td>
+
+<a  href="{{ URL::to('savingtransactions/void/'.$transaction->id)}}" > <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Void</a>
 
 
           </td> 

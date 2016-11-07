@@ -1,8 +1,7 @@
 @extends('layouts.member')
 @section('content')
-<br/>
-<?php
 
+<?php
 
 function asMoney($value) {
   return number_format($value, 2);
@@ -202,7 +201,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="users" style="width:100%" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -236,7 +235,7 @@ function asMoney($value) {
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul class="dropdown-menu" style="margin-left:0" role="menu">
                     <li><a href="{{URL::to('kins/edit/'.$kin->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('kins/delete/'.$kin->id)}}">Delete</a></li>
@@ -279,7 +278,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="mobile" class="table table-condensed table-bordered table-responsive table-hover">
+    <table id="mobile" width="100%" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -313,7 +312,7 @@ function asMoney($value) {
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul class="dropdown-menu" style="margin-left:0" role="menu">
                     <li><a href="{{URL::to('loans/show/'.$loan->id)}}">View</a></li>
                    
                     
@@ -375,7 +374,7 @@ function asMoney($value) {
             <div class="panel-body">
 
 
-                <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+                <table id="users" width="100%" class="table table-condensed table-bordered table-responsive table-hover">
 
 
                   <thead>
@@ -452,7 +451,7 @@ function asMoney($value) {
             <div class="panel-body">
 
 
-                <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+                <table width="100%" id="users" class="table table-condensed table-bordered table-responsive table-hover">
 
 
                   <thead>

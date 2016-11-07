@@ -60,6 +60,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'disbursal';
 		$posting->debit_account = array_get($data, 'portfolio_account');
 		$posting->credit_account = array_get($data, 'cash_account');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -77,6 +78,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'principal_repayment';
 		$posting->debit_account = array_get($data, 'cash_account');
 		$posting->credit_account = array_get($data, 'portfolio_account');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -94,6 +96,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'interest_repayment';
 		$posting->debit_account = array_get($data, 'cash_account');
 		$posting->credit_account = array_get($data, 'loan_interest');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -110,6 +113,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'loan_write_off';
 		$posting->debit_account = array_get($data, 'loan_write_off');
 		$posting->credit_account = array_get($data, 'portfolio_account');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -126,6 +130,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'fee_payment';
 		$posting->debit_account = array_get($data, 'cash_account');
 		$posting->credit_account = array_get($data, 'loan_fees');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -142,6 +147,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'penalty_payment';
 		$posting->debit_account = array_get($data, 'cash_account');
 		$posting->credit_account = array_get($data, 'loan_penalty');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -158,6 +164,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'loan_overpayment';
 		$posting->debit_account = array_get($data, 'cash_account');
 		$posting->credit_account = array_get($data, 'loan_overpayment');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -174,6 +181,7 @@ class Loanposting extends \Eloquent {
 		$posting->transaction = 'overpayment_refund';
 		$posting->debit_account = array_get($data, 'loan_overpayment');
 		$posting->credit_account = array_get($data, 'cash_account');
+		$posting->organization_id= Confide::user()->organization_id;
 		$posting->save();
 
 	}
@@ -182,7 +190,7 @@ class Loanposting extends \Eloquent {
 
 	public static function getPostingAccount($loanproduct, $transaction){
 
-		$posting = DB::table('loanpostings')->where('loanproduct_id', '=', $loanproduct->id)->where('transaction', '=', $transaction)->get();
+		$posting = DB::table('loanpostings')->where('organization_id',Confide::user()->organization_id)->where('loanproduct_id', '=', $loanproduct->id)->where('transaction', '=', $transaction)->get();
 
 		foreach ($posting as $posting) {
 			

@@ -9,7 +9,7 @@ class CreateLeavetypesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$leavetypes= Leavetype::all();
+		$leavetypes= Leavetype::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('leavetypes.index',compact('leavetypes'));
 	}
@@ -41,8 +41,9 @@ class CreateLeavetypesController extends \BaseController {
 		}
 
 		$leavetypes = new Leavetype;
-        $leavetypes->leavetypes_name = Input::get('name');
+                $leavetypes->leavetypes_name = Input::get('name');
 		$leavetypes->leavetypes_days= Input::get('leavetypes_days');
+		$leavetypes->organization_id= Confide::user()->organization_id;
 		$leavetypes->save();
 
 		return Redirect::route('leavetypes.index');	//

@@ -9,9 +9,29 @@ class LeaveapplicationsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$leaveapplications = Leaveapplication::all();
+		$leaveapplications = Leaveapplication::where('organization_id',Confide::user()->organization_id)->get();
 
 		return Redirect::to('leavemgmt');
+	}
+
+	public function createleave()
+	{
+      $postleave = Input::all();
+      $data = array('name' => $postleave['type'], 
+      	            'days' => $postleave['days'],
+      	            'organization_id' => Confide::user()->organization_id,
+      	            'created_at' => DB::raw('NOW()'),
+      	            'updated_at' => DB::raw('NOW()'));
+      $check = DB::table('leavetypes')->insertGetId( $data );
+
+		if($check > 0){
+         
+		Audit::logaudit('Leavetypes', 'create', 'created: '.$postleave['type']);
+        return $check;
+        }else{
+         return 1;
+        }
+      
 	}
 
 	/**
@@ -21,9 +41,9 @@ class LeaveapplicationsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$employees = Employee::all();
+		$employees = Employee::where('organization_id',Confide::user()->organization_id)->get();
 
-		$leavetypes = Leavetype::all();
+		$leavetypes = Leavetype::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('leaveapplications.create', compact('employees', 'leavetypes'));
 	}
@@ -49,7 +69,7 @@ class LeaveapplicationsController extends \BaseController {
 		$start_date = array_get($data, 'applied_start_date');
 		$end_date = array_get($data, 'applied_end_date');
 
-		$days_applied = Leaveapplication::getLeaveDays($start_date, $end_date);
+		/*$days_applied = Leaveapplication::getLeaveDays($start_date, $end_date);
 
 		$balance_days = Leaveapplication::getBalanceDays($employee, $leavetype);
 
@@ -57,7 +77,7 @@ class LeaveapplicationsController extends \BaseController {
 		if($days_applied > $balance_days){
 
 			return Redirect::back()->with('info', 'The days you have applied are more than your balance. You have '.$balance_days.' days left');
-		}
+		}*/
 
 
 		Leaveapplication::createLeaveApplication($data);
@@ -94,9 +114,9 @@ class LeaveapplicationsController extends \BaseController {
 	{
 		$leaveapplication = Leaveapplication::find($id);
 
-		$employees = Employee::all();
+		$employees = Employee::where('organization_id',Confide::user()->organization_id)->get();
 
-		$leavetypes = Leavetype::all();
+		$leavetypes = Leavetype::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('leaveapplications.edit', compact('leaveapplication', 'employees', 'leavetypes'));
 	}

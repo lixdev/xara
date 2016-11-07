@@ -9,7 +9,7 @@ class AuditsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$audits = Audit::all();
+		$audits = Audit::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('audits.index', compact('audits'));
 	}

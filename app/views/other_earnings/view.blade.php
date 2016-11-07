@@ -1,6 +1,6 @@
 @extends('layouts.payroll')
 @section('content')
-<br/>
+
 <?php
 
 
@@ -41,7 +41,20 @@ function asMoney($value) {
       </tr>
       <tr><td><strong>Earning Type: </strong></td><td>{{$earning->earnings_name}}</td></tr>
       <tr><td><strong>Narrative: </strong></td><td>{{$earning->narrative}}</td></tr>
-      <tr><td><strong>Amount: </strong></td><td align="right">{{asMoney($earning->earnings_amount)}}</td></tr>
+       <tr><td><strong>Formular: </strong></td><td>{{$earning->formular}}</td></tr>
+      @if($earning->instalments > 1)
+      <tr><td><strong>Instalments: </strong></td><td>{{$earning->instalments}}</td></tr>
+      <tr><td><strong>Earning Amount: </strong></td><td align="right">{{asMoney($earning->earnings_amount)}}</td></tr>
+      <tr><td><strong>Total Amount: </strong></td><td align="right">{{asMoney((double)$earning->earnings_amount*(double)$earning->instalments)}}</td></tr>
+      @else
+      <tr><td><strong>Earning Amount: </strong></td><td align="right">{{asMoney($earning->earnings_amount)}}</td></tr>
+      @endif
+      @if($earning->formular == 'One Time' || $earning->formular == 'Instalments')
+      <tr><td><strong>Start Date: </strong></td><td>{{$earning->earning_date}}</td></tr>
+      <tr><td><strong>End Date: </strong></td><td>{{$earning->last_day_month}}</td></tr>
+      @else
+      <tr><td><strong>Start Date: </strong></td><td>{{$earning->earning_date}}</td></tr>
+      @endif
       
 </table>
 </div>

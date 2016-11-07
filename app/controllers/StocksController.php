@@ -9,11 +9,16 @@ class StocksController extends \BaseController {
 	 */
 	public function index()
 	{
-		$stocks = Stock::all();
+		$stocks = Stock::where('organization_id',Confide::user()->organization_id)->get();
 
-		$items = Item::all();
+		$items = Item::where('organization_id',Confide::user()->organization_id)->get();
 
-		return View::make('stocks.index', compact('stocks', 'items'));
+		$stock_in = DB::table('stocks')
+         ->join('items', 'stocks.item_id', '=', 'items.id')
+         ->where('stocks.organization_id',Confide::user()->organization_id)
+         ->get();
+
+		return View::make('stocks.index', compact('stocks', 'items','stock_in'));
 	}
 
 	/**
@@ -23,8 +28,9 @@ class StocksController extends \BaseController {
 	 */
 	public function create()
 	{
-		$items = Item::all();
-		$locations = Location::all();
+		$items = Item::where('organization_id',Confide::user()->organization_id)
+			->where('type','=','product')->get();
+		$locations = Location::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('stocks.create', compact('items', 'locations'));
 	}
@@ -44,13 +50,12 @@ class StocksController extends \BaseController {
 		}
 
 		$item_id = Input::get('item');
-		$location_id = Input::get('location');
-
+		$location_id = Input::get('location');		
 		$item = Item::findOrFail($item_id);
 		$location = Location::find($location_id);
 		$quantity = Input::get('quantity');
 		$date = Input::get('date');
-
+ 
 		
 
 		Stock::addStock($item, $location, $quantity, $date);

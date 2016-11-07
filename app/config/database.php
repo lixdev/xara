@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'xpose',
+			'database'  => 'xarademo',
 			'username'  => 'root',
-			'password'  => 'mysql',
+			'password'  => 'K0049521m',
 			'port' => '3306',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',

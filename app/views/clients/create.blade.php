@@ -1,14 +1,14 @@
 @extends('layouts.erp')
 @section('content')
 
-<br><div class="row">
+<div class="row">
 	<div class="col-lg-12">
-  <h3>New Client</h3>
+  <h4><font color='green'>New Client</font></h4>
 
 <hr>
 </div>	
 </div>
-
+<font color="red"><i>All fields marked with * are mandatory</i></font>
 
 <div class="row">
 	<div class="col-lg-5">
@@ -28,12 +28,12 @@
     <fieldset>
         <div class="form-group">
             <label for="username">Client Name <span style="color:red">*</span> :</label>
-            <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}">
+            <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{{ Input::old('name') }}}" required>
         </div>
 
          <div class="form-group">
             <label for="username">Email:</label>
-            <input class="form-control" placeholder="" type="text" name="email_office" id="email_office" value="{{{ Input::old('email_office') }}}">
+            <input class="form-control" placeholder="" type="email" name="email_office" id="email_office" value="{{{Input::old('email_office') }}}" >
         </div>
 
         <div class="form-group">
@@ -53,7 +53,7 @@
         
         <div class="form-group">
             <label for="username">Contact Personal Email:</label>
-            <input class="form-control" placeholder="" type="text" name="email_personal" id="email_personal" value="{{{ Input::old('email_personal') }}}">
+            <input class="form-control" placeholder="" type="email" name="email_personal" id="email_personal" value="{{{ Input::old('email_personal') }}}">
         </div>
 
         <div class="form-group">
@@ -63,7 +63,7 @@
 
         <div class="form-group">
         	<label for="username">Type</label><span style="color:red">*</span> :
-           <select name="type" class="form-control">
+           <select name="type" class="form-control" required>
                            <option></option>
                             <option value="Customer"> Customer</option>
                             <option value="Supplier"> Supplier</option>

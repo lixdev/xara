@@ -16,6 +16,11 @@ class Branch extends \Eloquent {
 		return $this->hasMany('Member');
 	}
 
+	public function employee(){
+
+		return $this->hasMany('Employee');
+	}
+
 
 	public function journals(){
 

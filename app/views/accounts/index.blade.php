@@ -1,6 +1,5 @@
 @extends('layouts.accounting')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -13,6 +12,20 @@
 
 <div class="row">
 	<div class="col-lg-12">
+
+    @if (Session::has('flash_message'))
+
+      <div class="alert alert-success">
+      {{ Session::get('flash_message') }}
+     </div>
+    @endif
+
+     @if (Session::has('delete_message'))
+
+      <div class="alert alert-danger">
+      {{ Session::get('delete_message') }}
+     </div>
+    @endif
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -68,8 +81,7 @@
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('accounts/edit/'.$account->id)}}">Update</a></li>
                    
-                    <li><a href="{{URL::to('accounts/delete/'.$account->id)}}">Delete</a></li>
-                     <li><a href="{{URL::to('accounts/show/'.$account->id)}}">Delete</a></li>
+                    <li><a href="{{URL::to('accounts/delete/'.$account->id)}}" onclick="return (confirm('Are you sure you want to delete this account?'))">Delete</a></li>
                     
                   </ul>
               </div>

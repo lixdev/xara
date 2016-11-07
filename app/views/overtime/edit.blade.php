@@ -8,20 +8,15 @@ function asMoney($value) {
 
 @extends('layouts.payroll')
 
+{{HTML::script('media/jquery-1.8.0.min.js') }}
+
 <script type="text/javascript">
+document.getElementById("edate").value = '';
  function totalBalance() {
       var p = document.getElementById("period").value;
+      var instals = document.getElementById("instalments").value;
       var amt = document.getElementById("amount").value.replace(/,/g,'');
-      var total = p * amt * 10;
-      total=total.toLocaleString('en-US',{minimumFractionDigits: 2});
-      document.getElementById("total").value = total;
-
-}
-
-function totalB() {
-      var p = document.getElementById("period").value;
-      var amt = document.getElementById("amount").value.replace(/,/g,'');
-      var total = p * amt ;
+      var total = instals * amt * p;
       total=total.toLocaleString('en-US',{minimumFractionDigits: 2});
       document.getElementById("total").value = total;
 
@@ -29,8 +24,89 @@ function totalB() {
 
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){
+$('#formular option#instals').each(function() {
+    if (this.selected){
+       $('#insts').show();
+       $('#bal').show();
+     }else{
+       $('#insts').hide();
+       $('#bal').hide();
+     }
+});
+$('#formular').change(function(){
+if($(this).val() == "Instalments"){
+    $('#insts').show();
+}else{
+    $('#insts').hide();
+    $('#instalments').val(1);
+    totalBalance();
+}
+
+});
+
+});
+</script>
+
+<script type="text/javascript">
+ 
+function totalB() {
+      var p = document.getElementById("period").value;
+      var amt = document.getElementById("amount").value.replace(/,/g,'');
+      var total = p * amt ;
+      total=total.toFixed(2);
+      document.getElementById("total").value = total;
+
+}
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+  
+
+    $('#employee').change(function(){
+        $.get("{{ url('api/pay')}}", 
+        { option: $(this).val() }, 
+        function(data) {
+          console.log(data.replace(/,/g, ''));
+
+          if($('#type').val() == '' || $('#period').val() == ''){
+                $('#amount').val(0.00);
+                $('#total').val(0.00);
+          }else if($('#type').val() == 'Hourly' && $('#period').val() != ''){
+                  $('#amount').val(((data.replace(/,/g, ''))/24/30).toFixed(2));
+                  $('#total').val((((data.replace(/,/g, ''))/24/30).toFixed(2)*($('#period').val())).toFixed(2));
+          }else if($('#type').val() == 'Daily' && $('#period').val() != ''){
+                $('#amount').val(((data.replace(/,/g, ''))/30).toFixed(2));
+                $('#total').val((((data.replace(/,/g, ''))/30).toFixed(2)*($('#period').val())).toFixed(2));
+                }
+          $('#type').change(function(){
+                if($(this).val() == ''){
+                $('#amount').val(0.00);
+                }else if($(this).val() == 'Hourly'){
+                  $('#amount').val(((data.replace(/,/g, ''))/24/30).toFixed(2));
+                }else{
+                $('#amount').val(((data.replace(/,/g, ''))/30).toFixed(2));
+                }
+              
+                if($('#period').val() != '' && $(this).val() == 'Hourly'){
+                $('#total').val((((data.replace(/,/g, ''))/24/30).toFixed(2)*($('#period').val())).toFixed(2));
+                }else if($('#period').val() != '' && $(this).val() == 'Daily'){
+                $('#total').val((((data.replace(/,/g, ''))/30).toFixed(2)*($('#period').val())).toFixed(2));
+                }
+                else{
+                $('#total').val(0.00);
+                } 
+              });
+            });
+        });
+   });
+</script>
+
 @section('content')
-<br/>
 
 <div class="row">
     <div class="col-lg-12">
@@ -58,34 +134,25 @@ function totalB() {
    
     <fieldset>
 
+      <input class="form-control" placeholder="" type="hidden" readonly name="employeeid" id="employeeid" value="{{$overtime->employee->id}}">
+
        <div class="form-group">
                         <label for="username">Employee <span style="color:red">*</span></label>
                         <input class="form-control" placeholder="" type="text" readonly name="employee" id="employee" value="{{$overtime->employee->first_name.' '.$overtime->employee->last_name}}">
                 
                     </div>                    
 
-                    <div class="form-group">
+              
+        <div class="form-group">
                         <label for="username">Type <span style="color:red">*</span></label>
-                        <select name="type" class="form-control">
+                        <select name="type" id="type" class="form-control">
                             <option></option>
                             <option value="Hourly"<?= ($overtime->type=='Hourly')?'selected="selected"':''; ?>> Hourly</option>
                             <option value="Daily"<?= ($overtime->type=='Daily')?'selected="selected"':''; ?>> Daily</option>
                         </select>
                 
                     </div>
-
-                    <div class="form-group">
-                        <label for="username">Pay Rate <span style="color:red">*</span></label>
-                        <select name="rate" class="form-control">
-                            <option></option>
-                            <option value="Normal"<?= ($overtime->rate=='Normal')?'selected="selected"':''; ?>> Normal</option>
-                            <option value="Weekday"<?= ($overtime->rate=='Weekday')?'selected="selected"':''; ?>> Weekday</option>
-                            <option value="Saturday"<?= ($overtime->rate=='Saturday')?'selected="selected"':''; ?>> Saturday</option>
-                            <option value="Sunday"<?= ($overtime->rate=='Sunday')?'selected="selected"':''; ?>> Sunday</option>
-                            <option value="Holiday"<?= ($overtime->rate=='Holiday')?'selected="selected"':''; ?>> Holiday</option>
-                        </select>
-                
-                    </div>
+                  
 
           <div class="form-group">
             <label for="username">Period Worked<span style="color:red">*</span> </label>
@@ -93,20 +160,45 @@ function totalB() {
            
         </div>
 
+         <div class="form-group">
+                        <label for="username">Formular <span style="color:red">*</span></label>
+                        <select name="formular" id="formular" class="form-control forml">
+                            <option></option>
+                            <option value="One Time"<?= ($overtime->formular=='One Time')?'selected="selected"':''; ?>>One Time</option>
+                            <option value="Recurring"<?= ($overtime->formular=='Recurring')?'selected="selected"':''; ?>>Recurring</option>
+                            <option id="instals" value="Instalments"<?= ($overtime->formular=='Instalments')?'selected="selected"':''; ?>>Instalments</option>
+                        </select>
+                
+                    </div>
+
+        <div class="form-group" id="insts">
+            <label for="username">Instalments </label>
+            <input class="form-control" placeholder="" onkeypress="totalBalance()" onkeyup="totalBalance()" type="text" name="instalments" id="instalments" value="{{ $overtime->instalments}}">
+        </div>
+
         <div class="form-group">
-            <label for="username">Amount <span style="color:red">*</span> </label>
-            <input class="form-control" placeholder="" type="text" onkeypress="totalBalance()" onkeyup="totalBalance()" name="amount" id="amount" value="{{$overtime->amount}}">
-            <script type="text/javascript">
-           $(document).ready(function() {
-           $('#amount').priceFormat();
-           });
-           </script>
+            <label for="username">Amount</label>
+            <div class="input-group">
+            <span class="input-group-addon">{{$currency->shortname}}</span>
+            <input class="form-control" readonly placeholder="" type="text" onkeypress="totalBalance()" onkeyup="totalBalance()" name="amount" id="amount" value="{{$overtime->amount * 100}}">
+            </div>
+            
         </div>
         
         <div class="form-group">
             <label for="username">Total Amount </label>
-            <input class="form-control" placeholder="" readonly type="text" name="total" id="total" value="{{asMoney((double)$overtime->amount*(double)$overtime->period)}}">
-           
+            <div class="input-group">
+            <span class="input-group-addon">{{$currency->shortname}}</span>
+            <input class="form-control" placeholder="" readonly type="text" name="total" id="total" value="{{asMoney((double)$overtime->amount*(double)$overtime->instalments*(double)$overtime->period)}}">
+           </div>
+        </div>
+
+        <div class="form-group">
+                        <label for="username">Earning Date <span style="color:red">*</span></label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control expiry" readonly="readonly" placeholder="" type="text" name="odate" id="odate" value="{{ $overtime->overtime_date }}">
+                        </div>
         </div>
         
         <div class="form-actions form-group">

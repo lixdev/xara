@@ -1,4 +1,6 @@
- <nav class="navbar-default navbar-static-side" role="navigation">
+
+
+ <nav class="navbar-default navbar-static-side" id="wrap" role="navigation">
 
             <div class="sidebar-collapse">
 
@@ -6,6 +8,14 @@
                     
                     <li>
                         <a href="{{ URL::to('allowances') }}"><i class="glyphicon glyphicon-home fa-fw"></i> Allowances</a>
+                    </li>
+
+                     <li>
+                        <a href="{{ URL::to('earningsettings') }}"><i class="fa fa-list fa-fw"></i> Earning</a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ URL::to('nontaxables') }}"><i class="fa fa-list fa-fw"></i> Non Taxable Income</a>
                     </li>
 
                      <li>
@@ -25,6 +35,17 @@
                     </li>
                     
                 </ul>
+                <?php
+                    $organization = Organization::find(Confide::user()->organization_id);
+                    $pdate = (strtotime($organization->payroll_support_period)-strtotime(date("Y-m-d"))) / 86400;
+                    ?>
+                    @if($pdate<0 && $organization->payroll_license_key ==1)
+                       <h4 style="color:red">
+                       Your annual support license for payroll product has expired!!!....
+                       Please upgrade your license by clicking on the link below.</h4>
+                       <a href="{{ URL::to('activatedproducts') }}">Upgrade license</a>
+                    @else
+                    @endif
                 <!-- /#side-menu -->
             </div>
             <!-- /.sidebar-collapse -->

@@ -7,7 +7,6 @@
 
 	<div class="col-lg-5">
 
-		<br/>
 
       <form method="POST" action="{{{ URL::to('roles') }}}" accept-charset="UTF-8">
         

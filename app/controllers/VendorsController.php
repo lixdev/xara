@@ -9,7 +9,7 @@ class VendorsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$vendors = Vendor::all();
+		$vendors = Vendor::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('vendors.index', compact('vendors'));
 	}
@@ -45,6 +45,7 @@ class VendorsController extends \BaseController {
 		$vendor->phone = Input::get('phone');
 		$vendor->description = Input::get('description');
 		$vendor->status = Input::get('status');
+		$vendor->organization_id = Confide::user()->organization_id;
 		$vendor->save();
 
 

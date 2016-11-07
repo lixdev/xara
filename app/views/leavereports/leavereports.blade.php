@@ -1,10 +1,5 @@
-@extends('layouts.leave')
+@extends('layouts.leave_ports')
 @section('content')
-<br/>
-
-
-
-
 
 <div class="row">
     <div class="col-lg-12">

@@ -1,9 +1,9 @@
 @extends('layouts.erp')
 @section('content')
 
-<br><div class="row">
+<div class="row">
 	<div class="col-lg-12">
-  <h3>Update Client</h3>
+  <h4><font color='green'>Update Client</font></h4>
 
 <hr>
 </div>	
@@ -28,12 +28,12 @@
     <fieldset>
         <div class="form-group">
             <label for="username">Client Name <span style="color:red">*</span> :</label>
-            <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{$client->name}}">
+            <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{$client->name}}" required>
         </div>
 
          <div class="form-group">
             <label for="username">Email:</label>
-            <input class="form-control" placeholder="" type="text" name="email_office" id="email_office" value="{{$client->email}}">
+            <input class="form-control" placeholder="" type="email" name="email_office" id="email_office" value="{{$client->email}}">
         </div>
 
         <div class="form-group">
@@ -53,7 +53,7 @@
         
         <div class="form-group">
             <label for="username">Contact Personal Email:</label>
-            <input class="form-control" placeholder="" type="text" name="email_personal" id="email_personal" value="{{$client->contact_person_email}}">
+            <input class="form-control" placeholder="" type="email" name="email_personal" id="email_personal" value="{{$client->contact_person_email}}">
         </div>
 
         <div class="form-group">
@@ -63,7 +63,7 @@
 
         <div class="form-group">
         	<label for="username">Type</label><span style="color:red">*</span> :
-           <select name="type" class="form-control">
+           <select name="type" class="form-control" required>
                            <option></option>
                             <option value="Customer"<?= ($client->type=='Customer')?'selected="selected"':''; ?>>Customer</option>
                             <option value="Supplier"<?= ($client->type=='Supplier')?'selected="selected"':''; ?>>Supplier</option>

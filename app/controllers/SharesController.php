@@ -9,7 +9,7 @@ class SharesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$shares = Share::all();
+		$shares = Share::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('shares.index', compact('shares'));
 	}
@@ -44,6 +44,7 @@ class SharesController extends \BaseController {
 		$share->value = Input::get('value');
 		$share->transfer_charge = Input::get('transfer_charge');
 		$share->charged_on = Input::get('charged_on');
+		$share->organization_id = Confide::user()->organization_id;
 		$share->save();
 
 		return Redirect::route('shares.index');
@@ -73,6 +74,14 @@ class SharesController extends \BaseController {
 		$share = Share::find($id);
 
 		return View::make('shares.edit', compact('share'));
+	}
+
+	public function cssshares()
+	{
+		$member = Member::where('email',Confide::user()->email)->first();
+		$shareaccount = $member->shareaccount;
+
+		return View::make('css.shareaccounts', compact('shareaccount','member'));
 	}
 
 	/**

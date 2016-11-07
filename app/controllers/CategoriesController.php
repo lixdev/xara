@@ -9,7 +9,7 @@ class CategoriesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$categories = Category::all();
+		$categories = Category::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('categories.index', compact('categories'));
 	}

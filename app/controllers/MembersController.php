@@ -12,7 +12,7 @@ class MembersController extends \BaseController {
 	 */
 	public function index()
 	{
-		$members = Member::all();
+		$members = Member::where('organization_id',Confide::user()->organization_id)->get();
 
 		
 
@@ -39,17 +39,21 @@ class MembersController extends \BaseController {
 	public function create()
 	{
 
-
-		
-		
 		$this->beforeFilter('limit');
-
+        $pfn = 0;
+        if(Member::where('organization_id',Confide::user()->organization_id)->orderBy('id', 'DESC')->count() == 0){
+        $pfn = 0;
+        }else{
+         $pfn = Member::where('organization_id',Confide::user()->organization_id)->orderBy('id', 'DESC')->pluck('membership_no');
+         $pfn = preg_replace('/\D/', '', $pfn);
+      
+         }
 		
-		$branches = Branch::all();
-		$groups = Group::all();
-		$savingproducts = Savingproduct::all();
+		$branches = Branch::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$groups = Group::where('organization_id',Confide::user()->organization_id)->get();
+		$savingproducts = Savingproduct::where('organization_id',Confide::user()->organization_id)->get();
 
-		return View::make('members.create', compact('branches', 'groups', 'savingproducts'));
+		return View::make('members.create', compact('branches','pfn', 'groups', 'savingproducts'));
 	}
 
 	/**
@@ -132,6 +136,7 @@ class MembersController extends \BaseController {
 		$member->address = Input::get('address');
 		$member->monthly_remittance_amount = Input::get('monthly_remittance_amount');
 		$member->gender = Input::get('gender');
+		$member->organization_id= Confide::user()->organization_id;
 		if(Input::get('active') == '1'){
 
 			
@@ -176,8 +181,11 @@ class MembersController extends \BaseController {
 
 		$savingaccounts = $member->savingaccounts;
 		$shareaccount = $member->shareaccount;
-
+        if(Confide::user()->user_type == 'member'){
+        return View::make('members.cssshow', compact('member', 'savingaccounts', 'shareaccount'));
+        }else{
 		return View::make('members.show', compact('member', 'savingaccounts', 'shareaccount'));
+	}
 	}
 
 	/**
@@ -189,10 +197,14 @@ class MembersController extends \BaseController {
 	public function edit($id)
 	{
 		$member = Member::find($id);
-		$branches = Branch::all();
-		$groups = Group::all();
-
+		$branches = Branch::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$groups = Group::where('organization_id',Confide::user()->organization_id)->get();
+        
+        if(Confide::user()->user_type == 'member'){
+        return View::make('members.cssedit', compact('member', 'branches', 'groups'));
+        }else{
 		return View::make('members.edit', compact('member', 'branches', 'groups'));
+	    }
 	}
 
 	/**
@@ -274,8 +286,11 @@ class MembersController extends \BaseController {
 		$member->monthly_remittance_amount = Input::get('monthly_remittance_amount');
 		$member->gender = Input::get('gender');
 		$member->update();
-
+        if(Confide::user()->user_type == 'member'){
+        return Redirect::to('dashboard');
+        }else{
 		return Redirect::route('members.index');
+	}
 	}
 
 	/**
@@ -303,50 +318,54 @@ class MembersController extends \BaseController {
 
 	public function activateportal($id){
 
-		$employee = Employee::find($id);
+		$member = Member::find($id);
 
 
 		$password = strtoupper(Str::random(8));
 
 		
 
-$email = $employee->email_office;
-$name = $employee->first_name.' '.$employee->last_name;
+$email = $member->email;
+$name = $member->name;
 		
 		if($email != null){
 
 		DB::table('users')->insert(
-	array('email' => $employee->email_office, 
-	  'username' => $employee->personal_file_number,
+	array('email' => $member->email, 
+	  'username' => $member->membership_no,
 	  'password' => Hash::make($password),
 	  'user_type'=>'member',
 	  'confirmation_code'=> md5(uniqid(mt_rand(), true)),
-	  'confirmed'=> 1
+	  'confirmed'=> 1,
+	  'organization_id'=> Confide::user()->organization_id,
+	  'created_at'=> date('Y-m-d H:m:s'),
+	  'updated_at'=> date('Y-m-d H:m:s')
 		)
 );
 
-		
+		$member->is_css_active = true;
+		$member->update();
 
 
 
 
 
-	Mail::send( 'emails.password', array('password'=>$password, 'name'=>$name), function( $message ) use ($employee)
+	Mail::send( 'emails.password', array('password'=>$password, 'name'=>$name), function( $message ) use ($member)
 {
-    $message->to($employee->email_office )->subject( 'Self Service Portal Credentials' );
+    $message->to($member->email )->subject( 'Self Service Portal Credentials' );
 });
 
 
 		
 
 
-		return Redirect::back()->with('notice', 'Employee has been activated and login credentials emailed');
+		return Redirect::back()->with('notice', 'Member has been activated and login credentials emailed');
 
 }
 
 else{
 
-	return Redirect::back()->with('notice', 'Employee has not been activated kindly update email address');
+	return Redirect::back()->with('notice', 'Member has not been activated kindly update email address');
 
 }
 
@@ -363,14 +382,15 @@ else{
 	public function deactivateportal($id){
 
 		
-		$employee = Employee::find($id);
+		$member = Member::find($id);
 
-		DB::table('users')->where('username', '=', $employee->personal_file_number)->delete();
+		DB::table('users')->where('username', '=', $member->membership_no)->delete();
 
-		
+		$member->is_css_active = false;
+		$member->update();
 
 
-		return Redirect::back()->with('notice', 'Employee has been deactivated');;
+		return Redirect::back()->with('notice', 'Member has been deactivated');;
 
 		
 	}
@@ -393,11 +413,10 @@ else{
 	public function loanaccounts2()
 	{
 
-		$mem = Confide::user()->username;
+		$mem = Confide::User()->email;
 
-		$id = DB::table('members')->where('membership_no', '=', $mem)->pluck('id');
-		$member = Member::findOrFail($id);
-
+		$member= DB::table('members')->where('email', '=', $mem)->where('organization_id',Confide::user()->organization_id)->first();
+		 //= Member::where('id','=',$id)->get();
 		return View::make('css.loanaccounts', compact('member'));
 	}
 	
@@ -407,11 +426,11 @@ else{
 		//$id = DB::table('members')->where('membership_no', '=', $mem)->pluck('id');
 		$member = Member::findOrFail($id);
 		
-		$user_id = DB::table('users')->where('username', '=', $member->membership_no)->pluck('id');
+		$user_id = DB::table('users')->where('organization_id',Confide::user()->organization_id)->where('username', '=', $member->membership_no)->pluck('id');
 		
 		$user = User::findOrFail($user_id);
 		
-		$user->password = Hash::make('tacsix123');
+		$user->password = Hash::make('123456');
 		$user->update();
 		
 		return Redirect::back();

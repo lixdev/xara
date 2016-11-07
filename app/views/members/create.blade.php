@@ -1,6 +1,24 @@
 @extends('layouts.member')
 @section('content')
-<br/>
+
+<?php 
+$organization = Organization::find(Confide::user()->organization_id);
+
+$string = $organization->name;
+
+function initials($str,$pfn) {
+    $ret = '';
+    foreach (explode(' ', $str) as $word){
+      if($word == null){
+        $ret .= strtoupper($str[0]); 
+      }else{
+        $ret .= strtoupper($word[0]);
+      }
+      }
+    return $ret.'M.'.($pfn+1);
+}
+
+?>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -84,7 +102,7 @@
 
                     <div class="form-group">
                         <label for="username">Membership Number</label>
-                        <input class="form-control" placeholder="" type="text" name="membership_no" id="membership_no" value="{{{ Input::old('membership_no') }}}" >
+                        <input class="form-control" placeholder="" type="text" name="membership_no" id="membership_no" value="{{initials($organization->name,$pfn)}}" >
                     </div>
 
 

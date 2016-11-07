@@ -2,7 +2,7 @@
 
 class Audit extends \Eloquent {
 
-	use \Traits\Encryptable;
+	/*use \Traits\Encryptable;
 
 
 	protected $encryptable = [
@@ -11,7 +11,7 @@ class Audit extends \Eloquent {
 		'entity',
 		'action',
 		'user',
-	];
+	];*/
 
 	// Add your validation rules here
 	public static $rules = [
@@ -28,7 +28,22 @@ class Audit extends \Eloquent {
 
     $audit->date = date('Y-m-d');
     $audit->description = $description;
-    $audit->user = Confide::user()->username;
+    $audit->user = Confide::user()->username;	
+    $audit->organization_id= Confide::user()->organization_id;
+    $audit->entity = $entity;
+    $audit->action = $action;
+    $audit->save();
+
+	}
+
+	public static function loglicenseAudit( $entity, $action, $description,$name){
+
+	$audit = new Audit;
+
+    $audit->date = date('Y-m-d');
+    $audit->description = $description;
+    $audit->user = 'admin';
+    $audit->organization_id= $name;
     $audit->entity = $entity;
     $audit->action = $action;
     $audit->save();

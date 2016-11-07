@@ -2,6 +2,14 @@
 
 {{HTML::script('media/jquery-1.8.0.min.js') }}
 
+<?php
+
+function asMoney($value) {
+  return number_format($value, 2);
+}
+
+?>
+
 <script type="text/javascript">
 $(document).ready(function(){
 console.log($("#issuedby").val());
@@ -21,7 +29,6 @@ console.log($("#issuedby").val());
 </script>
 
 @section('content')
-<br/>
 
 <div class="row">
     <div class="col-lg-12">
@@ -73,12 +80,10 @@ console.log($("#issuedby").val());
 
          <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span></label>
-            <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{ $property->monetary }}">
-            <script type="text/javascript">
-           $(document).ready(function() {
-           $('#amount').priceFormat();
-           });
-           </script>
+            <div class="input-group">
+            <span class="input-group-addon">{{$currency->shortname}}</span>
+            <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{ asMoney($property->monetary) }}">
+            </div>
         </div>
         
         <div class="form-group">
@@ -88,14 +93,17 @@ console.log($("#issuedby").val());
 
         <div class="form-group">
             <label for="username">Issue Date <span style="color:red">*</span></label>
-            <input class="form-control" readonly placeholder="" type="text" name="idate" id="idate" value="{{$property->issue_date}}">
+            <div class="right-inner-addon ">
+            <i class="glyphicon glyphicon-calendar"></i>
+            <input class="form-control expiry" readonly placeholder="" type="text" name="idate" id="idate" value="{{$property->issue_date}}">
+        </div>
         </div>
 
         <div class="form-group">
             <label for="username">Scheduled Return Date <span style="color:red">*</span></label>
             <div class="right-inner-addon ">
             <i class="glyphicon glyphicon-calendar"></i>
-            <input class="form-control datepicker4" readonly placeholder="" type="text" name="sdate" id="sdate" value="{{$property->scheduled_return_date}}">
+            <input class="form-control expiry" readonly placeholder="" type="text" name="sdate" id="sdate" value="{{$property->scheduled_return_date}}">
             </div>
         </div>
 

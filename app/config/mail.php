@@ -1,5 +1,13 @@
 <?php
 
+$name = 'Lixnet Technologies';
+    
+    if(isset(Confide::user()->organization_id)){
+    $name = Organization::find(Confide::user()->organization_id)->pluck('name');
+    }else{
+    $name = 'Lixnet Technologies';
+    }
+
 return array(
 
 	/*
@@ -15,7 +23,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'smtp',
+	'driver' => Mailsender::driver(),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -28,7 +36,7 @@ return array(
 	|
 	*/
 
-	'host' => 'mail.lixnet.net',
+	'host' => Mailsender::host(),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -41,7 +49,7 @@ return array(
 	|
 	*/
 
-	'port' => 25,
+	'port' => Mailsender::port(),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -53,8 +61,9 @@ return array(
 	| used globally for all e-mails that are sent by your application.
 	|
 	*/
+    
 
-	'from' => array('address' => 'info@lixnet.net', 'name' => 'Xpose Limited'), 
+	'from' => array('address' => Mailsender::username(), 'name' =>$name), 
 
 	/*
 	|--------------------------------------------------------------------------
@@ -67,7 +76,7 @@ return array(
 	|
 	*/
 
-	'encryption' => '',
+	'encryption' => Mailsender::encryption(),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +89,7 @@ return array(
 	|
 	*/
 
-	'username' => 'info@lixnet.net',
+	'username' => Mailsender::username(),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +102,7 @@ return array(
 	|
 	*/
 
-	'password' => 'lixnetco2015',
+	'password' => Mailsender::password(),
 
 	/*
 	|--------------------------------------------------------------------------

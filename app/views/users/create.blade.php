@@ -1,17 +1,21 @@
 @extends('layouts.system')
 @section('content')
 
-
-
 <div class="row">
 
 	<div class="col-lg-5">
 
-		<br/>
+        @if ($errors->has())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>        
+            @endforeach
+        </div>
+        @endif
 
       <form method="POST" action="{{{ URL::to('users/newuser') }}}" accept-charset="UTF-8">
         <input class="form-control" type="hidden" name="user_type" id="user_type" value="admin">
-         <input class="form-control" type="hidden" name="organization_id" id="user_type" value="1">
+        <input class="form-control" type="hidden" name="organization_id" id="organization_id" value="{{Confide::user()->organization_id}}">
    
     <fieldset>
         <div class="form-group">

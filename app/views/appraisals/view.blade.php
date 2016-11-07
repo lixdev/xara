@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('content')
-<br/>
-<?php
 
+<?php
 
 function asMoney($value) {
   return number_format($value, 2);
@@ -31,7 +30,7 @@ function asMoney($value) {
 
 <a class="btn btn-danger btn-sm "  href="{{URL::to('Appraisals/delete/'.$appraisal->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s appraisal?'))">Delete</a>
 
-<a class="btn btn-success btn-sm "  href="{{ URL::to('employees/view/'.$appraisal->employee->id)}}">Go Back</a>
+<a class="btn btn-success btn-sm "  href="{{ URL::to('Appraisals')}}">Go Back</a>
 
 <hr>
 </div>	

@@ -9,7 +9,7 @@ class ErporderitemsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$erporderitems = Erporderitem::all();
+		$erporderitems = Erporderitem::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('erporderitems.index', compact('erporderitems'));
 	}
@@ -40,6 +40,7 @@ class ErporderitemsController extends \BaseController {
 
 		Erporderitem::create($data);
 
+		
 		return Redirect::route('erporderitems.index');
 	}
 

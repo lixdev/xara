@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style="margin-top:-150px">
      <table >
 
       <tr>
@@ -67,16 +67,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">
+
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -104,9 +105,12 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
+	<div class="content" style='margin-top:-70px;'>
+    @if($type == 'All')
    <div style="margin-bottom:20px">{{'<strong>Period</strong> : '.$period}}<div align="center"><strong>Allowance Report</strong></div></div>
-
+    @else
+    <div style="margin-bottom:20px">{{'<strong>Period</strong> : '.$period}}<div align="center"><strong>Allowance Report for {{$type}}</strong></div></div>
+    @endif
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>
@@ -116,7 +120,10 @@ body {
         <td width='20'><strong># </strong></td>
         <td><strong>Payroll Number </strong></td>
         <td><strong>Employee Name </strong></td>
+         @if($type == 'All')
         <td><strong>Allowance Type </strong></td>
+        @else
+        @endif
          @foreach($currencies as $currency)
         <td><strong>Amount ({{$currency->shortname}}) </strong></td>  
          @endforeach   
@@ -128,16 +135,26 @@ body {
 
        <td td width='20'>{{$i}}</td>
         <td> {{ $allw->personal_file_number }}</td>
-        <td> {{ $allw->last_name.' '.$allw->first_name }}</td>
+        @if($allw->middle_name != null || $allw->middle_name != '')
+        <td> {{$allw->first_name.' '.$allw->middle_name.' '.$allw->last_name}}</td>
+        @else
+        <td> {{$allw->first_name.' '.$allw->last_name}}</td>
+        @endif
+        
+        @if($type == 'All')
         <td> {{ $allw->allowance_name }}</td>
+        @else
+        @endif
         <td align="right"> {{ asMoney($allw->allowance_amount )}}</td>
         </tr>
       <?php $i++; ?>
    
     @endforeach
-
-     
-
+      @if($type == 'All')
+     <tr><td colspan="4" align="right"><strong>Total</strong></td><td align="right"><strong>{{asMoney($total)}}<strong></td></tr>
+       @else
+       <tr><td colspan="3" align="right"><strong>Total</strong></td><td align="right"><strong>{{asMoney($total)}}<strong></td></tr>
+      @endif
     </table>
 
 <br><br>

@@ -12,11 +12,18 @@ class NextOfKinsController extends \BaseController {
 		$kins = DB::table('employee')
 		          ->join('nextofkins', 'employee.id', '=', 'nextofkins.employee_id')
 		          ->where('in_employment','=','Y')
+		          ->where('organization_id',Confide::user()->organization_id)
 		          ->get();
 
 		Audit::logaudit('Next of Kins', 'view', 'viewed employee next of kin');
 
 		return View::make('nextofkins.index', compact('kins'));
+	}
+
+	public function serializecheck(){
+		
+        return Input::get('kin_first_name');
+        
 	}
 
 	/**
@@ -30,6 +37,7 @@ class NextOfKinsController extends \BaseController {
 
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('organization_id',Confide::user()->organization_id)
 		          ->get();
 		return View::make('nextofkins.create', compact('employees','id'));
 	}
@@ -56,6 +64,8 @@ class NextOfKinsController extends \BaseController {
 		$kin->relationship = Input::get('rship');
 		$kin->contact = Input::get('contact');
 		$kin->id_number = Input::get('id_number');
+		$kin->id_number = Input::get('id_number');
+		$kin->organization_id = Confide::user()->organization_id;
 		$kin->save();
 
 		Audit::logaudit('NextofKins', 'create', 'created: '.$kin->name.' for '.Employee::getEmployeeName(Input::get('employee_id')));
@@ -107,7 +117,9 @@ class NextOfKinsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
         
-		$kin->name = Input::get('name');
+		$kin->first_name = Input::get('fname');
+		$kin->middle_name = Input::get('mname');
+		$kin->last_name = Input::get('lname');
 		$kin->relationship = Input::get('rship');
 		$kin->contact = Input::get('contact');
 		$kin->id_number = Input::get('id_number');
@@ -138,7 +150,7 @@ class NextOfKinsController extends \BaseController {
 
 		$kin = Nextofkin::find($id);
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('nextofkins.view', compact('kin'));
 		

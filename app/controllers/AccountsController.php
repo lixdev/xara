@@ -9,9 +9,9 @@ class AccountsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$accounts = DB::table('accounts')->orderBy('code', 'asc')->get();
-
-		return View::make('accounts.index', compact('accounts'));
+		$accounts = DB::table('accounts')->where('organization_id',Confide::user()->organization_id)->orderBy('code', 'asc')->get();
+                $organization = Organization::find(Confide::user()->organization_id);
+		return View::make('accounts.index', compact('accounts','organization'));
 
 
 		Audit::logaudit('Accounts', 'view', 'view chart of accounts');
@@ -44,7 +44,7 @@ class AccountsController extends \BaseController {
 
 		// check if code exists
 		$code = Input::get('code');
-		$code_exists = DB::table('accounts')->where('code', '=', $code)->count();
+		$code_exists = DB::table('accounts')->where('organization_id',Confide::user()->organization_id)->where('code', '=', $code)->count();
 
 		if($code_exists >= 1){
 
@@ -59,6 +59,8 @@ class AccountsController extends \BaseController {
 		$account->category = Input::get('category');
 		$account->name = Input::get('name');
 		$account->code = Input::get('code');
+		$account->balance = Input::get('balance');
+		$account->organization_id = Confide::user()->organization_id;
 		if(Input::get('active')){
 			$account->active = TRUE;
 		}
@@ -120,11 +122,11 @@ class AccountsController extends \BaseController {
 		}
 
 		$code = Input::get('code');
-		$original_code = DB::table('accounts')->where('id', '=', $account->id)->pluck('code');
+		$original_code = DB::table('accounts')->where('organization_id',Confide::user()->organization_id)->where('id', '=', $account->id)->pluck('code');
 
 		if($code != $original_code) {
 
-			$code_exists = DB::table('accounts')->where('code', '=', $code)->count();
+			$code_exists = DB::table('accounts')->where('organization_id',Confide::user()->organization_id)->where('code', '=', $code)->count();
 
 		if($code_exists >= 1){
 
@@ -140,6 +142,7 @@ class AccountsController extends \BaseController {
 		$account->category = Input::get('category');
 		$account->name = Input::get('name');
 		$account->code = Input::get('code');
+		$account->balance = Input::get('balance');
 		if(Input::get('active')){
 			$account->active = TRUE;
 		}
@@ -156,6 +159,7 @@ class AccountsController extends \BaseController {
 		$account->category = Input::get('category');
 		$account->name = Input::get('name');
 		$account->code = Input::get('code');
+		$account->balance = Input::get('balance');
 		$account->active = Input::get('active');
 		$account->update();
 

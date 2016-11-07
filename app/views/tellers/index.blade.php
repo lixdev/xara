@@ -1,14 +1,9 @@
 @extends('layouts.system')
 @section('content')
 
-
-
-
 <div class="row">
 
 	<div class="col-lg-12">
-
-		<br/>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">

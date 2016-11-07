@@ -1,9 +1,7 @@
 @extends('layouts.membercss')
 @section('content')
-<br/>
 
 <?php
-
 
 function asMoney($value) {
   return number_format($value, 2);
@@ -450,7 +448,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+    <table width="100%" id="users" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -582,7 +580,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="mobile" class="table table-condensed table-bordered table-responsive table-hover">
+    <table width="100%" id="mobile" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -591,7 +589,6 @@ function asMoney($value) {
         <th>Member</th>
 
          <th>Loan Account</th>
-         <th>Guaranteed Amount</th>
          
            
         <th></th>
@@ -609,15 +606,7 @@ function asMoney($value) {
           <td> {{ $i }}</td>
           <td>{{ $guarantor->member->name }}</td>
           <td>{{ $guarantor->loanaccount->account_number }}</td>
-          <td>{{ $guarantor->amount }}</td>
-          
-
-       
-
-           
-
-         
-
+  
         <td>
 
                   <div class="btn-group">
@@ -627,9 +616,9 @@ function asMoney($value) {
           
                   <ul class="dropdown-menu" role="menu">
                    
-                    <li><a href="{{URL::to('loanguarantors/edit/'.$guarantor->id)}}">Update</a></li>
+                    <li><a href="{{URL::to('loanguarantors/cssedit/'.$guarantor->id)}}">Update</a></li>
                    
-                    <li><a href="{{URL::to('loanguarantors/delete/'.$guarantor->id)}}">Remove</a></li>
+                    <li><a href="{{URL::to('loanguarantors/cssdelete/'.$guarantor->id)}}">Remove</a></li>
                     
                   </ul>
               </div>

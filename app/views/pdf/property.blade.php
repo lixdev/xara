@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style='margin-top:-150px;'>
      <table >
 
       <tr>
@@ -67,16 +67,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">
+
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -109,7 +110,7 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
+	<div class="content" style='margin-top:-70px;'>
 
 <div align="center"><strong>Company Property Report for period between {{date("F j, Y", $d).' and '.date("F j, Y", $d1)}}</strong></div><br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
@@ -137,7 +138,11 @@ body {
 
 
        <td td width='20'>{{$i}}</td>
-        <td> {{$property->last_name.' '.$property->first_name}}</td>
+        @if($property->middle_name != null || $property->middle_name != '')
+        <td> {{$property->first_name.' '.$property->middle_name.' '.$property->last_name}}</td>
+        @else
+        <td> {{$property->first_name.' '.$property->last_name}}</td>
+        @endif
         <td> {{ $property->name}}</td>
         <td> {{ $property->description}}</td>
         <td> {{ $property->serial}}</td>

@@ -24,7 +24,7 @@ return array(
 
 
 	'table' => array(
-		'number' => 'Nambari la uwanachama',
+		'number' => 'Nambari ya uwanachama',
 		'name' => 'Jina la Mwanachama',
 		'branch' => 'Tawi la Mwanachama',
 		
@@ -33,11 +33,13 @@ return array(
 
 
 	'nav' => array(
+		'home' => 'Nyumbani'
 		'dashboard' => 'Dashibodi',
 		'members' => 'Wanachama',
 		'accounting' => 'Uhasibu',
 		'reports' => 'Ripoti',
 		'administration' => 'Usimamizi',
+		'hr' => 'Human Resource',
 		'payroll' => 'Mishahara',
 		'erp' => 'ERP',
 		'leave' => 'Likizo',
@@ -45,6 +47,7 @@ return array(
 		'payroll_leave' => 'Payroll & Leave',
 		'employees' => 'Waajiriwa',
 		'css' => 'Portal',
+		'emp_css' => 'Employee Portal',
 		
 
 		),

@@ -1,6 +1,5 @@
-@extends('layouts.accounting')
+@extends('layouts.member')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -50,7 +49,7 @@
 
         <div class="form-group">
             <label for="username">Disbursal Date </label>
-            <input class="form-control" placeholder="" type="date" name="date_disbursed" id="date_disbursed" value="{{ date('Y-m-d') }}">
+            <input class="form-control datepicker" placeholder="" type="date" name="date_disbursed" id="date_disbursed" value="{{ date('Y-m-d') }}">
         </div>
 
 

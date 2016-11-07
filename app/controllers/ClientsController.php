@@ -9,9 +9,7 @@ class ClientsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$clients = Client::all();
-
-		Audit::logaudit('Clients', 'client', 'viewed clients');
+		$clients = Client::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('clients.index', compact('clients'));
 	}
@@ -43,6 +41,7 @@ class ClientsController extends \BaseController {
 		$client = new Client;
 
 		$client->name = Input::get('name');
+		$client->date = date('Y-m-d');
 		$client->contact_person = Input::get('cname');
 		$client->email = Input::get('email_office');
 		$client->contact_person_email = Input::get('email_personal');
@@ -50,9 +49,8 @@ class ClientsController extends \BaseController {
 		$client->phone = Input::get('office_phone');
 		$client->address = Input::get('address');
 		$client->type = Input::get('type');
+		$client->organization_id = Confide::user()->organization_id;
 		$client->save();
-
-        Audit::logaudit('Clients', 'create', 'created: '.$client->name);
 
 		return Redirect::route('clients.index')->withFlashMessage('Client successfully created!');
 	}
@@ -108,10 +106,9 @@ class ClientsController extends \BaseController {
 		$client->phone = Input::get('office_phone');
 		$client->address = Input::get('address');
 		$client->type = Input::get('type');
+		$client->save();
 
 		$client->update();
-
-		Audit::logaudit('Clients', 'update', 'updated: '.$client->name);
 
 		return Redirect::route('clients.index')->withFlashMessage('Client successfully updated!');
 	}
@@ -124,9 +121,8 @@ class ClientsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$client = Client::findOrFail($id);
 		Client::destroy($id);
-        Audit::logaudit('Clients', 'delete', 'deleted: '.$client->name);
+
 		return Redirect::route('clients.index')->withDeleteMessage('Client successfully deleted!');
 	}
 

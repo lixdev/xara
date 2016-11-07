@@ -9,7 +9,7 @@ class KinsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$kins = Kin::all();
+		$kins = Kin::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('kins.index', compact('kins'));
 	}
@@ -23,7 +23,11 @@ class KinsController extends \BaseController {
 	{
 
 		$member = Member::findOrFail($id);
+		if(Confide::user()->user_type == 'member'){
+        return View::make('kins.csscreate', compact('member'));
+		}else{
 		return View::make('kins.create', compact('member'));
+	}
 	}
 
 	/**
@@ -51,9 +55,14 @@ class KinsController extends \BaseController {
 		$kin->rship = Input::get('rship');
 		$kin->goodwill = Input::get('goodwill');
 		$kin->id_number = Input::get('id_number');
+		$kin->organization_id = Confide::user()->organization_id;
 		$kin->save();
-
+        
+        if(Confide::user()->user_type == 'member'){
+        return Redirect::to('member/show/'.$member->id);
+		}else{
 		return Redirect::to('members/show/'.$member->id);
+	}
 	}
 
 	/**
@@ -78,8 +87,11 @@ class KinsController extends \BaseController {
 	public function edit($id)
 	{
 		$kin = Kin::find($id);
-
+        if(Confide::user()->user_type == 'member'){
+        return View::make('kins.cssedit', compact('kin'));
+		}else{
 		return View::make('kins.edit', compact('kin'));
+	}
 	}
 
 	/**
@@ -112,8 +124,12 @@ class KinsController extends \BaseController {
 
 
 		$kin->update();
-
+        
+        if(Confide::user()->user_type == 'member'){
+        return Redirect::to('member/show/'.$member->id);
+		}else{
 		return Redirect::to('members/show/'.$member->id);
+	}
 	}
 
 	/**
@@ -125,8 +141,11 @@ class KinsController extends \BaseController {
 	public function destroy($id)
 	{
 		Kin::destroy($id);
-
-		return Redirect::route('kins.index');
+        if(Confide::user()->user_type == 'member'){
+        return Redirect::to('member/show/'.$member->id);
+		}else{
+		return Redirect::to('members/show/'.$member->id);
+	}
 	}
 
 }

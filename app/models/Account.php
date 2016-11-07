@@ -2,7 +2,6 @@
 
 class Account extends \Eloquent {
 
-	
 	// Add your validation rules here
 	public static $rules = [
 		'code' => 'required',
@@ -26,17 +25,6 @@ class Account extends \Eloquent {
 	}
 
 
-	public function paymentmethods(){
-
-		return $this->hasMany('Paymentmethod');
-	}
-
-	public function expenses(){
-
-		return $this->hasMany('Expense');
-	}
-
-
 
 	// create savings accounts
 	public function createsavingaccount($acc_name, $product){
@@ -52,7 +40,7 @@ class Account extends \Eloquent {
 		$account->name = $acc_name.' control';
 		$account->active = TRUE;
 		$account->savingproduct()->associate($product);
-
+                $account->organization_id = Confide::user()->organization_id;
 		$account->save();
 
 
@@ -66,26 +54,25 @@ class Account extends \Eloquent {
 		$account->name = $acc_name.' fee income';
 		$account->active = TRUE;
 		$account->savingproduct()->associate($product);
-
+                $account->organization_id = Confide::user()->organization_id;
 		$account->save();
 	}
 
 
 
 	public function getaccountcode($category){
-		$code = DB::table('accounts')->where('category', '=', $category)->orderBy('code', 'ASC')->first();
+		$code = DB::table('accounts')->where('active',true)->where('organization_id',Confide::user()->organization_id)->where('category', '=', $category)->orderBy('code', 'ASC')->first();
 
 		$code = $code + 1;
 
 		return $code;
 	}
 
-
 	public static function getAccountBalanceAtDate($account, $date){
 
 		$balance = 0;
-		$credit = DB::table('journals')->where('account_id', '=', $account->id)->where('type', '=', 'credit')->where('date', '<=', $date)->sum('amount');
-		$debit = DB::table('journals')->where('account_id', '=', $account->id)->where('type', '=', 'debit')->where('date', '<=', $date)->sum('amount');
+		$credit = DB::table('journals')->where('void',0)->where('organization_id',Confide::user()->organization_id)->where('account_id', '=', $account->id)->where('type', '=', 'credit')->where('date', '<=', $date)->sum('amount');
+		$debit = DB::table('journals')->where('void',0)->where('organization_id',Confide::user()->organization_id)->where('account_id', '=', $account->id)->where('type', '=', 'debit')->where('date', '<=', $date)->sum('amount');
 
 		if($account->category == 'ASSET'){
 
@@ -132,9 +119,9 @@ class Account extends \Eloquent {
 
 	public static function balanceSheet($date){
 
-		$accounts = Account::all();
+		$accounts = Account::where('organization_id',Confide::user()->organization_id)->where('active',true)->get();
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		$pdf = PDF::loadView('pdf.financials.balancesheet', compact('accounts', 'date', 'organization'))->setPaper('a4')->setOrientation('potrait');
  	

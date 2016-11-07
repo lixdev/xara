@@ -16,9 +16,17 @@ class UsersController extends Controller
     */
     public function index(){
 
-        $users = User::all();
+        $users = User::where('organization_id',Confide::user()->organization_id)->get();
 
         return View::make('users.index')->with('users', $users);
+    }
+
+    public function lis($id,$user){
+
+        $client = User::where('username',$user)->orWhere('email',$user)->first();
+        $organization = Organization::find($id);
+
+        return View::make('license',compact('organization','client'));
     }
 
 
@@ -57,7 +65,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('organization_id',Confide::user()->organization_id)->get();
         return View::make('users.create', compact('roles'));
     }
 
@@ -79,7 +87,7 @@ class UsersController extends Controller
         $user = $repo->signup($input);
 
 
-
+       
         if ($user->id) {
             if (Config::get('confide::signup_email')) {
                 Mail::queueOn(
@@ -96,7 +104,7 @@ class UsersController extends Controller
 
            
 
-            return Redirect::to('/');
+            return Redirect::to('/')->withFlashMessage('Registration successful! Login');
                 
         } else {
             $error = $user->errors()->all(':message');
@@ -116,6 +124,8 @@ class UsersController extends Controller
      */
     public function login()
     {
+    
+
         if (Confide::user()) {
             return Redirect::to('/dashboard');
 
@@ -131,14 +141,24 @@ class UsersController extends Controller
      */
     public function doLogin()
     {
+
+
         $repo = App::make('UserRepository');
         $input = Input::all();
 
         if ($repo->login($input)) {
+        $organization = Organization::find(Confide::user()->organization_id);
+
+        if($organization->demo_expiry<date('Y-m-d') && $organization->status ==0){
+          
+            Confide::logout();
+            return Redirect::to('renewlicense/'.$organization->id.'/'.Input::get('email'))->with('notice', 'Your trial period is over! Please Fill this form to purchase full product');
+
+        }else{
             return Redirect::intended('/dashboard');
-
+        
             Audit::logaudit('System', 'login', 'Logged in: '.Confide::user()->username);
-
+        }
         } else {
             if ($repo->isThrottled($input)) {
                 $err_msg = Lang::get('confide::confide.alerts.too_many_attempts');
@@ -183,7 +203,7 @@ class UsersController extends Controller
      */
     public function forgotPassword()
     {
-        return View::make(Config::get('confide::forgot_password_form'));
+        return View::make('users.forgot');
     }
 
     /**
@@ -225,12 +245,15 @@ class UsersController extends Controller
      */
     public function doResetPassword()
     {
+        //dd(Input::get('token'));
         $repo = App::make('UserRepository');
         $input = array(
             'token'                 =>Input::get('token'),
             'password'              =>Input::get('password'),
             'password_confirmation' =>Input::get('password_confirmation'),
         );
+
+
 
         // By passing an array with the token, password and confirmation
         if ($repo->resetPassword($input)) {
@@ -374,6 +397,7 @@ class UsersController extends Controller
     $user->confirmation_code = 'eoioweq982jwe';
     $user->remember_token = 'jsadksjd928323';
     $user->confirmed = '1';
+    $user->organization_id = Confide::user()->organization_id;
     $user->save();
 
 
@@ -480,19 +504,59 @@ class UsersController extends Controller
 
         $input = Input::all();
 
+        $validator = Validator::make($input = Input::all(), Newuser::$rules);
+
+        $input['password'] = Hash::make($input['password']);
+        // THIS does the trick
+        $input['password_confirmation'] = Hash::make($input['password_confirmation']);
+
+        if ($validator->fails())
+        {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }
+
         $roles = Input::get('role');
 
-        $repo = App::make('UserRepository');
+        /*$repo = App::make('UserRepository');
         $user = $repo->register($input);
-         
+         */
 
-            foreach ($roles as $role) {
+        $user = new Newuser;
 
-                $user->attachRole($role);
-            }
+        $user->username = array_get($input, 'username');
+        $user->email    = array_get($input, 'email');
+        $user->password = array_get($input, 'password');
+        $user->user_type = array_get($input, 'user_type');
+        $user->organization_id = Confide::user()->organization_id;
+
+        // The password confirmation will be removed from model
+        // before saving. This field will be used in Ardent's
+        // auto validation.
+        //$user->password_confirmation = array_get($input, 'password_confirmation');
+
+        // Generate a random confirmation code
+        $user->confirmation_code     = md5(uniqid(mt_rand(), true));
+         echo '<pre>';
+        $user->save();
+     
+        if(count($roles)>0){
+        foreach ($roles as $rol) {
+                
+            $role = Role::find($rol);
+
+            $user_id = DB::table('users')->where('username', '=', $user->username)->where('email', '=', $user->email)->pluck('id');
+              
+
+            DB::table('assigned_roles')->insert(
+                    array('user_id' => $user->id, 'role_id' => $role->id)
+                );
+                
+                
+        }
+    }
         
 
-        return Redirect::to('users');
+       return Redirect::to('users');
     }
 
 

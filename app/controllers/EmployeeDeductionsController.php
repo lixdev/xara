@@ -13,7 +13,8 @@ class EmployeeDeductionsController extends \BaseController {
 		          ->join('employee_deductions', 'employee.id', '=', 'employee_deductions.employee_id')
 		          ->join('deductions', 'employee_deductions.deduction_id', '=', 'deductions.id')
 		          ->where('in_employment','=','Y')
-		          ->select('employee_deductions.id','first_name','last_name','deduction_amount','deduction_name')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->select('employee_deductions.id','first_name','middle_name','last_name','deduction_amount','deduction_name')
 		          ->get();
 		return View::make('employee_deductions.index', compact('deds'));
 	}
@@ -23,14 +24,36 @@ class EmployeeDeductionsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+
+   public function create()
 	{
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->get();
-		$deductions = Deduction::all();
-		return View::make('employee_deductions.create',compact('employees','deductions'));
+		$deductions = Deduction::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('employee_deductions.create',compact('employees','deductions','currency'));
 	}
+
+	public function creatededuction()
+	{
+      $postdeduction = Input::all();
+      $data = array('deduction_name' => $postdeduction['name'], 
+      	            'organization_id' => Confide::user()->organization_id,
+      	            'created_at' => DB::raw('NOW()'),
+      	            'updated_at' => DB::raw('NOW()'));
+      $check = DB::table('deductions')->insertGetId( $data );
+
+		if($check > 0){
+         
+		Audit::logaudit('Deductions', 'create', 'created: '.$postdeduction['name']);
+        return $check;
+        }else{
+         return 1;
+        }
+      
+	} 
 
 	/**
 	 * Store a newly created branch in storage.
@@ -123,9 +146,10 @@ class EmployeeDeductionsController extends \BaseController {
 	public function edit($id)
 	{
 		$ded = EDeduction::find($id);
-		$employees = Employee::all();
-        $deductions = Deduction::all();
-		return View::make('employee_deductions.edit', compact('ded','employees','deductions'));
+		$employees = Employee::where('organization_id',Confide::user()->organization_id)->get();
+                $deductions = Deduction::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+                $currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('employee_deductions.edit', compact('ded','employees','deductions','currency'));
 	}
 
 	/**
@@ -216,10 +240,11 @@ class EmployeeDeductionsController extends \BaseController {
 		          ->join('employee_deductions', 'employee.id', '=', 'employee_deductions.employee_id')
 		          ->join('deductions', 'employee_deductions.deduction_id', '=', 'deductions.id')
 		          ->where('employee_deductions.id','=',$id)
-		          ->select('employee_deductions.id','first_name','last_name','middle_name','formular','instalments','deduction_amount','deduction_name','deduction_date','last_day_month','photo','signature')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+  ->select('employee_deductions.id','first_name','last_name','middle_name','formular','instalments','deduction_amount','deduction_name','deduction_date','last_day_month','photo','signature')
 		          ->first();
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('employee_deductions.view', compact('ded'));
 		

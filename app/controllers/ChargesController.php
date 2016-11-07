@@ -9,7 +9,7 @@ class ChargesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$charges = Charge::all();
+		$charges = Charge::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('charges.index', compact('charges'));
 	}
@@ -48,6 +48,7 @@ class ChargesController extends \BaseController {
 		$charge->payment_method = Input::get('payment_method');
 		$charge->percentage_of = Input::get('percentage_of');
 		$charge->amount = Input::get('amount');
+		$charge->organization_id = Confide::user()->organization_id;
 		if(Input::get('fee') == '1') {
 				$charge->fee = TRUE;
 		}

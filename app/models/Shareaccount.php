@@ -42,6 +42,8 @@ class Shareaccount extends \Eloquent {
 		$shareaccount->account_number = $acc;
 
 		$shareaccount->opening_date = date('Y-m-d');
+		
+		$shareaccount->organization_id = Confide::user()->organization_id;
 
 		$shareaccount->save();
 	}

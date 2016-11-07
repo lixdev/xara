@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -44,8 +43,23 @@
             <label for="username">Description </label><br>
             <textarea name="desc" class="form-control" id="desc">{{{ Input::old('desc') }}}</textarea>
         </div>
+
+                <div class="form-group">
+                        <label for="username">Date From </label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control expiry" readonly="readonly" placeholder="" required type="text" name="fdate" id="fdate" value="{{{ Input::old('fdate') }}}">
+                    </div>
+                </div>
         
-        
+        <div class="form-group">
+                        <label for="username">End Date</label>
+                        <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control expiry" readonly="readonly" placeholder="" required type="text" name="edate" id="edate" value="{{{ Input::old('edate') }}}">
+                    </div>
+                </div>
+
         <div class="form-actions form-group">
         
           <button type="submit" class="btn btn-primary btn-sm">Upload Document</button>

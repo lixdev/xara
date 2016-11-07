@@ -1,28 +1,54 @@
-@extends('layouts.erp')
-@section('content')
 <?php
-
 
 function asMoney($value) {
   return number_format($value, 2);
 }
 
 ?>
-<br><div class="row">
+
+@extends('layouts.erp')
+
+{{ HTML::script('media/js/jquery.js') }}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#select_all').on('click',function(){
+        if(this.checked){
+            $('.checkbox').each(function(){
+                this.checked = true;
+            });
+        }else{
+             $('.checkbox').each(function(){
+                this.checked = false;
+            });
+        }
+    });
+    
+    $('.checkbox').on('click',function(){
+        if($('.checkbox:checked').length == $('.checkbox').length){
+            $('#select_all').prop('checked',true);
+        }else{
+            $('#select_all').prop('checked',false);
+        }
+    });
+});
+</script>
+
+@section('content')
+
+<div class="row">
 	<div class="col-lg-12">
-  <h4>Quote # : {{$order->order_number}} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client: {{$order->client->name}}  &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Date: {{$order->date}} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Status: {{$order->status}}  </h4>
+  <h4><font color='green'>Sales Order : {{$order->order_number}} &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client: {{$order->client->name}}  &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Date: {{$order->date}} &nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; Status: {{$order->status}} </font> </h4>
 
 <hr>
 </div>	
 </div>
-
+ 
 <div class="row">
     <div class="col-lg-12">
-    
-    
-
-    <a href="{{URL::to('salesinvoice/'.$order->id)}}" class="btn btn-primary"> Print Quote</a>
-    
+    <!-- <a href="{{URL::to('erpReports/invoice/'.$order->id)}}" class="btn btn-primary"> Generate Invoice</a> -->
+    <!-- <a href="{{ URL::to('payments/create')}}" class="btn btn-primary"> Receive Payment</a> -->
+    <a href="{{URL::to('erpReports/receipt/'.$order->id)}}" class="btn btn-primary" target="_blank"> Generate Receipt</a>
     </div>
 </div>
 
@@ -42,12 +68,12 @@ function asMoney($value) {
     <table class="table table-condensed table-bordered table-hover" >
 
     <thead>
-        
+        <th><input type="checkbox" id="select_all" value=""></th>
         <th>Item</th>
         <th>Quantity</th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th>Duration</th>
+        <th>Price</th>
+        <!-- <th>Amount</th>
+        <th>Duration</th> -->
         <th>Total Amount</th>
        
     </thead>
@@ -61,32 +87,32 @@ function asMoney($value) {
             <?php
 
             $amount = $orderitem['price'] * $orderitem['quantity'];
-            $total_amount = $amount * $orderitem['duration'];
-            $total = $total + $total_amount;
+            /*$total_amount = $amount * $orderitem['duration'];*/
+            $total = $total + $amount;
             ?>
         <tr>
-          
+            <td><input type="checkbox" class="checkbox" name="{{$orderitem->item->id}}" value=""></td>
             <td>{{$orderitem->item->name}}</td>
             <td>{{$orderitem['quantity']}}</td>
             <td>{{asMoney($orderitem['price'])}}</td>
-            <td>{{asMoney($amount)}}</td>
-            <td>{{$orderitem['duration']}}</td>
-            <td>{{asMoney($total_amount) }}</td>
+            <!-- <td>{{$amount}}</td>
+            <td>{{$orderitem['duration']}}</td> -->
+            <td>{{asMoney($amount) }}</td>
             
         </tr>
 
         @endforeach
 
-        <tr>
-           
+        <!-- <tr>
+           <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td>Total</td>
-            <td>{{asMoney($total)}}</td>
+            <td><strong>Grand Total</strong></td>
+            <td><strong>{{asMoney($total)}}</strong></td>
           
-        </tr>
+        </tr> -->
     </tbody>
         
     </table>
@@ -95,8 +121,5 @@ function asMoney($value) {
   </div>
 
 </div>
-
-
-
 
 @stop
