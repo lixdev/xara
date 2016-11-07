@@ -29,6 +29,15 @@
         <th>Action</th>
 
       </thead>
+
+     <tfoot>
+
+        <th>#</th>
+        <th>Leave Type</th>
+        <th>Days Entitled</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>

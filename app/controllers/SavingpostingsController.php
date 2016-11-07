@@ -9,7 +9,7 @@ class SavingpostingsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$savingpostings = Savingposting::all();
+		$savingpostings = Savingposting::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('savingpostings.index', compact('savingpostings'));
 	}

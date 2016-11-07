@@ -28,7 +28,7 @@
 																</tr>
 																<tr>
 
-																	<td>Version</td><td>v1.1.10</td>
+																	<td>Version</td><td>v3.1.10</td>
 																</tr>
 
 																<tr>

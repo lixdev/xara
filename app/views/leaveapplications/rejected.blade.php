@@ -1,7 +1,6 @@
 @extends('layouts.leave')
 @section('content')
 
-<br><br>
 <div class="row">
 											
 											
@@ -21,17 +20,30 @@
 
   <thead>
     
-    <th>Employee #</th>
+    <th style="font-size:10px;">PFN</th>
+    <th style="font-size:10px;">Employee</th>
+    <th style="font-size:10px;">Leave Type</th>
+    <th style="font-size:10px;">Rejection Date</th>
+    <th style="font-size:10px;">Start Date</th>
+    <th style="font-size:10px;">End Date</th>
+    <th style="font-size:10px;">Leave Days</th>
+    <th></th>
+
+
+  </thead>
+
+  <tfoot>
+    
+    <th>PFN</th>
     <th>Employee</th>
     <th>Leave Type</th>
     <th>Rejection Date</th>
     <th>Start Date</th>
     <th>End Date</th>
     <th>Leave Days</th>
-    <th></th>
 
 
-  </thead>
+  </tfoot>
 
   <tbody>
 
@@ -42,12 +54,12 @@
          <tr>
 
           <td>{{$leaveapplication->employee->personal_file_number}}</td>
-          <td>{{$leaveapplication->employee->first_name." ".$leaveapplication->employee->last_name." ".$leaveapplication->employee->middle_name}}</td>
+          <td>{{$leaveapplication->employee->first_name." ".$leaveapplication->employee->middle_name." ".$leaveapplication->employee->last_name}}</td>
           <td>{{$leaveapplication->leavetype->name}}</td>
           <td>{{$leaveapplication->date_rejected}}</td>
            <td>{{$leaveapplication->applied_start_date}}</td>
             <td>{{$leaveapplication->applied_end_date}}</td>
-            <td>{{Leaveapplication::getLeaveDays($leaveapplication->applied_end_date,$leaveapplication->applied_start_date)}}</td>
+            <td>{{Leaveapplication::getDays($leaveapplication->applied_end_date,$leaveapplication->applied_start_date,$leaveapplication->is_weekend,$leaveapplication->is_holiday)+1}}</td>
 
 
           <td>

@@ -1,8 +1,5 @@
 <body>
 
-
-    
-
     <div id="wrapper">
 
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -34,10 +31,7 @@
                  
 
                 <li  >
-                    <a  href="{{ URL::to('dashboard')}}">
-                        <i class="fa fa-home fa-fw"></i>  Dashboard 
-                    </a>
-                    
+                    <a  href="{{ URL::to('dashboard')}}" style="color:blue">{{ Lang::get('messages.nav.home') }}<span>Welcome </span></a>
                 </li>
 
 
@@ -57,7 +51,7 @@
 
                 <!-- /.dropdown -->
                
-                <li class="dropdown" style="background-color:white;">
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  {{ Confide::user()->username}} <i class="fa fa-caret-down"></i>
                     </a>

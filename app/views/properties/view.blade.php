@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-<br/>
+
 <?php
 
 
@@ -29,7 +29,7 @@ function asMoney($value) {
 
 <a class="btn btn-info btn-sm "  href="{{ URL::to('Properties/edit/'.$property->id)}}">update details</a>
 <a class="btn btn-danger btn-sm "  href="{{URL::to('Properties/delete/'.$property->id)}}" onclick="return (confirm('Are you sure you want to delete this property?'))">Delete</a>
-<a class="btn btn-success btn-sm "  href="{{ URL::to('employees/view/'.$property->employee->id)}}">Go Back</a>
+<a class="btn btn-success btn-sm "  href="{{ URL::to('Properties')}}">Go Back</a>
 
 <hr>
 </div>	

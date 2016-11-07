@@ -1,6 +1,6 @@
 @extends('layouts.payroll')
 @section('content')
-<br/>
+
 <?php
 
 
@@ -40,7 +40,23 @@ function asMoney($value) {
       @endif
       </tr>
       <tr><td><strong>Allowance Type: </strong></td><td>{{$eallw->allowance_name}}</td></tr>
+
+      <tr><td><strong>Formular: </strong></td><td>{{$eallw->formular}}</td></tr>
+      @if($eallw->instalments > 1)
+      <tr><td><strong>Instalments: </strong></td><td>{{$eallw->instalments}}</td></tr>
       <tr><td><strong>Amount: </strong></td><td align="right">{{asMoney($eallw->allowance_amount)}}</td></tr>
+      <tr><td><strong>Total Amount: </strong></td><td align="right">{{asMoney((double)$eallw->deduction_amount*(double)$eallw->instalments)}}</td></tr>
+      @else
+      <tr><td><strong>Amount: </strong></td><td align="right">{{asMoney($eallw->allowance_amount)}}</td></tr>
+      @endif
+      @if($eallw->formular == 'One Time' || $eallw->formular == 'Instalments')
+      <tr><td><strong>Start Date: </strong></td><td>{{$eallw->allowance_date}}</td></tr>
+      <tr><td><strong>End Date: </strong></td><td>{{$eallw->last_day_month}}</td></tr>
+      @else
+      <tr><td><strong>Start Date: </strong></td><td>{{$eallw->allowance_date}}</td></tr>
+      @endif
+
+      
 </table>
 </div>
 

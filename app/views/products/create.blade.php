@@ -5,7 +5,6 @@
 
 <div class="col-lg-12 ">
 
-<br/>
 <h3>new product</h3>
 <hr>
 

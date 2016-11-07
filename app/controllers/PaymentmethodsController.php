@@ -9,9 +9,7 @@ class PaymentmethodsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$paymentmethods = Paymentmethod::all();
-
-		Audit::logaudit('Payment methods', 'view', 'viewed payment methods');
+		$paymentmethods = Paymentmethod::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('paymentmethods.index', compact('paymentmethods'));
 	}
@@ -23,7 +21,8 @@ class PaymentmethodsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('paymentmethods.create');
+		$accounts = Account::where('organization_id',Confide::user()->organization_id)->where('active',true)->get();
+		return View::make('paymentmethods.create',compact('accounts'));
 	}
 
 	/**
@@ -33,16 +32,21 @@ class PaymentmethodsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Paymentmethod::$rules);
+		$validator = Validator::make($data = Input::all(), Paymentmethod::$rules, Paymentmethod::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Paymentmethod::create($data);
+		$paymentmethod = new Paymentmethod;
 
-		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment method successfully created!');
+		$paymentmethod->name = Input::get('name');
+		$paymentmethod->account_id = Input::get('account');
+		$paymentmethod->organization_id = Confide::user()->organization_id;
+		$paymentmethod->save();
+
+		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment Method successfully created!');
 	}
 
 	/**
@@ -67,8 +71,8 @@ class PaymentmethodsController extends \BaseController {
 	public function edit($id)
 	{
 		$paymentmethod = Paymentmethod::find($id);
-
-		return View::make('paymentmethods.edit', compact('paymentmethod'));
+                $accounts = Account::where('organization_id',Confide::user()->organization_id)->get();
+		return View::make('paymentmethods.edit', compact('paymentmethod','accounts'));
 	}
 
 	/**
@@ -81,16 +85,18 @@ class PaymentmethodsController extends \BaseController {
 	{
 		$paymentmethod = Paymentmethod::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Paymentmethod::$rules);
+		$validator = Validator::make($data = Input::all(), Paymentmethod::$rules, Paymentmethod::$messages);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$paymentmethod->update($data);
+        $paymentmethod->name = Input::get('name');
+		$paymentmethod->account_id = Input::get('account');
+		$paymentmethod->update();
 
-		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment method successfully updated!');
+		return Redirect::route('paymentmethods.index')->withFlashMessage('Payment Method successfully updated!');
 	}
 
 	/**
@@ -101,11 +107,9 @@ class PaymentmethodsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$paymentmethod = Paymentmethod::findOrFail($id);
 		Paymentmethod::destroy($id);
-		Audit::logaudit('Payment methods', 'delete', 'deleted: '.$paymentmethod->name);
 
-		return Redirect::route('paymentmethods.index')->withDeleteMessage('Payment method successfully deleted!');
+		return Redirect::route('paymentmethods.index')->withDeleteMessage('Payment Method successfully deleted!');
 	}
 
 }

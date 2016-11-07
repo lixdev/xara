@@ -9,7 +9,7 @@ class LoanguarantorsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$loanguarantors = Loanguarantor::all();
+		$loanguarantors = Loanguarantor::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('loanguarantors.index', compact('loanguarantors'));
 	}
@@ -22,7 +22,7 @@ class LoanguarantorsController extends \BaseController {
 	public function create($id)
 	{
 		$loanaccount = Loanaccount::findOrFail($id);
-		$members = DB::table('members')->where('is_active', '=', TRUE)->get();
+		$members = DB::table('members')->where('organization_id',Confide::user()->organization_id)->where('is_active', '=', TRUE)->where('id', '!=', $loanaccount->member_id)->get();
 		return View::make('loanguarantors.create', compact('members', 'loanaccount'));
 	}
 
@@ -30,7 +30,7 @@ class LoanguarantorsController extends \BaseController {
 	public function csscreate($id)
 	{
 		$loanaccount = Loanaccount::findOrFail($id);
-		$members = DB::table('members')->where('is_active', '=', TRUE)->get();
+		$members = DB::table('members')->where('organization_id',Confide::user()->organization_id)->where('is_active', '=', TRUE)->where('id', '!=', $loanaccount->member_id)->get();
 		return View::make('css.guarantors', compact('members', 'loanaccount'));
 	}
 
@@ -59,7 +59,8 @@ class LoanguarantorsController extends \BaseController {
 
 		$guarantor->member()->associate($member);
 		$guarantor->loanaccount()->associate($loanaccount);
-		$guarantor->amount = Input::get('amount');
+		$guarantor->organization_id= Confide::user()->organization_id;
+		$guarantor->is_approved= 'pending';
 		$guarantor->save();
 		
 
@@ -89,7 +90,8 @@ class LoanguarantorsController extends \BaseController {
 	public function edit($id)
 	{
 		$loanguarantor = Loanguarantor::find($id);
-		$members = DB::table('members')->where('is_active', '=', TRUE)->get();
+		$loanaccount = Loanaccount::find($loanguarantor->loanaccount_id);
+		$members = DB::table('members')->where('organization_id',Confide::user()->organization_id)->where('is_active', '=', TRUE)->where('id', '!=', $loanaccount->member_id)->get();
 
 		return View::make('loanguarantors.edit', compact('loanguarantor', 'members'));
 	}
@@ -98,7 +100,8 @@ class LoanguarantorsController extends \BaseController {
 	public function cssedit($id)
 	{
 		$loanguarantor = Loanguarantor::find($id);
-		$members = DB::table('members')->where('is_active', '=', TRUE)->get();
+		$loanaccount = Loanaccount::find($loanguarantor->loanaccount_id);
+		$members = DB::table('members')->where('organization_id',Confide::user()->organization_id)->where('is_active', '=', TRUE)->where('id', '!=', $loanaccount->member_id)->get();
 
 		return View::make('css.editguarantors', compact('loanguarantor', 'members'));
 	}
@@ -132,7 +135,6 @@ class LoanguarantorsController extends \BaseController {
 
 		$guarantor->member()->associate($member);
 		$guarantor->loanaccount()->associate($loanaccount);
-		$guarantor->amount = Input::get('amount');
 		$guarantor->save();
 
 		return Redirect::to('loans/show/'.$loanaccount->id);
@@ -161,7 +163,6 @@ class LoanguarantorsController extends \BaseController {
 
 		$guarantor->member()->associate($member);
 		$guarantor->loanaccount()->associate($loanaccount);
-		$guarantor->amount = Input::get('amount');
 		$guarantor->save();
 
 		return Redirect::to('memloans/'.$loanaccount->id);

@@ -15,7 +15,7 @@
                 </button>
                 <?php 
 
-    $organization = DB::table('organizations')->where('id', '=', 1)->pluck('name');
+    $organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->pluck('name');
 
     
 ?> 
@@ -26,35 +26,10 @@
         
 
             <ul class="nav navbar-top-links navbar-right">
-         
-               
-                
-               
-
-                 
-
-               
-               
-
-               
-
-               
-
-                
-                
-
-                
-
-                
-
-
-
-                
-
 
                 <!-- /.dropdown -->
                
-                <li class="dropdown" style="background-color:white;">
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  {{ Confide::user()->username}} <i class="fa fa-caret-down"></i>
                     </a>

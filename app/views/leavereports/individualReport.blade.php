@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style='margin-top:-150px;'>
      <table >
 
       <tr>
@@ -67,16 +67,16 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{asset('public/uploads/logo/'.$organization->logo)}}" alt="{{ $organization->logo }}" width="150px"/>
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -98,15 +98,20 @@ body {
    </div>
 
 
-
+<br>
 <div class="footer">
      <p class="page">Page <?php $PAGE_NUM ?></p>
    </div>
+<br>
 
-
-	<div class="content" style='margin-top:0px;'>
-   <div align="center"><strong>Leave Report for {{$employee->first_name.' '.$employee->last_name}}</strong></div>
-
+	<div class="content" style='margin-top:-70px;'>
+    @if($employee->middle_name != null || $employee->middle_name != '')
+     <div align="center"><strong>Leave Report for {{$employee->personal_file_number.' : '.$employee->first_name.' '.$employee->middle_name.' '.$employee->last_name}}</strong></div>
+    @else
+     <div align="center"><strong>Leave Report for {{$employee->personal_file_number.' : '.$employee->first_name.' '.$employee->last_name}}</strong></div>
+    @endif
+   
+<br>
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
       <tr>
@@ -133,16 +138,16 @@ body {
       ?>
      
       <?php 
-          } else {
+          } else if($application->approved_start_date<=date('Y-m-d')){
             ?>
             <tr>
 
 
        <td td width='20'>{{$i}}</td>
         <td> {{ $application->leavetype->name }}</td>
-        <td> {{ Leaveapplication::getBalanceDays($employee, $application->leavetype)}}</td>
-        <td> {{ Leaveapplication::getDaysTaken($employee, $application->leavetype)}}</td>
-        <td> {{ (Leaveapplication::getBalanceDays($employee, $application->leavetype))-(Leaveapplication::getDaysTaken($employee, $application->leavetype)) }}</td>
+        <td> {{ Leaveapplication::getBegBalanceDays($employee, $application->leavetype, $application)}}</td>
+        <td>{{Leaveapplication::getDays($application->approved_end_date,$application->approved_start_date,$application->is_weekend,$application->is_holiday)+1}}</td>
+       <td> {{ (Leaveapplication::getBegBalanceDays($employee, $application->leavetype, $application))-(Leaveapplication::getDays($application->approved_end_date,$application->approved_start_date,$application->is_weekend,$application->is_holiday)+1) }}</td>
         </tr>
         <?php
          $i++;

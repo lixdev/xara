@@ -9,21 +9,15 @@ class OrganizationsController extends \BaseController {
 	 */
 	public function index()
 	{
-		
-		$banks = DB::table('banks')
-		->join('organizations', 'banks.id', '=', 'organizations.bank_id')
-		->get();
-
-		$bbranches = DB::table('bank_branches')
-        ->join('organizations', 'bank_branches.id', '=', 'organizations.bank_branch_id')
-		->get();
 
 		$banks_db = DB::table('banks')
 		->get();
 
-		$bbranches_db = DB::table('bank_branches')
+		$organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->first();
+       
+       $bbranches_db = DB::table('bank_branches')
+		->where('bank_id',$organization->bank_id)
 		->get();
-		$organization = DB::table('organizations')->where('id', '=', 1)->first();
 
 		return View::make('organizations.index', compact('organization','banks','bbranches','banks_db','bbranches_db'));
 	
@@ -71,10 +65,14 @@ class OrganizationsController extends \BaseController {
 	{
 		$banks = DB::table('banks')
 		->join('organizations', 'banks.id', '=', 'organizations.bank_id')
+		->where('organization_id',Confide::user()->organization_id)
+		->where('organization_id',1)
 		->get();
 
 		$bbranches = DB::table('bank_branches')
-        ->join('organizations', 'bank_branches.id', '=', 'organizations.bank_branch_id')
+                ->join('organizations', 'bank_branches.id', '=', 'organizations.bank_branch_id')
+                ->where('organization_id',Confide::user()->organization_id)
+		->where('organization_id',1)
 		->get();
 
 		$organization = Organization::findOrFail($id);
@@ -124,6 +122,21 @@ class OrganizationsController extends \BaseController {
 		$organization->bank_branch_id = Input::get('bbranch_id');
 		$organization->bank_account_number = Input::get('acc');
 		$organization->swift_code = Input::get('code');
+		/*if(Input::get('payroll_activate') != null ){
+        $organization->is_payroll_active = 1;
+        }else{
+        $organization->is_payroll_active = 0;
+        }
+        if(Input::get('erp_activate') != null ){
+        $organization->is_erp_active = 1;
+        }else{
+        $organization->is_erp_active = 0;
+        }
+        if(Input::get('cbs_activate') != null ){
+        $organization->is_cbs_active = 1;
+        }else{
+        $organization->is_cbs_active = 0;
+        }*/
 		$organization->update();
 
 		return Redirect::route('organizations.index');
@@ -207,23 +220,17 @@ public function logo($id){
 
 
 	
-
-
-
-
-
-
-	if(Input::hasFile('logo')){
+if(Input::hasFile('photo')){
 
 			$destination = public_path().'/uploads/logo/';
 
 			$filename = str_random(12);
 
-			$ext = Input::file('logo')->getClientOriginalExtension();
+			$ext = Input::file('photo')->getClientOriginalExtension();
 			$photo = $filename.'.'.$ext;
 			
 			
-			Input::file('logo')->move($destination, $photo);
+			Input::file('photo')->move($destination, $photo);
 
 			
 			$organization = Organization::findOrFail($id);
@@ -233,12 +240,7 @@ public function logo($id){
 			
 		}
 
-
-
-	
-
-		//return Redirect::to('organizations');
-
+		return Redirect::to('organizations');
 }
 
 

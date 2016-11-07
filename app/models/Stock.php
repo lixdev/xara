@@ -22,13 +22,46 @@ class Stock extends \Eloquent {
 
 	public static function getStockAmount($item){
 
-		$qin = DB::table('stocks')->where('item_id', '=', $item->id)->sum('quantity_in');
-		$qout = DB::table('stocks')->where('item_id', '=', $item->id)->sum('quantity_out');
+		$qin = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_in');
+		$qout = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_out');
 
 		$stock = $qin - $qout;
 
 		return $stock;
 	}
+
+	public static function getOpeningStock($item){
+
+		$qin = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_in');
+		$qout = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_out');
+
+		$stock = $qin - $qout;
+		
+		$opening = $stock;
+
+		return $opening;
+	}
+
+
+	public static function totalPurchases($item){
+
+		$qin = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_in');
+		
+
+		return $qin;
+	}
+
+	public static function totalsales($item){
+
+		
+		$qout = DB::table('stocks')->where('organization_id',Confide::user()->organization_id)->where('item_id', '=', $item->id)->sum('quantity_out');
+
+		
+
+		return $qout;
+	}
+
+
 
 
 	public static function addStock($item, $location, $quantity, $date){
@@ -39,6 +72,7 @@ class Stock extends \Eloquent {
 		$stock->item()->associate($item);
 		$stock->location()->associate($location);
 		$stock->quantity_in = $quantity;
+		$stock->organization_id = Confide::user()->organization_id;
 		$stock->save();
 
 
@@ -46,16 +80,15 @@ class Stock extends \Eloquent {
 	}
 
 
-	public static function removeStock($item, $location, $quantity, $date){
-
+	public static function removeStock($item, $location, $quantity, $date){		
+			
 		$stock = new Stock;
-
 		$stock->date = $date;
 		$stock->item()->associate($item);
 		$stock->location()->associate($location);
 		$stock->quantity_out = $quantity;
-		$stock->save();
-
+		$stock->organization_id = Confide::user()->organization_id;
+		$stock->save();	
 
 
 	}

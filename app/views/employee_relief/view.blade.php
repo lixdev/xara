@@ -1,6 +1,6 @@
 @extends('layouts.payroll')
 @section('content')
-<br/>
+
 <?php
 
 

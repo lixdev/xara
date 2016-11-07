@@ -9,7 +9,7 @@ class BankBranchController extends \BaseController {
 	 */
 	public function index()
 	{
-		$bbranches = BBranch::all();
+		$bbranches = BBranch::where('organization_id',1)->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Bank branches', 'view', 'viewed bank branches');
 
@@ -23,7 +23,8 @@ class BankBranchController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('bank_branch.create');
+		$banks = Bank::where('organization_id',1)->orWhere('organization_id',Confide::user()->organization_id)->get();
+		return View::make('bank_branch.create',compact('banks'));
 	}
 
 	/**
@@ -46,7 +47,9 @@ class BankBranchController extends \BaseController {
 
 		$bbranch->branch_code = Input::get('code');
 
-        $bbranch->organization_id = '1';
+		$bbranch->bank_id = Input::get('bank_id');
+
+                $bbranch->organization_id = Confide::user()->organization_id;
 
 		$bbranch->save();
 
@@ -77,8 +80,9 @@ class BankBranchController extends \BaseController {
 	public function edit($id)
 	{
 		$bbranch = BBranch::find($id);
+		$banks = Bank::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
-		return View::make('bank_branch.edit', compact('bbranch'));
+		return View::make('bank_branch.edit', compact('bbranch','banks'));
 	}
 
 	/**
@@ -100,6 +104,7 @@ class BankBranchController extends \BaseController {
 
 		$bbranch->bank_branch_name = Input::get('name');
 		$bbranch->branch_code = Input::get('code');
+		$bbranch->bank_id = Input::get('bank_id');
 		$bbranch->update();
 
 		Audit::logaudit('Bank Branch', 'update', 'updated: '.$bbranch->bank_branch_name);
@@ -122,6 +127,7 @@ class BankBranchController extends \BaseController {
 		Audit::logaudit('Bank Branch', 'delete', 'deleted: '.$bbranch->bank_branch_name);
 
 		return Redirect::route('bank_branch.index')->withDeleteMessage('Bank Branch successfully deleted!');
-	}
+
+  }
 
 }

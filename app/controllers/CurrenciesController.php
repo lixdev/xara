@@ -9,7 +9,7 @@ class CurrenciesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$currencies = Currency::all();
+		$currencies = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('currencies.index', compact('currencies'));
 	}
@@ -42,6 +42,7 @@ class CurrenciesController extends \BaseController {
 
 		$currency->name = Input::get('name');
 		$currency->shortname = Input::get('shortname');
+		$currency->organization_id = Confide::user()->organization_id;
 		$currency->save();
 
 		Audit::logaudit('Currency', 'create', 'created: '.$currency->name);
@@ -58,7 +59,7 @@ class CurrenciesController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$currency = Currency::findOrFail($id);
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		Audit::logaudit('Currency', 'view', 'viewed: '.$currency->name);
 
@@ -87,7 +88,7 @@ class CurrenciesController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$currency = Currency::findOrFail($id);
+		$currency = Currency::find($id);
 
 		$validator = Validator::make($data = Input::all(), Currency::$rules);
 

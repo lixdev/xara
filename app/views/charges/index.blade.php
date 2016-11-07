@@ -1,6 +1,5 @@
 @extends('layouts.charge')
 @section('content')
-<br/>
 
 <?php
 

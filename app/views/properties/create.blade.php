@@ -21,7 +21,6 @@ console.log($("#issuedby").val());
 </script>
 
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -49,7 +48,16 @@ console.log($("#issuedby").val());
    
     <fieldset>
 
-       <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee" value="{{ $id }}"> 
+       <div class="form-group">
+                        <label for="username">Employee <span style="color:red">*</span></label>
+                        <select name="employee_id" class="form-control">
+                           <option></option>
+                            @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}"> {{ $employee->first_name.' '.$employee->middle_name.' '.$employee->last_name }}</option>
+                            @endforeach
+                        </select>
+                
+                    </div>   
                 
                          
         <div class="form-group">
@@ -74,12 +82,10 @@ console.log($("#issuedby").val());
 
          <div class="form-group">
             <label for="username">Amount <span style="color:red">*</span></label>
+            <div class="input-group">
+            <span class="input-group-addon">{{$currency->shortname}}</span>
             <input class="form-control" placeholder="" type="text" name="amount" id="amount" value="{{{ Input::old('amount') }}}">
-            <script type="text/javascript">
-           $(document).ready(function() {
-           $('#amount').priceFormat();
-           });
-           </script>
+            </div>
         </div>
         
         <div class="form-group">
@@ -89,14 +95,17 @@ console.log($("#issuedby").val());
 
         <div class="form-group">
             <label for="username">Issue Date <span style="color:red">*</span></label>
-            <input class="form-control" readonly placeholder="" type="text" name="idate" id="idate" value="{{date('Y-m-d')}}">
+             <div class="right-inner-addon ">
+            <i class="glyphicon glyphicon-calendar"></i>
+            <input class="form-control expiry" readonly placeholder="" type="text" name="idate" id="idate" value="{{date('Y-m-d')}}">
+        </div>
         </div>
 
         <div class="form-group">
             <label for="username">Scheduled Return Date <span style="color:red">*</span></label>
             <div class="right-inner-addon ">
             <i class="glyphicon glyphicon-calendar"></i>
-            <input class="form-control datepicker4" readonly placeholder="" type="text" name="sdate" id="sdate" value="{{date('Y-m-d')}}">
+            <input class="form-control expiry" readonly placeholder="" type="text" name="sdate" id="sdate" value="{{date('Y-m-d')}}">
             </div>
         </div>
 

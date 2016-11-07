@@ -1,3 +1,4 @@
+<div class="main_wrapper">
 @include('includes.head')
 @include('includes.nav')
 @include('includes.nav_rep_payroll')
@@ -13,3 +14,4 @@
         </div>
         <!-- /#page-wrapper -->
 @include('includes.footer')
+</div>

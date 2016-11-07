@@ -32,7 +32,7 @@ class Loantransaction extends \Eloquent {
 
 		//$balance = $loan_amount - $total_paid;
 
-		$payments = DB::table('loantransactions')->where('loanaccount_id', '=', $loanaccount->id)->where('type', '=', 'credit')->sum('amount');
+		$payments = DB::table('loantransactions')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->where('type', '=', 'credit')->sum('amount');
 
 		
 		$loanamount = Loanaccount::getLoanAmount($loanaccount);
@@ -46,7 +46,7 @@ class Loantransaction extends \Eloquent {
 
 	public static function getRemainingPeriod($loanaccount){
 
-		$paid_periods = DB::table('loantransactions')->where('loanaccount_id', '=', $loanaccount->id)->where('description', '=', 'loan repayment')->count();
+		$paid_periods = DB::table('loantransactions')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount->id)->where('description', '=', 'loan repayment')->count();
 
 		$remaining_period = $loanaccount->repayment_duration - $paid_periods;
 
@@ -161,6 +161,7 @@ class Loantransaction extends \Eloquent {
 		$transaction->description = 'loan repayment';
 		$transaction->amount = $amount;
 		$transaction->type = 'credit';
+		$transaction->organization_id = Confide::user()->organization_id;
 		$transaction->save();
 
 		Audit::logAudit($date, Confide::user()->username, 'loan repayment', 'Loans', $amount);
@@ -180,6 +181,7 @@ class Loantransaction extends \Eloquent {
 		$transaction->description = 'loan disbursement';
 		$transaction->amount = $amount;
 		$transaction->type = 'debit';
+		$transaction->organization_id = Confide::user()->organization_id;
 		$transaction->save();
 
 
@@ -188,6 +190,7 @@ class Loantransaction extends \Eloquent {
 		$data = array(
 			'credit_account' =>$account['credit'] , 
 			'debit_account' =>$account['debit'] ,
+			'organization_id' =>Confide::user()->organization_id ,
 			'date' => $date,
 			'amount' => $loanaccount->amount_disbursed,
 			'initiated_by' => 'system',
@@ -219,6 +222,7 @@ class Loantransaction extends \Eloquent {
 		$transaction->description = 'loan top up';
 		$transaction->amount = $amount;
 		$transaction->type = 'debit';
+		$transaction->organization_id = Confide::user()->organization_id;
 		$transaction->save();
 
 
@@ -228,6 +232,7 @@ class Loantransaction extends \Eloquent {
 			'credit_account' =>$account['credit'] , 
 			'debit_account' =>$account['debit'] ,
 			'date' => $date,
+			'organization_id' =>Confide::user()->organization_id ,
 			'amount' => $loanaccount->top_up_amount,
 			'initiated_by' => 'system',
 			'description' => 'loan top up'
@@ -246,6 +251,53 @@ class Loantransaction extends \Eloquent {
 
 	}
 
+
+
+	public static function trasactionExists($date, $loanaccount){
+
+
+		$dt = explode('-', $date);
+		$mnth = $dt[1];
+
+		$dates = DB::table('loantransactions')->where('organization_id',Confide::user()->organization_id)->where('loanaccount_id', '=', $loanaccount)->get();
+
+		foreach ($dates as $date) {
+
+			$dat = explode('-', $date->date);
+			$month = $dat[1];
+			
+			if($mnth == $month){
+
+				return true;
+			} else {
+
+				return false;
+			}
+
+		}
+
+		
+	}
+
+    public static function getMember($id){
+
+		$loanaccount = Loanaccount::find($id);
+
+		$member = Member::find($loanaccount->member_id);
+
+		return $member->name." - ".$member->membership_no;
+	}
+
+
+
+	public static function getLoanaccount($id){
+
+		$loanaccount = Loanaccount::find($id);
+
+		
+
+		return $loanaccount->account_number;
+	}
 
 
 

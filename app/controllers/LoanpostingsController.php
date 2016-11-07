@@ -9,7 +9,7 @@ class LoanpostingsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$loanpostings = Loanposting::all();
+		$loanpostings = Loanposting::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('loanpostings.index', compact('loanpostings'));
 	}

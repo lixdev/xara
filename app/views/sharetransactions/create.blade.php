@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -47,8 +46,12 @@
 
         <div class="form-group">
             <label for="username"> Date</label>
-            <input class="form-control" placeholder="" type="date" name="date" id="date" value="{{{ Input::old('date') }}}" required>
-        </div>
+            <div class="right-inner-addon ">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <input class="form-control datepicker"  readonly="readonly" placeholder=""  type="text" name="date" id="date" value="{{{ Input::old('date') }}}" required>
+                        </div>
+                        </div>
+            
 
 
         <div class="form-group">

@@ -1,5 +1,6 @@
 @extends('layouts.leave')
 @section('content')
+
 <div class="row">
 	<div class="col-lg-12">
 
@@ -29,6 +30,16 @@
         <th>Action</th>
 
       </thead>
+
+     
+      <tfoot>
+
+        <th>#</th>
+        <th>Holiday Name</th>
+        <th>Holiday Date</th>
+
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>

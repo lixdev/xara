@@ -67,7 +67,7 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">
     
         </td>
 

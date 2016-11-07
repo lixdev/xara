@@ -1,3 +1,4 @@
+<div class="main_wrapper">
 @include('includes.head')
 @include('includes.nav_memberdash')
 @include('includes.nav_css_member')
@@ -13,3 +14,4 @@
         </div>
         <!-- /#page-wrapper -->
 @include('includes.footer')
+</div>

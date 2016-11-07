@@ -1,6 +1,5 @@
-@extends('layouts.accounting')
+@extends('layouts.member')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">

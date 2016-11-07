@@ -1,6 +1,6 @@
 @extends('layouts.loans')
+
 @section('content')
-<br/>
 
 <?php
 
@@ -32,8 +32,8 @@ function asMoney($value) {
     <!-- <li role="presentation"><a href="#amended" aria-controls="profile" role="tab" data-toggle="tab">Amended Applications</a></li>
     -->
     <li role="presentation"><a href="#approved" aria-controls="messages" role="tab" data-toggle="tab">Approved Applications</a></li>
-   <!-- <li role="presentation"><a href="#rejected" aria-controls="messages" role="tab" data-toggle="tab">Rejected Applications</a></li>
-   -->
+    <li role="presentation"><a href="#rejected" aria-controls="messages" role="tab" data-toggle="tab">Rejected Applications</a></li>
+   
    <li role="presentation"><a href="#disbursed" aria-controls="messages" role="tab" data-toggle="tab">Disbursed Loans</a></li>
   </ul>
 
@@ -89,11 +89,11 @@ function asMoney($value) {
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul style="margin-left:0px" class="dropdown-menu" role="menu">
                     <!-- <li><a href="{{URL::to('loans/edit/'.$loanaccount->id)}}">Amend</a></li> -->
                    
                     <li><a href="{{URL::to('loans/approve/'.$loanaccount->id)}}">Approve</a></li>
-                    <!-- <li><a href="{{URL::to('loans/reject/'.$loanaccount->id)}}">Reject</a></li> -->
+                    <li><a href="{{URL::to('loans/reject/'.$loanaccount->id)}}">Reject</a></li> 
                     
                   </ul>
                   </div>
@@ -120,7 +120,7 @@ function asMoney($value) {
 
 
 
-    <div role="tabpanel" class="tab-pane" id="amended">
+    <div role="tabpanel" class="tab-pane" id="">
       <br>
 
       <div class="col-lg-12">
@@ -135,7 +135,7 @@ function asMoney($value) {
 
         <div class="panel-body">
    
-          <table id="amended" class="table table-condensed table-hover table-bodered">
+          <table id="" class="table table-condensed table-hover table-bodered">
 
             <thead>
 
@@ -197,6 +197,63 @@ function asMoney($value) {
 
 
 
+  <div role="tabpanel" class="tab-pane" id="rejected">
+      <br>
+
+      <div class="col-lg-12">
+
+
+        <div class="panel panel-default">
+            
+          <div class="panel-heading">
+            <p>Rejected Applications</p>
+
+          </div>
+
+        <div class="panel-body">
+   
+          <table style="width:100%" id="rej" class="table table-condensed table-hover table-bodered">
+
+            <thead>
+
+              <th>Member</th>
+              <th>Loan Type</th>
+              <th>Date Applied</th>
+              <th>Amount Applied</th>
+              <th>Period (months)</th>
+              <th>Interest Rate (monthly)</th>
+              <th>Rejection Reason</th>
+
+            </thead>
+            <tbody>
+
+              @foreach($loanaccounts as $loanaccount)
+              @if($loanaccount->is_rejected)
+
+                <tr>
+                  <td>{{ $loanaccount->member->name}}</td>
+                  <td>{{ $loanaccount->loanproduct->name}}</td>
+                  <td>{{ $loanaccount->application_date}}</td>
+                  <td>{{ $loanaccount->amount_applied}}</td>
+                  <td>{{ $loanaccount->repayment_duration}}</td>
+                  <td>{{ $loanaccount->interest_rate.' %'}}</td>
+                    <td>{{ $loanaccount->rejection_reason}}</td> 
+                </tr>
+
+                @endif
+              @endforeach
+
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
 
 
 
@@ -216,7 +273,7 @@ function asMoney($value) {
 
         <div class="panel-body">
    
-          <table id="mobile" class="table table-condensed table-hover table-bodered">
+          <table style="width:100%" id="mobile" class="table table-condensed table-hover table-bodered">
 
             <thead>
 
@@ -243,16 +300,14 @@ function asMoney($value) {
                   <td>{{ $loanaccount->interest_rate}}</td>
                   <td>
 
-                       <div class="btn-group">
+                  <div class="btn-group">
                   <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="{{URL::to('loans/disburse/'.$loanaccount->id)}}">Disburse</a></li>
-                   
-                    
-                    
+                  <ul style="margin-left:0px" class="dropdown-menu" role="menu">
+                  <li><a href="{{URL::to('loans/disburse/'.$loanaccount->id)}}">Disburse</a></li>
+
                   </ul>
                   </div>
 
@@ -278,74 +333,6 @@ function asMoney($value) {
 
 
 
-
-
-
-  <div role="tabpanel" class="tab-pane" id="rejected">
-      <br>
-
-      <div class="col-lg-12">
-
-
-        <div class="panel panel-default">
-            
-          <div class="panel-heading">
-            <p>Rejected Applications</p>
-
-          </div>
-
-        <div class="panel-body">
-   
-          <table id="o" class="table table-condensed table-hover table-bodered">
-
-            <thead>
-
-              <th>Member</th>
-              <th>Loan Type</th>
-              <th>Date Applied</th>
-              <th>Amount Applied</th>
-              <th>Period (months)</th>
-              <th>Interest Rate (monthly)</th>
-             
-
-            </thead>
-            <tbody>
-
-              @foreach($loanaccounts as $loanaccount)
-              @if($loanaccount->is_rejected)
-
-                <tr>
-                  <td>{{ $loanaccount->member->name}}</td>
-                  <td>{{ $loanaccount->loanproduct->name}}</td>
-                  <td>{{ $loanaccount->date_applied}}</td>
-                  <td>{{ $loanaccount->amount_applied}}</td>
-                  <td>{{ $loanaccount->repayment_duration}}</td>
-                  <td>{{ $loanaccount->interest_rate}}</td>
-                  
-                </tr>
-
-                @endif
-              @endforeach
-
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-
-
-
-
-
-
-
-
 <div role="tabpanel" class="tab-pane" id="disbursed">
       <br>
 
@@ -361,7 +348,7 @@ function asMoney($value) {
 
         <div class="panel-body">
    
-          <table id="rejected" class="table table-condensed table-hover table-bodered">
+          <table style="width:100%" id="disb" class="table table-condensed table-hover table-bodered">
 
             <thead>
 
@@ -388,16 +375,14 @@ function asMoney($value) {
                   <td>{{ $loanaccount->interest_rate}}</td>
                   <td>
 
-                       <div class="btn-group">
+                  <div class="btn-group">
                   <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul style="margin-left:0px" class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('loans/show/'.$loanaccount->id)}}">Manage</a></li>
-                   
-                    
-                    
+
                   </ul>
                   </div>
 

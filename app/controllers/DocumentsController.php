@@ -19,6 +19,12 @@ class DocumentsController extends \BaseController {
 		return View::make('documents.index', compact('documents'));
 	}
 
+	public function serializecheck(){
+		
+        return Input::get('path');
+        
+	}
+
 	/**
 	 * Show the form for creating a new branch
 	 *
@@ -64,6 +70,10 @@ class DocumentsController extends \BaseController {
         }
 
         $document->description = Input::get('desc');
+
+        $document->from_date = Input::get('fdate');
+
+        $document->expiry_date = Input::get('edate');
 
 		$document->save();
 
@@ -133,6 +143,10 @@ class DocumentsController extends \BaseController {
         }
 
         $document->description = Input::get('desc');
+
+        $document->from_date = Input::get('fdate');
+
+        $document->expiry_date = Input::get('edate');
 
 		$document->update();
 

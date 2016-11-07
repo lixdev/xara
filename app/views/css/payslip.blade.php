@@ -1,6 +1,5 @@
 @extends('layouts.membercss')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -24,7 +23,7 @@
         </div>
         @endif
 
-		 <form method="POST" action="{{URL::to('payrollReports/payslip')}}" accept-charset="UTF-8">
+		 <form target="blank" method="POST" action="{{URL::to('payrollReports/payslip')}}" accept-charset="UTF-8">
    
     <fieldset>
 

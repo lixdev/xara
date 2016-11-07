@@ -29,7 +29,7 @@ class Autoprocess extends \Eloquent {
 		$autoprocess->category = $category;
 		$autoprocess->product_id = $product->id;
 		$autoprocess->is_completed = true;
-
+                $autoprocess->organization_id = Confide::user()->organization_id;
 		$autoprocess->save();
 
 	}
@@ -46,7 +46,7 @@ class Autoprocess extends \Eloquent {
 
 		$period = $month."-".$year;
 
-		$processed = DB::table('autoprocesses')->where('period', '=', $period)->where('product_id', '=', $product->id)->where('category', '=', $category)->where('is_completed', '=', true)->first();
+		$processed = DB::table('autoprocesses')->where('period', '=', $period)->where('product_id', '=', $product->id)->where('category', '=', $category)->where('is_completed', '=', true)->where('organization_id', '=', Confide::user()->organization_id)->first();
 
 		if(is_null($processed)){
 			return false;

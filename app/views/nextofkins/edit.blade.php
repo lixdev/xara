@@ -1,6 +1,5 @@
 @extends('layouts.main')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -31,8 +30,18 @@
             <input class="form-control" placeholder="" type="hidden" readonly name="employee_id" id="employee_id" value="{{ $kin->employee->id }}">
 
         <div class="form-group">
-            <label for="username">Kin Name</label>
-            <input class="form-control" placeholder="" type="text" name="name" id="name" value="{{ $kin->name }}">
+            <label for="username">First Name</label>
+            <input class="form-control" placeholder="" type="text" name="fname" id="fname" value="{{ $kin->first_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Middle Name</label>
+            <input class="form-control" placeholder="" type="text" name="mname" id="mname" value="{{ $kin->middle_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="username">last Name</label>
+            <input class="form-control" placeholder="" type="text" name="lname" id="lname" value="{{ $kin->last_name }}">
         </div>
 
         <div class="form-group">

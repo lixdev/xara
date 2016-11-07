@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('content')
-<br/>
-<?php
 
+<?php
 
 function asMoney($value) {
   return number_format($value, 2);
@@ -29,7 +28,7 @@ function asMoney($value) {
 
 <a class="btn btn-info btn-sm "  href="{{ URL::to('occurences/edit/'.$occurence->id)}}">update details</a>
 <a class="btn btn-danger btn-sm " href="{{URL::to('occurences/delete/'.$occurence->id)}}" onclick="return (confirm('Are you sure you want to delete this employee`s occurence?'))">Delete</a>
-<a class="btn btn-success btn-sm "  href="{{ URL::to('employees/view/'.$occurence->employee->id)}}">Go Back</a>
+<a class="btn btn-success btn-sm "  href="{{ URL::to('occurences')}}">Go Back</a>
 
 <hr>
 </div>	
@@ -56,8 +55,13 @@ function asMoney($value) {
       @endif
       </tr>
       <tr><td><strong>Occurence Brief: </strong></td><td>{{$occurence->occurence_brief}}</td></tr>
-      <tr><td><strong>Occurence Type: </strong></td><td>{{$occurence->occurence_type}}</td></tr>
+      <tr><td><strong>Occurence Type: </strong></td><td>{{Occurencesetting::getOccurenceType($occurence->occurencesetting_id)}}</td></tr>
       <tr><td><strong>Narrative: </strong></td><td>{{$occurence->narrative}}</td></tr>
+      @if($occurence->doc_path!=null || $occurence->doc_path!='')
+      <tr><td><strong>Attached Document: </strong></td><td>{{$occurence->doc_path.' - '}}<a href='{{asset("public/uploads/employees/documents/".$occurence->doc_path)}}'>Download <i class="glyphicon glyphicon-download"></i></a></td></tr>
+      @else
+      <tr><td><strong>Attached Document: </strong></td><td>None</td></tr>
+      @endif
       <?php
        $d=strtotime($occurence->occurence_date);
       ?>

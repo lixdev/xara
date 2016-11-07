@@ -7,10 +7,6 @@
 
 <div class="col-lg-12 ">
 
-
-
-		<br/>
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
     			<a  href="{{URL::to('products/create')}}" class="btn btn-success btn-sm" >New Product</a>

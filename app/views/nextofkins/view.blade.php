@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('content')
-<br/>
-<?php
 
+<?php
 
 function asMoney($value) {
   return number_format($value, 2);
@@ -55,7 +54,11 @@ function asMoney($value) {
       <td><strong>Employee: </strong></td><td> {{$kin->employee->last_name.' '.$kin->employee->first_name}}</td>
       @endif
       </tr>
-      <tr><td><strong>Kin: </strong></td><td>{{$kin->name}}</td></tr>
+      @if($kin->middle_name == '')
+          <td><strong>Kin Name</strong></td><td>{{ $kin->first_name.' '.$kin->last_name }}</td>
+          @else
+          <td><strong>Kin Name</strong></td><td>{{ $kin->first_name.' '.$kin->middle_name.' '.$kin->last_name }}</td>
+          @endif
       <tr><td><strong>Relationship: </strong></td><td>{{$kin->relationship}}</td></tr>
       <tr><td><strong>Contact Info: </strong></td><td><pre style="background:none;border:0;margin-left:-9px;margin-top:-6px;font-family:Sans-serif;font-size:14px;">{{$kin->contact}}</pre></td></tr>
       <tr><td><strong>Kin ID Number: </strong></td><td>{{$kin->id_number}}</td></tr>

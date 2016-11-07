@@ -9,7 +9,7 @@ class AllowancesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$allowances = Allowance::all();
+		$allowances = Allowance::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
         
 		Audit::logaudit('Allowances', 'view', 'viewed allowances');
@@ -46,7 +46,7 @@ class AllowancesController extends \BaseController {
 
 		$allowance->allowance_name = Input::get('name');
 
-        $allowance->organization_id = '1';
+                $allowance->organization_id = Confide::user()->organization_id;
 
 		$allowance->save();
 
@@ -116,11 +116,20 @@ class AllowancesController extends \BaseController {
 	public function destroy($id)
 	{
 		$allowance = Allowance::findOrFail($id);
+
+        $allc  = DB::table('employee_allowances')->where('allowance_id',$id)->count();
+		if($id == 1 || $id == 2){
+			return Redirect::route('allowances.index')->withDeleteMessage('Cannot delete this allowance!');
+		}elseif($allc>0){
+			return Redirect::route('allowances.index')->withDeleteMessage('Cannot delete this allowance because its assigned to an employee(s)!');
+		} else{
+
 		Allowance::destroy($id);
 
 		Audit::logaudit('Allowances', 'delete', 'deleted: '.$allowance->allowance_name);
 
 		return Redirect::route('allowances.index')->withDeleteMessage('Allowance successfully deleted!');
 	}
+}
 
 }

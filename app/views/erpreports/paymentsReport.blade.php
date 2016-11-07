@@ -39,15 +39,15 @@ body {
   line-height: 1.428571429;
   color: #333;
   background-color: #fff;
-}
 
 
-
- @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ @page { margin: 50px 30px; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 100px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
- .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
+ .footer { position: fixed; left: 0px; bottom: -60px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
+
+
 
 
 
@@ -58,7 +58,7 @@ body {
 <body>
 
   <div class="header">
-     <table >
+       <table >
 
       <tr>
 
@@ -66,17 +66,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{asset('public/uploads/logo/'.$organization->logo)}}" alt="logo" width="100%">
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
-          {{ $organization->website}}<br>
+          {{ strtoupper($organization->name)}}
+          </strong><br><p>
+          {{ $organization->phone}}<br><p> 
+          {{ $organization->email}}<br><p> 
+          {{ $organization->website}}<br><p>
           {{ $organization->address}}
        
 
@@ -103,8 +103,9 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
-   <div align="center"><strong>Items Report</strong></div>
+	<div class="content" style='margin-top:70px;'>
+   <!-- <div align="center"><strong>Payment Report as at {{date('d-M-Y')}}</strong></div><br> -->
+   <div align="center"><strong>Payments Report as from:  {{$from}} To:  {{$to}}</strong></div><br>
 
     <table class="table table-bordered" border='1' cellspacing='0' cellpadding='0'>
 
@@ -112,20 +113,35 @@ body {
         
 
 
-        <td width='20'><strong># </strong></td>
-        <td><strong>Client</strong></td>
-        <td><strong>Item</strong></td>
-        <td><strong>Receipt Number </strong></td>
-        <td><strong>Amount</strong></td>
-        <td><strong>Received By </strong></td>
-        <td><strong>Date </strong></td>
+        <th width='20'><strong># </strong></th>
+        
+        <th align="center"><strong>Client</strong></th>
+        <th align="center"><strong>Type </strong></th>
+        <th align="right"><strong>Amount</strong></th>        
+        <th align="center"><strong>Accepted By </strong></th>
+        <th align="center"><strong>Date </strong></th>
       </tr>
-      <?php $i =1; ?>
-      @foreach($payments as $payment)
-      <tr>
+     
+
+       <?php $i = 1; ?>
+        @foreach($payments as $payment)
+
+        <tr>
+
+          <td> {{ $i }}</td>
+          
+          <td align="center">{{ $payment->client->name }}</td>         
+         
+          
+         <td align="center">{{ $payment->client->type }}</td>          
+          <td align="right">{{ asMoney($payment->amount_paid) }}</td>
+          <td align="center"> {{ $payment->received_by }}</td>
+          <td align="center">{{ date("d-M-Y",strtotime($payment->date)) }}</td>
+          
 
 
-       <td td width='20'>{{$i}}</td>
+
+       <!-- <td td width='20'>{{$i}}</td>
        @foreach($erporders as $erporder)
        <td>{{ $erporder->client->name }}</td>
        @endforeach
@@ -138,7 +154,7 @@ body {
         <td align="right"> {{ asMoney($payment->amount_paid) }}</td>
         <td> {{ $payment->received_by }}</td>
         <td> {{ date("d-M-Y",strtotime($payment->date)) }}</td>
-        </tr>
+        </tr> -->
       <?php $i++; ?>
    
     @endforeach

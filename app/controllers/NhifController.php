@@ -9,7 +9,7 @@ class NhifController extends \BaseController {
 	 */
 	public function index()
 	{
-		$nrates = DB::table('hospital_insurance')->where('income_from', '!=', 0.00)->get();
+		$nrates = DB::table('hospital_insurance')->whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->where('income_from', '!=', 0.00)->get();
 
 		Audit::logaudit('NHIF', 'view', 'viewed nhif rates');
 		return View::make('nhif.index', compact('nrates'));
@@ -51,7 +51,7 @@ class NhifController extends \BaseController {
 
 		$nrate->hi_amount = $c;
 
-        $nrate->organization_id = '1';
+        $nrate->organization_id = Confide::user()->organization_id;
 
 		$nrate->save();
 

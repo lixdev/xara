@@ -5,7 +5,6 @@
 
 
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -41,6 +40,7 @@
             <label for="username">Benefits</label><label for="username" style="margin-left:150px">Amount</label>
             <?php $i = 1; ?>
             @foreach($benefits as $benefit)
+            <input type="hidden" name="chbox[]" value="{{$benefit->id}}" />
             <table>
             <tr><td width="200">
 
@@ -48,6 +48,7 @@
                              {{$benefit->benefit_name}}
             </td>
             <td>
+            
             <input class="form-control" placeholder="" type="text" name="amount[]" id="{{'amount_'.$i}}">
             </td>
             </tr>
@@ -56,18 +57,19 @@
 
             <script type="text/javascript">
             $(document).ready(function(){
-            $("#amount_"+<?php echo $i;?>).hide();
+            $("#amount_"+<?php echo $i;?>).attr('readonly',true);
             $("#amount_"+<?php echo $i;?>).val('0.00');
             $('#benefitid_'+<?php echo $i;?>).click(function(){
 
             if($('#benefitid_'+<?php echo $i;?>).is(":checked")){
             $('#benefitid_'+<?php echo $i;?>+':checked').each(function(){
 
-            $("#amount_"+<?php echo $i;?>).show();
+            $("#amount_"+<?php echo $i;?>).attr('readonly',false);
             $("#amount_"+<?php echo $i;?>).val('0.00');
             });
             }else{
-            $("#amount_"+<?php echo $i;?>).hide();
+            $("#amount_"+<?php echo $i;?>).attr('readonly',true);
+            $("#amount_"+<?php echo $i;?>).val('0.00');
             }
             });
             $("#amount_"+<?php echo $i;?>).priceFormat();

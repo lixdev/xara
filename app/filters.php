@@ -34,6 +34,7 @@ Event::listen('audit', function($entity, $action, $description) {
     $audit->user = Confide::user()->username;
     $audit->entity = $entity;
     $audit->action = $action;
+    $audit->organization_id= Confide::user()->organization_id;
     $audit->save();
 });
 
@@ -43,12 +44,12 @@ Event::listen('audit', function($entity, $action, $description) {
 
 Route::filter('limit', function(){
 
-	$organization = Organization::find(1);
+	$organization = Organization::find(Confide::user()->organization_id);
 
 
 	$members = count(Member::all());
 
-	if($organization->licensed <= $members){
+	if($organization->cbs_licensed <= $members){
 
 		return View::make('members.memberlimit');
 	}
@@ -58,7 +59,7 @@ Route::filter('limit', function(){
 
 Route::filter('license', function(){
 
-$organization = Organization::find(1);
+$organization = Organization::find(Confide::user()->organization_id);
 
 $string = $organization->name;
 $license_key =$organization->license_key;

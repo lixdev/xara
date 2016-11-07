@@ -12,7 +12,8 @@ class OvertimesController extends \BaseController {
 		$overtimes = DB::table('employee')
 		          ->join('overtimes', 'employee.id', '=', 'overtimes.employee_id')
 		          ->where('in_employment','=','Y')
-		          ->select('overtimes.id','type','first_name','last_name','rate','amount','period')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
+		          ->select('overtimes.id','type','first_name','middle_name','last_name','amount','period')
 		          ->get();
 
 		Audit::logaudit('Overtimes', 'view', 'viewed employee overtime');
@@ -29,9 +30,10 @@ class OvertimesController extends \BaseController {
 	{
 		$employees = DB::table('employee')
 		          ->where('in_employment','=','Y')
+		          ->where('employee.organization_id',Confide::user()->organization_id)
 		          ->get();
-
-		return View::make('overtime.create', compact('employees'));
+                $currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
+		return View::make('overtime.create', compact('employees','currency'));
 	}
 
 	/**
@@ -52,15 +54,53 @@ class OvertimesController extends \BaseController {
         
         $overtime->employee_id = Input::get('employee');
 
-		$overtime->type = Input::get('type');
-
-		$overtime->rate = Input::get('rate');
+        $overtime->type = Input::get('type');
 
 		$overtime->period = Input::get('period');
+
+		$overtime->formular = Input::get('formular');
+
+		if(Input::get('formular') == 'Instalments'){
+		$overtime->instalments = Input::get('instalments');
+        $insts = Input::get('instalments');
 
 		$a = str_replace( ',', '', Input::get('amount') );
 
 		$overtime->amount = $a;
+
+        $d=strtotime(Input::get('odate'));
+
+        $overtime->overtime_date = date("Y-m-d", $d);
+
+        $effectiveDate = date('Y-m-d', strtotime("+".($insts-1)." months", strtotime(Input::get('odate'))));
+
+        $First  = date('Y-m-01', strtotime(Input::get('odate')));
+        $Last   = date('Y-m-t', strtotime($effectiveDate));
+
+        $overtime->first_day_month = $First;
+
+        $overtime->last_day_month = $Last;
+
+	    }else{
+	    $overtime->instalments = '1';
+        $a = str_replace( ',', '', Input::get('amount') );
+
+		$overtime->amount = $a;
+
+        $d=strtotime(Input::get('odate'));
+
+        $overtime->overtime_date = date("Y-m-d", $d);
+
+        $First  = date('Y-m-01', strtotime(Input::get('odate')));
+        $Last   = date('Y-m-t', strtotime(Input::get('odate')));
+        
+
+        $overtime->first_day_month = $First;
+
+        $overtime->last_day_month = $Last;
+
+	    }
+
 
 		$overtime->save();
 
@@ -92,8 +132,9 @@ class OvertimesController extends \BaseController {
 	public function edit($id)
 	{
 		$overtime = Overtime::find($id);
+		$currency = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->first();
 
-		return View::make('overtime.edit', compact('overtime'));
+		return View::make('overtime.edit', compact('overtime','currency'));
 	}
 
 	/**
@@ -113,14 +154,52 @@ class OvertimesController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$overtime->type = Input::get('type');
+        $overtime->type = Input::get('type');
 
 		$overtime->period = Input::get('period');
 
-		$overtime->rate = Input::get('rate');
+        $overtime->formular = Input::get('formular');
+
+		if(Input::get('formular') == 'Instalments'){
+		$overtime->instalments = Input::get('instalments');
+        $insts = Input::get('instalments');
+
+		$a = str_replace( ',', '', Input::get('amount') );
+
+		$overtime->amount = $a;
+
+        $d=strtotime(Input::get('odate'));
+
+        $overtime->overtime_date = date("Y-m-d", $d);
+
+        $effectiveDate = date('Y-m-d', strtotime("+".($insts-1)." months", strtotime(Input::get('odate'))));
+
+        $First  = date('Y-m-01', strtotime(Input::get('odate')));
+        $Last   = date('Y-m-t', strtotime($effectiveDate));
+
+        $overtime->first_day_month = $First;
+
+        $overtime->last_day_month = $Last;
+
+	    }else{
+	    $overtime->instalments = '1';
         $a = str_replace( ',', '', Input::get('amount') );
 
 		$overtime->amount = $a;
+
+        $d=strtotime(Input::get('odate'));
+
+        $overtime->overtime_date = date("Y-m-d", $d);
+
+        $First  = date('Y-m-01', strtotime(Input::get('odate')));
+        $Last   = date('Y-m-t', strtotime(Input::get('odate')));
+        
+
+        $overtime->first_day_month = $First;
+
+        $overtime->last_day_month = $Last;
+
+	    }
 
 		$overtime->update();
 
@@ -149,7 +228,7 @@ class OvertimesController extends \BaseController {
 
 		$overtime = Overtime::find($id);
 
-		$organization = Organization::find(1);
+		$organization = Organization::find(Confide::user()->organization_id);
 
 		return View::make('overtime.view', compact('overtime'));
 		

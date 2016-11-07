@@ -1,6 +1,5 @@
 @extends('layouts.system')
 @section('content')
-<br/><br/>
 
 <div class="row">
 	<div class="col-lg-1">
@@ -29,15 +28,17 @@
 <div class="col-lg-5 ">
 
 	
-<form method="POST" action="{{{ URL::to('automated') }}}"  enctype="multipart/form-data">
+<form method="POST" action="{{{ URL::to('automated/autoloans') }}}"  enctype="multipart/form-data">
  
 
 <input type="hidden" value="loans" name="category">
 
 
+
+
         <div class="form-group loanproduct" id="loanproduct">
             <label for="username">Loan Products </label>
-            <select name="loanproduct" class="form-control " >
+            <select name="loanproduct_id" class="form-control " >
 
                 <?php $date = date('Y-m-d'); $category = 'loan'; ?>
                 @foreach($loanproducts as $loanproduct)
@@ -49,6 +50,15 @@
 
             </select>
         </div>
+
+
+
+         <div class="form-group " >
+
+            <label>Period</label>
+            <input type="text" class="form-control datepicker2" readonly="readonly" name="period">
+
+         </div>
 
 
         

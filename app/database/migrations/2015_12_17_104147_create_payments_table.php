@@ -14,13 +14,16 @@ class CreatePaymentsTable extends Migration {
 	{
 		Schema::create('payments', function(Blueprint $table)
 		{
-			$table->increments('id');
+			$table->increments('id');			
+			$table->integer('client_id')->unsigned();
+			$table->integer('account_id')->unsigned();
 			$table->integer('erporder_id')->unsigned();
 			$table->foreign('erporder_id')->references('id')->on('erporders');
 			$table->date('date')->nullable();
 			$table->double('amount_paid')->default(0);
-			$table->string('receipt_no')->nullable();
 			$table->string('received_by')->nullable();
+			$table->integer('paymentmethod_id')->unsigned();
+			$table->foreign('paymentmethod_id')->references('id')->on('paymentmethods');
 			$table->timestamps();
 		});
 	}

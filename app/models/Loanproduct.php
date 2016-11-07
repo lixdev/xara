@@ -54,6 +54,8 @@ class Loanproduct extends \Eloquent {
 		$loanproduct->formula = array_get($data, 'formula');
 		$loanproduct->amortization = array_get($data, 'amortization');
 		$loanproduct->currency = array_get($data, 'currency');
+		$loanproduct->period = array_get($data, 'period');
+		$loanproduct->organization_id= Confide::user()->organization_id;
 		$loanproduct->save();
 
 		Audit::logAudit(date('Y-m-d'), Confide::user()->username, 'loan product creation', 'Loans', '0');

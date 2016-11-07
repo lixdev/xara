@@ -17,10 +17,11 @@ class CreateXSavingproductsTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->string('shortname');
+			$table->string('currency');
 			$table->float('opening_balance', 10, 0);
 			$table->string('type');
 			$table->timestamps();
-			$table->string('currency');
+			
 		});
 	}
 

@@ -1,6 +1,5 @@
 @extends('layouts.member')
 @section('content')
-<br/>
 
 <?php
 
@@ -51,7 +50,7 @@ function asMoney($value) {
 
         <tr>
 
-          <td>Principal Balance</td><td>{{ asMoney($principal_due) }}</td>
+          <td>Principal Balance</td><td>{{ asMoney(Loanaccount::getPrincipalBal($loanaccount)) }}</td>
         </tr>
 
        

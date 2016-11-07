@@ -1,6 +1,5 @@
 @extends('layouts.stat_ports')
 @section('content')
-<br/>
 
 <div class="row">
     <div class="col-lg-12">

@@ -1,6 +1,5 @@
 @extends('layouts.member')
 @section('content')
-<br/>
 
 <?php
 
@@ -78,6 +77,15 @@ function asMoney($value) {
 
 	</tr>
 
+  @if($loanaccount->is_top_up)
+  <tr>
+
+    <td>Top Up Amount</td><td>{{ asMoney($loanaccount->top_up_amount)}}</td>
+
+
+  </tr>
+  @endif
+
   <!--
 
 	<tr>
@@ -136,7 +144,7 @@ function asMoney($value) {
 
 	<tr>
 
-		<td>Principal Balance </td><td>{{ asMoney($loanaccount->amount_disbursed - $principal_paid)}}</td>
+		<td>Principal Balance </td><td>{{ asMoney(Loanaccount::getPrincipalBal($loanaccount))}}</td>
 
 
 	</tr>
@@ -255,9 +263,9 @@ function asMoney($value) {
 
         <div class="panel panel-default">
             <div class="panel-heading">
-               
-              <a href="{{URL::to('loans/schedule/'.$loanaccount->id)}}" class="btn btn-success btn-sm"> <i class="glyphicon glyphicon-file"> </i> Print Schedule</a>
-
+               <p>Loan Schedule</p>
+             <!-- <a href="{{URL::to('loans/schedule/'.$loanaccount->id)}}" class="btn btn-success btn-sm"> <i class="glyphicon glyphicon-file"> </i> Print Schedule</a>
+-->
             </div>
         <div class="panel-body">
 
@@ -460,7 +468,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="users" class="table table-condensed table-bordered table-responsive table-hover">
+    <table width="100%" id="users" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -606,7 +614,7 @@ function asMoney($value) {
         <div class="panel-body">
 
 
-    <table id="mobile" class="table table-condensed table-bordered table-responsive table-hover">
+    <table width="100%" id="mobile" class="table table-condensed table-bordered table-responsive table-hover">
 
 
       <thead>
@@ -615,7 +623,6 @@ function asMoney($value) {
         <th>Member</th>
 
          <th>Loan Account</th>
-         <th>Guaranteed Amount</th>
          
            
         <th></th>
@@ -633,15 +640,6 @@ function asMoney($value) {
           <td> {{ $i }}</td>
           <td>{{ $guarantor->member->name }}</td>
           <td>{{ $guarantor->loanaccount->account_number }}</td>
-          <td>{{ $guarantor->amount }}</td>
-          
-
-       
-
-           
-
-         
-
         <td>
 
                   <div class="btn-group">
@@ -649,7 +647,7 @@ function asMoney($value) {
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul style="margin-left:0px" class="dropdown-menu" role="menu">
                    
                     <li><a href="{{URL::to('loanguarantors/edit/'.$guarantor->id)}}">Update</a></li>
                    

@@ -1,6 +1,5 @@
-@extends('layouts.css')
+@extends('layouts.empcss')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -40,6 +39,15 @@
         
 
       </thead>
+
+      <tfoot>
+
+        <th>#</th>
+        <th>Employee Number</th>
+        <th>Employee Name</th>
+        
+      </tfoot>
+
       <tbody>
 
         <?php $i = 1; ?>
@@ -59,12 +67,12 @@
                   </button>
           
                   <ul class="dropdown-menu" role="menu">
-                      @if(!User::exists($employee))
+                      @if($employee->is_css_active == false)
                     <li><a href="{{URL::to('portal/activate/'.$employee->id)}}">Activate</a></li>
                   
                         @endif
                    
-                           @if(User::exists($employee))
+                          @if($employee->is_css_active == true)
                     <li><a href="{{URL::to('portal/deactivate/'.$employee->id)}}">Deactivate</a></li>
  @endif
                     

@@ -4,7 +4,6 @@
 
 
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -57,7 +56,7 @@
                     Action <span class="caret"></span>
                   </button>
           
-                  <ul class="dropdown-menu" role="menu">
+                  <ul style="margin-left:0px" class="dropdown-menu" role="menu">
                     <li><a href="{{URL::to('savingaccounts/edit/'.$saving->id)}}">Update</a></li>
                    
                     <li><a href="{{URL::to('savingaccounts/delete/'.$saving->id)}}">Delete</a></li>

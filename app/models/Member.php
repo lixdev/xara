@@ -52,4 +52,15 @@ class Member extends \Eloquent {
 
 		return $this->hasMany('Loanguarantor');
 	}
+
+
+
+	public static function getMemberAccount($id){
+
+		$account_id = DB::table('savingaccounts')->where('organization_id',Confide::user()->organization_id)->where('member_id', '=', $id)->pluck('id');
+
+		$account = Savingaccount::find($account_id);
+
+		return $account;
+	}
 }

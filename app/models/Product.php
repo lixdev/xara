@@ -25,13 +25,4 @@ class Product extends \Eloquent {
 		return $this->hasMany('Order');
 	}
 
-
-
-	public static function getRemoteProducts(){
-
-		$products = json_decode(file_get_contents('http://shop.lixnet.net/productlist'), true);
-
-		return $products;
-	}
-
 }

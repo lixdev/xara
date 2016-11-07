@@ -25,7 +25,7 @@ th {
 }
 .table {
   width: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
 }
 hr {
   margin-top: 1px;
@@ -45,7 +45,7 @@ body {
 
 
  @page { margin: 170px 30px; }
- .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
+ .header { position: top; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
  .content {margin-top: -100px; margin-bottom: -150px}
  .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
  .footer .page:after { content: counter(page, upper-roman); }
@@ -58,7 +58,7 @@ body {
 
 <body>
 
-  <div class="header">
+  <div class="header" style='margin-top:-150px;'>
      <table >
 
       <tr>
@@ -67,16 +67,17 @@ body {
        
         <td style="width:150px">
 
-            <img src="{{ '../images/logo.png' }}" alt="{{ $organization->logo }}" width="150px"/>
+            <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">>
+
     
         </td>
 
         <td>
         <strong>
-          {{ strtoupper($organization->name)}}<br>
-          </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
+          {{ strtoupper($organization->name)}}
+          </strong><br>
+          {{ $organization->phone}}<br>
+          {{ $organization->email}}<br>
           {{ $organization->website}}<br>
           {{ $organization->address}}
        
@@ -104,7 +105,7 @@ body {
    </div>
 
 
-	<div class="content" style='margin-top:0px;'>
+	<div class="content" style='margin-top:-70px;'>
     <table>
     
           {{'<tr><td width="50"><strong>Period</strong> : </td><td>'.$period.'</td></tr>'}}
@@ -143,7 +144,30 @@ body {
          @endforeach   
       </tr>
       <?php $i =1; ?>
-      @foreach($payes as $paye)
+      @if($type == 'enabled')
+      @foreach($payes_enabled as $paye)
+      <tr>
+
+
+       <td td width='20'>{{$i}}</td>
+        <td> {{ $paye->personal_file_number }}</td>
+         @if($paye->middle_name != null || $paye->middle_name != '')
+        <td> {{$paye->first_name.' '.$paye->middle_name.' '.$paye->last_name}}</td>
+        @else
+        <td> {{$paye->first_name.' '.$paye->last_name}}</td>
+        @endif
+        <td> {{ $paye->identity_number }}</td>
+        <td> {{ $paye->pin }}</td>
+        <td align="right"> {{ asMoney($paye->taxable_income ) }}</td>
+        <td align="right"> {{ asMoney($paye->paye ) }}</td>
+        </tr>
+      <?php $i++; ?>
+   
+    @endforeach
+    <tr><td align="right" colspan='6'><strong>Total Paye Returns: </strong></td><td align="right">{{ asMoney($total_enabled ) }}</td></tr>
+    @else
+
+       @foreach($payes_disabled as $paye)
       <tr>
 
 
@@ -159,7 +183,8 @@ body {
    
     @endforeach
 
-    <tr><td align="right" colspan='6'><strong>Total Paye Returns: </strong></td><td align="right">{{ asMoney($total ) }}</td></tr>
+    <tr><td align="right" colspan='6'><strong>Total Paye Returns: </strong></td><td align="right">{{ asMoney($total_disabled ) }}</td></tr>
+    @endif
 </table>
 </div>
 <br><br>

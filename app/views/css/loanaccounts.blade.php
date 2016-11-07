@@ -1,7 +1,5 @@
 @extends('layouts.membercss')
 @section('content')
-<br/>
-
 
 <?php
 

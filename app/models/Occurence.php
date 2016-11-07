@@ -33,4 +33,8 @@ public static $rules = [
 		
 		return $this->belongsTo('Employee');
 	}
+	public function occurencesetting(){
+		
+		return $this->hasMany('Occurencesetting');
+	}
 }

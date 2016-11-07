@@ -9,7 +9,7 @@ class SavingproductsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$savingproducts = Savingproduct::all();
+		$savingproducts = Savingproduct::where('organization_id','=',Confide::user()->organization_id)->get();
 
 		return View::make('savingproducts.index', compact('savingproducts'));
 	}
@@ -21,10 +21,9 @@ class SavingproductsController extends \BaseController {
 	 */
 	public function create()
 	{
-
-		$accounts = Account::all();
-		$charges = Charge::all();
-		$currencies = Currency::all();
+		$accounts = Account::where('organization_id',Confide::user()->organization_id)->get();
+		$charges = Charge::where('organization_id',Confide::user()->organization_id)->get();
+		$currencies = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 		return View::make('savingproducts.create', compact('accounts', 'charges', 'currencies'));
 	}
 
@@ -44,52 +43,35 @@ class SavingproductsController extends \BaseController {
 
 		$charge_id = array();
 		
-		$charge_id = Input::get('charge_id');
-		
-
-		 $prod_id = DB::table('savingproducts')->insertGetId(
-            
-             array(
-                'name' => Input::get('name'), 
-                'shortname' => Input::get('shortname'),
-                'opening_balance' => Input::get('opening_balance'),
-                'currency' => Input::get('currency'),
-                'type' => Input::get('type')
-                )
-            );
-
-
-		 
-
-		
-
+		$charge_id = Input::get('charge_id');	
+		$prod_id = DB::table('savingproducts')->insertGetId(            
+		             array(
+		                'name' => Input::get('name'), 
+		                'shortname' => Input::get('shortname'),
+		                'organization_id'=>Confide::user()->organization_id,
+		                'opening_balance' => Input::get('opening_balance'),
+		                'currency' => Input::get('currency'),
+		                'type' => Input::get('type'),
+		                'created_at'=>date('Y-m-d H:m:s'),
+		                'updated_at'=>date('Y-m-d H:m:s')
+		                )
+		            );
 		$product = Savingproduct::findOrFail($prod_id);
 
 		$fee_income_acc = Input::get('fee_income_acc');
 		$saving_control_acc = Input::get('saving_control_acc');
 		$cash_account = Input::get('cash_account');
 
-
 		//save charges 
-
-
-		foreach($charge_id as $charg){
-
-			$charge = Charge::findOrFail($charg);
-
-			$product->charges()->attach($charge);
-		}
-
-
+		if(count($charge_id) >= 1){		
+			foreach($charge_id as $charg){		
+					$charge = Charge::findOrFail($charg);		
+					$product->charges()->attach($charge);
+				}
+		}		
 		// create posting rules
-
-		$savingposting = new savingposting;
-
+		$savingposting = new Savingposting;
 		$savingposting->create_post_rules($product, $fee_income_acc, $saving_control_acc, $cash_account);
-
-
-
-
 		return Redirect::route('savingproducts.index');
 	}
 
@@ -115,20 +97,31 @@ class SavingproductsController extends \BaseController {
 	public function edit($id)
 	{
 		$savingproduct = Savingproduct::find($id);
-		$currencies = Currency::all();
+		$currencies = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('savingproducts.edit', compact('savingproduct', 'currencies'));
 	}
-
+	/**
+	*GET THE PRODUCT TO UPDATE
+	*
+	*/
+	public function selectproduct($id){
+		$product=Savingproduct::where('id','=',$id)->get()->first();
+		$accounts = Account::where('organization_id',Confide::user()->organization_id)->get();
+		$charges = Charge::where('organization_id',Confide::user()->organization_id)->get();
+		$currencies = Currency::whereNull('organization_id')->orWhere('organization_id',Confide::user()->organization_id)->get();
+		return View::make('savingproducts.selectproduct',compact('product','accounts','charges','currencies'));
+	}
 	/**
 	 * Update the specified savingproduct in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update()
 	{
-		$savingproduct = Savingproduct::findOrFail($id);
+		$id=Input::get('product_id');
+		$savingproduct = Savingproduct::where('id','=',$id)->get()->first();
 
 		$validator = Validator::make($data = Input::all(), Savingproduct::$rules);
 
@@ -137,22 +130,22 @@ class SavingproductsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$savingproduct = new Savingproduct;
-
-
 		$savingproduct->name = Input::get('name');
 		$savingproduct->shortname = Input::get('shortname');
 		$savingproduct->opening_balance = Input::get('opening_balance');
 		$savingproduct->type = Input::get('type');
 		$savingproduct->currency = Input::get('currency');
-		$savingproduct->fee_income_acc = Input::get('fee_income_acc');
-		$savingproduct->saving_control_acc = Input::get('saving_control_acc');
-
-		$savingproduct->update();
-
-		return Redirect::route('savingproducts.index');
+		$fee_income_acc = Input::get('fee_income_acc');
+		$saving_control_acc = Input::get('saving_control_acc');
+		$cash_account = Input::get('cash_account');		
+		// create posting rules
+		$savingposting = new Savingposting;
+		$savingposting->create_post_rules($savingproduct, $fee_income_acc, $saving_control_acc, $cash_account);
+		$savingproduct->save();
+		$surface="Saving product update successfully";
+		$savingproducts = Savingproduct::all();
+		return View::make('savingproducts.index', compact('savingproducts','surface'));		
 	}
-
 	/**
 	 * Remove the specified savingproduct from storage.
 	 *
@@ -161,9 +154,12 @@ class SavingproductsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		Savingproduct::destroy($id);
-
-		return Redirect::route('savingproducts.index');
+		Savingposting::where('savingproduct_id','=',$id)->delete();
+		Savingaccount::where('savingproduct_id','=',$id)->delete();
+		Savingproduct::destroy($id);		
+		$smash="Saving product deleted";
+		$savingproducts = Savingproduct::where('organization_id',Confide::user()->organization_id)->get();
+		return View::make('savingproducts.index', compact('savingproducts','smash'));	
 	}
 
 }

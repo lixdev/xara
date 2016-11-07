@@ -16,15 +16,12 @@ class CreateEmployeeTypeTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('employee_type_name');
-			$table->integer('organization_id')->unsigned()->default('0')->index('employee_type_organization_id_foreign');
+			$table->integer('organization_id')->unsigned();
+			$table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict')->onUpdate('cascade');
 			$table->timestamps();
 		});
 
-		DB::table('employee_type')->insert(array(
-            array('employee_type_name' => 'Full Time','organization_id' => '1'),
-            array('employee_type_name' => 'Contract','organization_id' => '1'),
-            array('employee_type_name' => 'Internship','organization_id' => '1'),
-        ));
+		
 	}
 
 

@@ -9,7 +9,7 @@ class SavingtransactionsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$savingtransactions = Savingtransaction::all();
+		$savingtransactions = Savingtransaction::where('organization_id',Confide::user()->organization_id)->get();
 
 		return View::make('savingtransactions.index', compact('savingtransactions'));
 	}
@@ -24,8 +24,8 @@ class SavingtransactionsController extends \BaseController {
 
 		$savingaccount = Savingaccount::findOrFail($id);
 
-		$credit = DB::table('savingtransactions')->where('savingaccount_id', '=', $savingaccount->id)->where('type', '=', 'credit')->sum('amount');
-		$debit = DB::table('savingtransactions')->where('savingaccount_id', '=', $savingaccount->id)->where('type', '=', 'debit')->sum('amount');
+		$credit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $savingaccount->id)->where('type', '=', 'credit')->sum('amount');
+		$debit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $savingaccount->id)->where('type', '=', 'debit')->sum('amount');
 
 		$balance = $credit - $debit;
 
@@ -55,95 +55,14 @@ class SavingtransactionsController extends \BaseController {
 		$transAmount = Input::get('amount');
 
 		$savingaccount = Savingaccount::findOrFail(Input::get('account_id'));
-
-		$savingtransaction = new Savingtransaction;
-
-		$savingtransaction->date = Input::get('date');
-		$savingtransaction->savingaccount()->associate($savingaccount);
-		$savingtransaction->amount = Input::get('amount');
-		$savingtransaction->type = Input::get('type');
-		$savingtransaction->description = Input::get('description');
-		$savingtransaction->transacted_by = Input::get('transacted_by');
-		$savingtransaction->save();
+		$date = Input::get('date');
+		$amount = Input::get('amount');
+		$type = Input::get('type');
+		$description = Input::get('description');
+		$transacted_by = Input::get('transacted_by');
 
 
-	
-		// withdrawal 
-
-		if(Input::get('type') == 'debit'){
-
-
-			foreach($savingaccount->savingproduct->savingpostings as $posting){
-
-				if($posting->transaction == 'withdrawal'){
-
-					$debit_account = $posting->debit_account;
-					$credit_account = $posting->credit_account;
-				}
-
-				
-			}
-
-
-
-			$data = array(
-				'credit_account' => $credit_account,
-				'debit_account' => $debit_account,
-				'date' => Input::get('date'),
-				'amount' => Input::get('amount'),
-				'initiated_by' => 'system',
-				'description' => 'cash withdrawal'
-				);
-
-
-			$journal = new Journal;
-
-
-			$journal->journal_entry($data);
-
-
-			Savingtransaction::withdrawalCharges($savingaccount, $date, $transAmount);
-
-			Audit::logAudit(date('Y-m-d'), Confide::user()->username, 'savings withdrawal', 'Savings', Input::get('amount'));
-
-		}
-
-
-		// deposit
-		if(Input::get('type') == 'credit'){
-
-
-			foreach($savingaccount->savingproduct->savingpostings as $posting){
-
-				if($posting->transaction == 'deposit'){
-
-					$debit_account = $posting->debit_account;
-					$credit_account = $posting->credit_account;
-				}
-			}
-
-
-
-			$data = array(
-				'credit_account' => $credit_account,
-				'debit_account' => $debit_account,
-				'date' => Input::get('date'),
-				'amount' => Input::get('amount'),
-				'initiated_by' => 'system',
-				'description' => 'cash deposit'
-				);
-
-
-			$journal = new Journal;
-
-
-			$journal->journal_entry($data);
-
-			Audit::logAudit(date('Y-m-d'), Confide::user()->username, 'savings deposit', 'Savings', Input::get('amount'));
-			
-		}
-
-
+		Savingtransaction::transact($date, $savingaccount, $amount, $type, $description, $transacted_by);
 
 		
 		return Redirect::to('savingtransactions/show/'.$savingaccount->id);
@@ -159,8 +78,8 @@ class SavingtransactionsController extends \BaseController {
 	{
 		$account = Savingaccount::findOrFail($id);
 
-		$credit = DB::table('savingtransactions')->where('savingaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
-		$debit = DB::table('savingtransactions')->where('savingaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
+		$credit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
+		$debit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
 
 		$balance = $credit - $debit;
 
@@ -220,7 +139,7 @@ class SavingtransactionsController extends \BaseController {
 
 		$transaction = Savingtransaction::findOrFail($id);
 
-		$organization = Organization::findOrFail(1);
+		$organization = Organization::findOrFail(Confide::user()->organization_id);
 
 		$pdf = PDF::loadView('pdf.receipt', compact('transaction', 'organization'))->setPaper('a6')->setOrientation('potrait');;
  	
@@ -237,12 +156,12 @@ class SavingtransactionsController extends \BaseController {
 		$transactions = $account->transactions;
 
 
-		$credit = DB::table('savingtransactions')->where('savingaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
-		$debit = DB::table('savingtransactions')->where('savingaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
+		$credit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $account->id)->where('type', '=', 'credit')->sum('amount');
+		$debit = DB::table('savingtransactions')->where('organization_id',Confide::user()->organization_id)->where('savingaccount_id', '=', $account->id)->where('type', '=', 'debit')->sum('amount');
 
 		$balance = $credit - $debit;
 
-		$organization = Organization::findOrFail(1);
+		$organization = Organization::findOrFail(Confide::user()->organization_id);
 
 		$pdf = PDF::loadView('pdf.statement', compact('transactions', 'organization', 'account', 'balance'))->setPaper('a4')->setOrientation('potrait');;
  	
@@ -293,14 +212,14 @@ if (($handle = fopen(public_path().'/uploads/savings/'.$photo, "r")) !== FALSE) 
    		$amount = $saving[$i]['amount'];
    		$date = $saving[$i]['date'];
 
-   		$member_no = DB::table('members')->where('membership_no', '=', $member)->get();
+   		$member_no = DB::table('members')->where('organization_id',Confide::user()->organization_id)->where('membership_no', '=', $member)->get();
 
 		if(empty($member_no)){
 
 			return Redirect::to('import')->with('error', 'The member does not exist');
 		}
 
-   		$account_no = DB::table('savingaccounts')->where('account_number', '=', $account)->get();
+   		$account_no = DB::table('savingaccounts')->where('organization_id',Confide::user()->organization_id)->where('account_number', '=', $account)->get();
 
 
 		if(empty($account_no)){
@@ -322,6 +241,15 @@ if (($handle = fopen(public_path().'/uploads/savings/'.$photo, "r")) !== FALSE) 
  return Redirect::to('/')->with('notice', 'Member savings successfully imported');
  
 
+	}
+
+
+
+	public function void($id){
+
+		Savingtransaction::destroy($id);
+
+		 return Redirect::back()->with('notice', ' transaction has been successfully voided');
 	}
 
 

@@ -8,7 +8,6 @@ function asMoney($value) {
 
 @extends('layouts.earning')
 @section('content')
-<br/>
 
 <div class="row">
 	<div class="col-lg-12">

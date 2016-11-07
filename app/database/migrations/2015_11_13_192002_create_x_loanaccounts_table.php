@@ -38,11 +38,12 @@ class CreateXLoanaccountsTable extends Migration {
 			$table->boolean('is_defaulted')->default(0);
 			$table->boolean('is_overpaid')->default(0);
 			$table->string('account_number')->nullable();
-			$table->timestamps();
 			$table->integer('repayment_duration')->nullable();
 			$table->boolean('is_top_up')->nullable()->default(0);
 			$table->float('top_up_amount', 15, 3)->nullable()->default(0.000);
 			$table->string('loan_purpose')->nullable();
+			$table->timestamps();
+			
 		});
 	}
 

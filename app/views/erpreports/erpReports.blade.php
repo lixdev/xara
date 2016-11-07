@@ -1,10 +1,5 @@
 @extends('layouts.erp_ports')
 @section('content')
-<br/>
-
-
-
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -14,22 +9,32 @@
 </div>  
 </div>
 
-
 <div class="row">
     <div class="col-lg-12">
 
     <ul>
-
-       <li>
-            <a href="{{ URL::to('erpReports/clients') }}" target="_blank">Clients</a>
+      <li>
+            <a href="{{ URL::to('erpReports/selectSalesPeriod') }}">Sales</a>
        </li>
 
        <li>
-          <a href="{{ URL::to('erpReports/items') }}" target="_blank">Items</a>
+            <a href="{{ URL::to('erpReports/sales_summary') }}" target="_blank">Sales Summary</a>
+       </li> 
+
+       <li>
+            <a href="{{ URL::to('erpReports/selectPurchasesPeriod') }}">Purchases</a>
        </li>
 
        <li>
-          <a href="{{ URL::to('erpReports/expenses') }}" target="_blank">Expenses</a>
+            <a href="{{ URL::to('erpReports/selectClientsPeriod') }}">Clients</a>
+       </li>
+
+       <li>
+          <a href="{{ URL::to('erpReports/selectItemsPeriod') }}">Items</a>
+       </li>
+
+       <li>
+          <a href="{{ URL::to('erpReports/selectExpensesPeriod') }}">Expenses</a>
        </li>
     
        <li>
@@ -37,18 +42,26 @@
        </li>  
 
        <li>
-         <a href="{{ URL::to('erpReports/payments') }}" target="_blank">Payments</a>     
-       </li>
+          <a href="{{ URL::to('erpReports/selectPaymentsPeriod') }}"> Payments</a>
+        </li>
 
         <li>
          <a href="{{ URL::to('erpReports/locations') }}" target="_blank">Stores</a>     
        </li> 
 
         <li>
-         <a href="{{ URL::to('erpReports/stock') }}" target="_blank">Stock report </a>     
+         <a href="{{ URL::to('erpReports/selectStockPeriod') }}">Stock report </a>      
+       </li>
+
+        <li>
+         <a href="{{ URL::to('erpReports/pricelist') }}" target="_blank">Price List </a>     
+       </li>
+
+        <li>
+         <a href="{{ URL::to('erpReports/accounts') }}" target="_blank">Account Balances </a>     
        </li> 
 
-       <li>
+      <li>
         <a href="reports/blank" target="_blank">Blank report template</a>
       </li>
     </ul>

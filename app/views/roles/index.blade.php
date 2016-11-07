@@ -8,8 +8,6 @@
 
 	<div class="col-lg-12">
 
-		<br/>
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
     			<a class="btn btn-info btn-sm" href="{{ URL::to('roles/create')}}">new role</a>
@@ -38,8 +36,8 @@
   								</button>
   				
   								<ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Permissions</a></li>
-    								<li><a href="#">Edit</a></li>
+                    <li><a href="{{URL::to('roles/show/'.$role->id)}}">View</a></li>
+    								<li><a href="{{URL::to('roles/edit/'.$role->id)}}">Edit</a></li>
 
     								
     								<li><a href="{{URL::to('roles/destroy/'.$role->id)}}">Delete</a></li>

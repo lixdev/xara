@@ -19,7 +19,8 @@ public $table = "earnings";
 public static $rules = [
 		'employee' => 'required',
 		'earning' => 'required',
-		'amount' => 'required|regex:/^[0-9]{1,3}(,[0-9]{3})*\.[0-9]+$/'
+		'amount' => 'required|regex:/^(\$?(?(?=\()(\())\d+(?:,\d+)?(?:\.\d+)?(?(2)\)))$/',
+		//'ddate' => 'required',
 	];
 
 public static $messages = array(
@@ -27,6 +28,7 @@ public static $messages = array(
         'earning.required'=>'Please select earning type!',
         'amount.required'=>'Please insert amount!',
         'amount.regex'=>'Please insert a valid amount!',
+        'ddate.required'=>'Please select earning date!',
     );
 
 	// Don't forget to fill this array
@@ -36,6 +38,11 @@ public static $messages = array(
 	public function employee(){
 
 		return $this->belongsTo('Employee');
+	}
+
+	public function earningsetting(){
+
+		return $this->hasMany('Earningsetting');
 	}
 
 }

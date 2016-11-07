@@ -1,6 +1,5 @@
 @extends('layouts.accounting')
 @section('content')
-<br/>
 
 <?php
 
@@ -71,7 +70,7 @@ echo asMoney($journal->amount);
 ?>
         </td>
           <td>{{ $journal->type }}</td>
-          <td> @if($journal->void) Void @endif</td>
+          <td> @if($journal->void) Void @else Not Void @endif</td>
           <td>
 
                   <div class="btn-group">
@@ -81,7 +80,6 @@ echo asMoney($journal->amount);
           
                   <ul class="dropdown-menu" role="menu">
                    
-                    <li><a href="{{URL::to('journals/show/'.$journal->id)}}">View</a></li>
                     <li><a href="{{URL::to('journals/delete/'.$journal->id)}}">Void</a></li>
                    
                     
