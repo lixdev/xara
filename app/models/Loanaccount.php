@@ -185,6 +185,25 @@ class Loanaccount extends \Eloquent {
 
 
 	public static function getEMPTacsix($loanaccount){
+<<<<<<< HEAD
+=======
+
+		 
+		$principal = $loanaccount->amount_disbursed;
+		$rate = $loanaccount->interest_rate/100;
+		$time = $loanaccount->repayment_duration;
+
+		$interest = $principal * $rate * $time;
+		$amount = $principal + $interest;
+
+		$amt = $amount/$time;
+
+		return $amt;
+
+	}
+
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 
 		 
 		$principal = $loanaccount->amount_disbursed;
@@ -203,14 +222,16 @@ class Loanaccount extends \Eloquent {
 
 
 	public static function getInterestAmount($loanaccount){
-
-
 		$principal = Loanaccount::getPrincipalBal($loanaccount);
 
 		$rate = $loanaccount->interest_rate/100;
-
+		$onerate=1 +$rate;
 		$time = $loanaccount->repayment_duration;
+<<<<<<< HEAD
+		$interest_amount = 0;
+=======
 
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 		$formula = DB::table('loanproducts')->where('organization_id',Confide::user()->organization_id)->where('id', '=', $loanaccount->loanproduct_id)->pluck('formula');
 
 		if($formula == 'SL'){
@@ -219,30 +240,15 @@ class Loanaccount extends \Eloquent {
 
 		}
 
-
 		if($formula == 'RB'){
-
-			
-    		
-    		
-   			$principal_bal = $principal;
-    		$interest_amount = 0;
+   			$principal_bal = $principal;    	
     		$principal_pay = $principal/$time;
-
-    		for($i=1; $i<=$time; $i++){
-
-
-        		$interest_amount = ($interest_amount + ($principal_bal * $rate));
-
-        		$principal_bal = $principal_bal - $principal_pay;
-
-        		
-    		}
-
-          
+    		$principal_bal = round(($rate*$principal)/(1-(pow($onerate,-$time))),2);
+    		$interest_amount = 0;    		 	
+        	for($i=0;$i<$time;$i++){
+        		$interest_amount=($principal_bal*$time)-($principal);
+        	}              
 		}
-
-
 		return $interest_amount;
 	}
 

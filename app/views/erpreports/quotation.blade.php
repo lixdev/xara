@@ -204,7 +204,7 @@ $payments = Erporder::getTotalPayments($erporder);
            </tr>
            @endforeach
             <tr>
-            <!-- <td colspan='3' style="border-top:1px solid #C0C0C0" ></td> -->
+            <td colspan='3' style="border-top:1px solid #C0C0C0" ></td>
             <td style="border-top:1px solid #C0C0C0" ><strong>Total Amount</strong> </td><td style="border-top:1px solid #C0C0C0" colspan="1">KES {{asMoney($grandtotal-$orders->discount_amount)}}</td>
            </tr>
            

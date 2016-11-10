@@ -12,22 +12,15 @@
  </head>
   <body style="font-size:11px">
 <?php
-
-
 function asMoney($value) {
   return number_format($value, 2);
 }
 
 ?>
-
-    
    <div class="header">
      <table >
 
-      <tr>
-
-
-       
+      <tr>       
         <td style="width:150px">
 
             <img src="{{public_path().'/uploads/logo/'.$organization->logo}}" alt="logo" width="80%">

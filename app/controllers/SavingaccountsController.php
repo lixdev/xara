@@ -121,12 +121,7 @@ class SavingaccountsController extends \BaseController {
 
 
 	public function memberaccounts($id){
-
-
 		$member = Member::findOrFail($id);
-
-
-
 		return View::make('savingaccounts.memberaccounts', compact('member'));
 	}
 

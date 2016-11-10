@@ -1,6 +1,6 @@
 <div class="main_wrapper">
 @include('includes.head')
-@include('includes.hrheader')
+@include('includes.navpayroll')
 @include('includes.nav_rep_payroll')
 
 <div id="page-wrapper">

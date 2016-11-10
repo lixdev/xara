@@ -16,7 +16,8 @@ class LoanaccountsController extends \BaseController {
 
     public function guarantor()
 	{
-		$member = Member::where('membership_no',Confide::user()->username)->first();
+
+		 $member = Member::where('email',Confide::user()->email)->first();
 		//$loanaccounts = Loanaccount::where('member_id',$member->id)->get();
         $loanaccounts = DB::table('loanaccounts')
 		               ->join('loanguarantors', 'loanaccounts.id', '=', 'loanguarantors.loanaccount_id')
@@ -96,10 +97,10 @@ class LoanaccountsController extends \BaseController {
 	{
 
 		$member = Member::find($id);
-
+        $guarantors = Member::where('id','!=',$id)->where('organization_id',Confide::user()->organization_id)->get();		
+		$disbursed=Disbursementoption::where('organization_id',Confide::user()->organization_id)->get();
 		$loanproducts = Loanproduct::where('organization_id',Confide::user()->organization_id)->get();
-
-		return View::make('css.loancreate', compact('member', 'loanproducts'));
+		return View::make('css.loancreate', compact('member', 'guarantors', 'loanproducts','disbursed'));					
 	}
 
 	/**

@@ -1,8 +1,4 @@
 <body>
-
-
-    
-
     <div id="wrapper">
 
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -14,17 +10,19 @@
                     <span class="icon-bar"></span>
                 </button>
                 <?php 
+<<<<<<< HEAD
+                    $organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->pluck('name');                
+                ?> 
+=======
 
     $organization = DB::table('organizations')->where('id', '=', Confide::user()->organization_id)->pluck('name');
 
     
 ?> 
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
                 <a class="navbar-brand"  href="{{ URL::to('/')}}" > <?php echo $organization; ?></a>
             </div>
             <!-- /.navbar-header -->
-
-        
-
             <ul class="nav navbar-top-links navbar-right">
 
                 <!-- /.dropdown -->
@@ -48,6 +46,6 @@
             
             </ul>
             <!-- /.navbar-top-links -->
-
         </nav>
         <!-- /.navbar-static-top -->
+        </div>

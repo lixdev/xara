@@ -9707,7 +9707,35 @@ public function members(){
     
   }
 
+<<<<<<< HEAD
+public function creditappraisal($id,$loanid){
+    $member = Member::where('id','=',$id)->get()->first();
+    $loans= Loanaccount::where('member_id','=',$id)
+        ->where('is_disbursed','=',1)
+        ->get();    
+    $currentloan=Loanaccount::where('id','=',$loanid)
+          ->get()->first();   
+    $savingaccount=DB::table('savingaccounts')
+          ->where('member_id','=',$id)->pluck('account_number');
+    $savings=DB::table('savingtransactions')
+        ->join('savingaccounts','savingtransactions.savingaccount_id','=','savingaccounts.id')
+        ->where('savingaccounts.member_id','=',$id)
+        ->where('savingtransactions.type','=','credit')
+        ->sum('savingtransactions.amount');
+    $shareaccount=DB::table('shareaccounts')
+          ->where('member_id','=',$id)->pluck('account_number');
+    $shares=DB::table('sharetransactions')
+        ->join('shareaccounts','sharetransactions.shareaccount_id','=','shareaccounts.id')
+        ->where('shareaccounts.member_id','=',$id)
+        ->where('sharetransactions.type','=','credit')
+        ->sum('sharetransactions.amount');    
+    $pdf = PDF::loadView('pdf.loanreports.creditappraisal', compact('member', 'loans','savings','savingaccount','shares','shareaccount','currentloan'))->setPaper('a4')->setOrientation('portrait');  
+    return $pdf->stream('Member Credit Appraisal Report.pdf');
+    
+  }
+=======
 
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 
   public function savinglisting(){
 

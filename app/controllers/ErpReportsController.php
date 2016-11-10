@@ -366,6 +366,7 @@ public function purchases(){
         $pdf = PDF::loadView('erpreports.quotation', compact('orders','erporder','txorders','count' ,'organization'))->setPaper('a4')->setOrientation('potrait');
     
         return $pdf->stream('quotation.pdf');
+<<<<<<< HEAD
         
     }
 
@@ -465,6 +466,107 @@ public function purchases(){
         
     }
 
+=======
+        
+    }
+
+
+
+
+
+
+    public function PurchaseOrder($id){
+
+        $orders = DB::table('erporders')
+                ->join('erporderitems', 'erporders.id', '=', 'erporderitems.erporder_id')
+                ->join('items', 'erporderitems.item_id', '=', 'items.id')
+                ->join('clients', 'erporders.client_id', '=', 'clients.id')
+                ->where('erporders.id','=',$id)
+                ->where('erporders.organization_id',Confide::user()->organization_id)
+                ->select('clients.name as client','items.name as item','quantity','clients.address as address',
+                  'clients.phone as phone','clients.email as email','erporders.id as id',
+                  'discount_amount','erporders.order_number as order_number','price','description')
+                ->get();
+
+        $txorders = DB::table('tax_orders')
+                ->join('erporders', 'tax_orders.order_number', '=', 'erporders.order_number')
+                ->join('taxes', 'tax_orders.tax_id', '=', 'taxes.id')
+                ->where('erporders.organization_id',Confide::user()->organization_id)
+                ->where('erporders.id','=',$id)
+                ->get();
+
+        $count = DB::table('tax_orders')->where('organization_id',Confide::user()->organization_id)->count();
+
+        $erporder = Erporder::findorfail($id);
+
+
+        $organization = Organization::find(Confide::user()->organization_id);
+
+        $pdf = PDF::loadView('erpreports.PurchaseOrder', compact('orders','erporder','txorders','count' ,'organization'))->setPaper('a4')->setOrientation('potrait');
+    
+        return $pdf->stream('Purchase Order.pdf');
+        
+    }
+
+
+    public function selectSalesPeriod()
+    {
+       $sales = Erporder::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('pdf.erpfinancials.selectSalesPeriod',compact('sales'));
+    }
+
+    public function selectPurchasesPeriod()
+    {
+       $purchases = Erporder::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectPurchasesPeriod',compact('purchases'));
+    }
+
+
+    public function selectClientsPeriod()
+    {
+       $clients = Client::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectClientsPeriod',compact('clients'));
+    }
+
+     public function selectItemsPeriod()
+    {
+       $items = Item::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectItemsPeriod',compact('items'));
+    }
+
+    public function selectExpensesPeriod()
+    {
+       $expenses = Expense::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectExpensesPeriod',compact('expenses'));
+    }
+
+     public function selectPaymentsPeriod()
+    {
+       $payments = Payment::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectPaymentsPeriod',compact('payments'));
+    }
+
+    public function selectStockPeriod()
+    {
+       $stocks = Item::where('organization_id',Confide::user()->organization_id)->get();
+        return View::make('erpreports.selectStocksPeriod',compact('stocks'));
+    }
+
+
+    public function accounts(){
+
+        $accounts = Account::where('organization_id',Confide::user()->organization_id)->where('active',true)->get();
+
+
+        $organization = Organization::find(Confide::user()->organization_id);
+
+        $pdf = PDF::loadView('erpreports.accountsReport', compact('accounts', 'organization'))->setPaper('a4')->setOrientation('potrait');
+    
+        return $pdf->stream('Account Balances.pdf');
+        
+    }
+
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
     /**
      * SEND QUOTATION AS AN ATTACHMENT
      */
@@ -532,6 +634,8 @@ public function purchases(){
 
 
 
+<<<<<<< HEAD
+=======
     /**
      * GENERATE BANK RECONCILIATION REPORT
      */
@@ -618,5 +722,6 @@ public function purchases(){
 
 
 
+>>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
 
 }
