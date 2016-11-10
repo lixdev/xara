@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
- <nav class="navbar-default navbar-static-side" id="wrap" role="navigation">
-=======
 <nav class="navbar-default navbar-static-side" id="wrap" role="navigation">
->>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
     
            
 
@@ -14,7 +10,6 @@
                   <li>
                     <a href="{{ URL::to('items') }}"><i class="fa fa-barcode fa-fw"></i>Items</a>
                   </li>
-<<<<<<< HEAD
 
                   <li>
                     <a href="{{ URL::to('clients') }}"><i class="fa fa-user fa-fw"></i>Clients / Supplier</a>
@@ -61,15 +56,13 @@
                     <ul class="nav">
                       <li><a href="{{ URL::to('salesorders') }}"><i class="fa fa-list fa-fw"></i>Sales Orders</a></li>
                       <li><a href="{{ URL::to('purchaseorders') }}"><i class="fa fa-list fa-fw"></i>Purchase Orders</a></li>
->>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
                     </ul>
                   </li>
 
                   <li>
                     <a href="{{ URL::to('quotationorders') }}"><i class="fa fa-list fa-fw"></i>Quotation</a>
-<<<<<<< HEAD
-=======
-                  </li>
+
+          </li>
                 
                  <!--  <li>
                     <a href="{{ URL::to('account') }}"><i class="fa fa-tasks fa-fw"></i>  Accounts</a>

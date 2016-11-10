@@ -61,5 +61,4 @@ function asMoney($value) {
       </div>
     </div>
   </div>
-
 @stop

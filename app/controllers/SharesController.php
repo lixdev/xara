@@ -78,11 +78,8 @@ class SharesController extends \BaseController {
 
 	public function cssshares()
 	{
-<<<<<<< HEAD
 		$member = Member::where('email',Confide::user()->email)->first();
-=======
-		$member = Member::where('membership_no',Confide::user()->username)->first();
->>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
+		
 		$shareaccount = $member->shareaccount;
 
 		return View::make('css.shareaccounts', compact('shareaccount','member'));

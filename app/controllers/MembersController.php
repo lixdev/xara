@@ -413,14 +413,11 @@ else{
 	public function loanaccounts2()
 	{
 
-<<<<<<< HEAD
+
 		$mem = Confide::User()->email;
-=======
-		$mem = Confide::user()->username;
 
 		$id = DB::table('members')->where('membership_no', '=', $mem)->where('organization_id',Confide::user()->organization_id)->pluck('id');
-		$member = Member::findOrFail($id);
->>>>>>> 92fdd8bfdec9effbd47d97d54a71fc925c91940f
+		
 
 		$member= DB::table('members')->where('email', '=', $mem)->where('organization_id',Confide::user()->organization_id)->first();
 		 //= Member::where('id','=',$id)->get();
